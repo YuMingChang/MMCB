@@ -1,0 +1,144 @@
+{# base/templates/base.html #} {% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!--
+░░░░░░░░░░░░░▄███▄▄▄
+░░░░░░░░░▄▄▄██▀▀▀▀███▄
+░░░░░░░▄▀▀░░░░░░░░░░░▀█
+░░░░▄▄▀░░░░░░░░░░░░░░░▀█     /
+░░░█░░░░░▀▄░░▄▀░░░░░░░░█    /
+░░░▐██▄░░▀▄▀▀▄▀░░▄██▀░▐▌   /
+░░░█▀█░▀░░░▀▀░░░▀░█▀░░▐▌  /
+░░░█░░▀▐░░░░░░░░▌▀░░░░░█  \    YEEEEEEEEEEEE!!!!!!
+░░░█░░░░░░░░░░░░░░░░░░░█   \
+░░░░█░░▀▄░░░░▄▀░░░░░░░░█    \
+░░░░█░░░░░░░░░░░▄▄░░░░█
+░░░░░█▀██▀▀▀▀██▀░░░░░░█
+░░░░░█░░▀████▀░░░░░░░█
+░░░░░░█░░░░░░░░░░░░▄█
+░░░░░░░██░░░░░█▄▄▀▀░█
+░░░░░░░░▀▀█▀▀▀▀░░░░░░█
+░░░░░░░░░█░░░░░░░░░░░░█
+    -->
+
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://semantic-ui.com/javascript/library/jquery.min.js"></script>
+    <!-- bootstrap-UI -->
+    <link rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+    <!-- semantic-UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+
+    <link rel="stylesheet" href="./lib/css/umc.css" />
+
+    <title>{% block title %}商品系統{% endblock title %}</title>
+
+</head>
+
+<body>
+    {% block body %}
+    <div class="container">
+
+        <div class="ui menu" margin-top="50px">
+            <div class="header item">
+                <img src="/media/navHead.png"></img>
+            </div>
+            <a class="item" href="#"> 首頁 </a>
+            <a class="item" href="#"> 商店 </a>
+            <a class="item" href="#"> 購物車 </a>
+            <a class="item" href="#"> 關於 </a>
+
+            <!-- ##### SignUp and LogIn ##### -->
+            <div class="right menu">
+                <div class="item">
+                    <div class="ui button">註冊</div>
+                </div>
+                <div class="item">
+                    <div class="ui primary button">登入</div>
+                </div>
+            </div>
+        </div>
+        <!-- /navbar -->
+
+        <!-- Main component for a primary marketing message or call to action -->
+        <img src="/media/MMCBpic.jpg" class="img-responsive center-block" alt="Responsive image" width="100%">
+        <div class="jumbotron">
+
+            <h1>Navbar example</h1>
+            <p>This example is a quick exercise to illustrate how the default responsive navbar works. It's placed within a <code>.container</code> to limit its width and will scroll with the rest of the page's content.</p>
+            <p>At the smallest breakpoint, the collapse plugin is used to hide the links and show a menu button to toggle the collapsed content.</p>
+            <p>
+                <a class="ui inverted purple button" href="../../components/navbar" role="button">View navbar docs &raquo;</a>
+            </p>
+        </div>
+
+    </div>
+    <!-- /container -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- <script src="lib/js/bootstrap.min.js"></script>
+    <script src="lib/js/jquery.scrollTo.min.js"></script>
+    <script src="lib/js/jquery.localScroll.min.js"></script>
+    <script src="lib/js/scrollspy.js"></script>
+    <script src="lib/js/tooltip.js"></script>
+    <script src="lib/js/gauge.min.js"></script>
+    <script src="lib/js/main.js"></script> -->
+
+    <!--
+
+
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　,．―――-z
+　　　　　　　　　　　　　　　　　　　　　　　　　　　/:::::::::::::::::::::::::::::::＞:.
+　　　　　　　　　　　　　　　　　　　＿＿＿＿__ゝj::::::::::::::::::::::::::::::::::::::::::＼
+　　　　　　　　　　　　　　　　,ィ:::::::::::::::::::::::::::::::::::≫〈＾ヽ￢:::::::z＿::::::::::::::ヽ
+　　　　　　　　　　　　　　／::::::::::::::::::::::::::::::::::::::::::::::::::::ヽ、　＼　　⌒ヽ::::::::::i
+　　　　　　　　　　　,.．,ｨ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::ｧ'　ヽ　　　　 ヽ::::|
+　　　　　　　　.　 ´　 /:::::::::::::::::::::::::::::,ﾍ::::::::::::::::::::::::::::::::::::f　　　i　　　　　j::::|
+　　　　　 ,．'´　　　 /:::::::::::::::::::::::::::::/　l:::::::::::::::::::::::::::::::::::ｉ＿__　Ｉ　　　　　j::::!
+　　 　 ／　　 　 　./:::::::::::::::::::::::::::::/ 　i|::::/|:::/l::::::::::::::::::j￣￣`､!　　　 　 i:::|
+　　　/　　　　 ,．'´i::::::::::::::::::::::::::::/　　 !::/_,l/　|:::/i:::::::::i　　　　 l　　　　　i::ﾘ
+　　　|　　　　〈　　 |::::::::::::::::i､:::::/　　　j/　 j,￣|/　!:::::::l　　　　 i　　　　　j/
+　　　':、　　　 ｀_　 |:::::::::::::::| ヽ/　　　　"´弐心,　j::::::::j
+　　　　　　　　　`､ Ｎ:::::::::斗符ゝ　　　　　 ﾋ少　 j::,ｲ::!　　　　 l
+　　　　　　　　　　 ＼Ⅵﾍ:::|　弋ｯ　　　　　 ,,,,,　,ｲ:/ j:| 　 　 　 !
+　　　　　 ＼　　　　　＼　}::!　,,,,,　 ，　　　　　　j:/_/ | 　 　 　 |
+　　　　　　　＼　　　　　`j:::ﾊ　　　　　､_,　　 ／j:k′,|　　　 　 l
+　　　　　　　　 ＼　　　　j:/ゝ､ ＞．_〃ji_, イ　 j:iｧ‐' j　　　　　i
+　　　　　　　　　　ヽ　 　 j{　　`ヽrｰ ヾ=' j　　　 /　 /　　　　　!
+　　　　　　　　　　　｀_　　　　 　_j　　{　 /　　　/　V
+　　　　　　　　　　　　　　　　　/　　丿ヽ　 ／/　V
+　　　　　　　　　　　　　 ＼　 /　　/　　　　 ,ｲ　/　　　　　　/
+　　　　　　　　　　　　　　　У　　 ゝ∠,____/　　|　　　　　　,′
+　　　　　　　　　　　　　_ノ　　　　 ,ｲ　　　　　　 ＼　　　　/
+　　　　　　　　　　　, イ　　　　 ／　　　　　　　　　　ゝ､_./j
+　　　　　　　　　／　　　　　　.::　　　　　　　　　　　　 　 Ｙ
+　　　　　　　　/　　　　　　,::　　　　　　　　　　　　.::　　 /
+　　　　　　　　i　　　　　　　　　　　　　　　　　　 .,　 　 /
+　　　　　　　　　　　　　 .;{　　　　　　　　　　　 _/　　 /
+　　　　　　　　ゝ､　　　　 ゝ　　　　　　　　　.:::,ｲ　　,ｲ
+　　　　　　　　　`ヽ　＿_ノヽ　　　　　　　...::,ｨ　　　/
+　　　　　　　　　　　　｀_　　　｀丶-==-=一'　　　　i
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　i
+　　　　　　　　　　　　　 ヽ　　　　　　　　　　　 　 ！
+　　　　　　　　　　　　　　 }　　　　　　　　　　　 　 ﾍ
+
+
+    -->
+
+    {% endblock body %}
+</body>
+
+</html>
