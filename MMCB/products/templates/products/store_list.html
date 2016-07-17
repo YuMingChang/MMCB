@@ -1,9 +1,7 @@
-{# products/templates/products/store_list.html #} {% extends 'products/base.html' %} {% block title %}MMCB商品列表 | {{ block.super }}{% endblock title %} {% block content %}
-
+{% extends 'products/base.html' %} {% block title %}MMCB商品列表 | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }}
 <!-- Main component for a primary marketing message or call to action -->
 <img src="/media/MMCBpic.jpg" class="img-responsive center-block" alt="Responsive image" width="100%">
 <div class="jumbotron">
-
     <h1>Navbar example</h1>
     <p>This example is a quick exercise to illustrate how the default responsive navbar works. It's placed within a <code>.container</code> to limit its width and will scroll with the rest of the page's content.</p>
     <p>At the smallest breakpoint, the collapse plugin is used to hide the links and show a menu button to toggle the collapsed content.</p>
@@ -11,98 +9,77 @@
         <a class="ui inverted purple button" href="../../components/navbar" role="button">View navbar docs &raquo;</a>
     </p>
 </div>
-
 <!-- ##### Semantic-UI Cards #### -->
 <div class="ui special cards">
     <div class="ui four stackable cards">
-        {% for product in AllProduct %} {% if product.is_display %}
+        {% for obj in Product_ObjList %} {% if obj.is_display %}
         <div class="ui centered card">
-
             <div class="blurring dimmable image">
                 <div class="ui inverted dimmer">
                     <div class="content">
                         <div class="center">
-                            <div class="ui inverted pink button" data-toggle="modal" data-target="#UMC_Modal{{product.id}}">Add Cart</div>
+                            <div class="ui inverted pink button" data-toggle="modal" data-target="#UMC_Modal{{obj.id}}">Add Cart</div>
                         </div>
                     </div>
                 </div>
-                <img src="/media/{{ product.image }}">
+                <img src="/media/{{ obj.image }}">
             </div>
-
             <div class="content">
-                <a class="header">{{ product.name }}</a>
+                <a class="header">{{ obj.name }}</a>
                 <div class="meta">
-                    <span class="date">在 {{ product.date }} 加入</span>
+                    <span class="date">在 {{ obj.date }} 加入</span>
                 </div>
-                <!-- ##### 縮排成四行文字 #### -->
-                <div class="description" style='overflow : hidden; text-overflow: ellipsis;
-										display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;'>{{ product.notes }}</div>
+                <!--  縮排成四行文字  -->
+                <div class="description" style='overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;'>{{ obj.notes | linebreaks }}</div>
             </div>
-
             <div class="extra content">
-                <a><i class="gift icon"></i> 成團數量：{{ product.raiser }} </a>
+                <a><i class="sers icon"></i> 成團數量：{{ obj.raiser }} </a>
             </div>
-
         </div>
         {% endif %} {% endfor %}
     </div>
 </div>
-
+{% endblock content %} {% block js-foot %}{{block.super}}
 <script type="text/javascript">
     $('.special.cards .image').dimmer({
         on: 'hover'
     });
 </script>
-
+{% endblock js-foot %} {% block footer %}
 <!-- ##### Add Cart Form #### -->
 <form class="form-horizontal" role="form" method="post" action="/add/">
-    {% for product in AllProduct %} {% if product.is_display %}
+    {% for obj in Product_ObjList %} {% if obj.is_display %}
     <!-- Modal -->
-    <div class="modal fade" id="UMC_Modal{{product.id}}" role="dialog">
+    <div class="modal fade" id="UMC_Modal{{obj.id}}" role="dialog">
         <div class="modal-dialog ">
-
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" value="ProductName">{{product.name}}</h4>
+                    <h4 class="modal-title" value="objName">{{obj.name}}</h4>
                 </div>
                 <div class="modal-body">
-                    {{ product.notes }}
+                    {{ obj.notes | linebreaks }}
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>樣式(Type)</th>
-                                <th>尺寸(Size)</th>
-                                <th>價錢(Price)</th>
+                                <th>選擇(Selection)</th>
                                 <th>數量(Quantity)</th>
                             </tr>
                         </thead>
                         <tbody>
-                          ProductId: {{ product.id }}
-                            {% for detail in product.details.all %}
-                            <!-- <p>TypeId: {{ details.id }}</p>
-                            <p>size: {{ details.size }}</p>
-                            <p>price: {{ details.price }}</p> -->
-
                             <tr>
                                 <td>
-                                    <select class="form-control" id="{{product.name}}" name="Type">
-                                        {% for color in product.colors.all %}
-                                        <option>ColorId{{color.id}} {{color.color}}</option>
+                                    <select class="form-control" id="{{obj.id}}selection" name="selection">
+                                        {% for objD in obj.details.all %}
+                                        <option>{{objD}}</option>
                                         {% empty %}
-                                        <option>OneType</option>
+                                        <option>Error</option>
                                         {% endfor %}
                                     </select>
                                 </td>
-                                <td class="disabled">
-                                    <div class="content">{{ detail.size }}</div>
-                                </td>
                                 <td>
-                                    <div class="content">{{ detail.price }}</div>
-                                </td>
-                                <td>
-                                    <select class="form-control" id="{{item.name}}" name="quantity">
+                                    <select class="form-control" id="{{obj.id}}quantity" name="quantity">
                                         <option>0</option>
                                         <option>1</option>
                                         <option>2</option>
@@ -116,11 +93,9 @@
                                     </select>
                                 </td>
                             </tr>
-                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
-
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -130,10 +105,9 @@
                         加入購物車 &raquo;
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
     {% endif %} {% endfor %}
 </form>
-{% endblock content %}
+{% endblock footer %}

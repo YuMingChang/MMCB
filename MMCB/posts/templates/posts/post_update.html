@@ -1,0 +1,8 @@
+{% extends 'posts/base.html' %} {% block title %}{{ title }} | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }} {% load crispy_forms_tags %}
+<h1> {{ title }} </h1>
+<form enctype="multipart/form-data" method="post">
+  {% crispy form %}
+  {% crispy detail_formset %}
+  <button type="submit" class="btn btn-primary">更新</button>
+</form>
+{% endblock content %}

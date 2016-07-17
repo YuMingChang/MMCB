@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for MMCB project.
 
@@ -40,13 +41,15 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'crispy_forms',
 ]
 
 LOCAL_APPS = [
     'base',
+    'posts',
     'products',
 ]
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE_CLASSES = [

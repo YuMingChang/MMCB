@@ -1,0 +1,7 @@
+{% extends 'posts/base.html' %} {% block title %}{{ title }} | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }} {% load crispy_forms_tags %}
+<h1> {{ title }} </h1>
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %} {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">新增商品</button>
+</form>
+{% endblock content %}
