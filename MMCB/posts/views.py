@@ -10,7 +10,7 @@ from products.models import Product, Detail
 def post_list(request):
     queryset = Product.objects.all()
     context = {
-        'title' : 'List',
+        'title' : '商品列表',
         'object_list': queryset,
     }
     return render(request, 'posts/post_list.html', context)
@@ -25,7 +25,7 @@ def post_create(request):
     # else:
         # messages.error(request, 'Not Successfully Created')
     context = {
-        'title' : 'Create',
+        'title' : '新增商品',
         'form': form,
     }
     return render(request, 'posts/post_create.html', context)
@@ -41,7 +41,7 @@ def post_update(request, id=None):
         messages.success(request, 'Item Saved')
         return HttpResponseRedirect(instance.get_absolute_url())
     context = {
-        'title' : 'Edit',
+        'title' : '商品編輯',
         'instance' : instance,
         'form' : form,
         'detail_formset': detail_formset
@@ -98,7 +98,7 @@ def post_add_detail(request):
                         Detail.objects.create(product=product, color=color_list[i], size=size_list[j], price=price_list[j])
 
     context = {
-        'title' : 'Add Detail',
+        'title' : '新增商品內容',
         'productsName' : nameList,
     }
     return render(request, 'posts/post_add_detail.html', context)

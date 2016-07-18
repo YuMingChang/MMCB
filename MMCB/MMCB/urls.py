@@ -21,6 +21,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^store/', include('products.urls')),
     url(r'^posts/', include('posts.urls', namespace='posts')),
+    url(r'^account', include('django.contrib.auth.urls')),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # 以下適用於網頁讀取"settings.py"中的 MEDIA_URL 與 MEDIA_ROOT 所用

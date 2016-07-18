@@ -1,144 +1,122 @@
 {% extends 'posts/base.html' %} {% block title %}{{ title }} | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }}
-<h1>{{ title }}</h1>
-<form class="form-horizontal" method='POST' action=''>
-    {% csrf_token %}
+<div class="ui clearing segment">
+    <h1 class="ui left floated header"> {{ title }} </h1>
+    <h4 class="ui horizontal divider header"><i class="write icon"></i> Edit Product </h4>
+    <form class="form-horizontal" method='POST' action=''>
+        {% csrf_token %}
 
-    <div class="row">
-        <div class="form-group col-md-12">
-            <div class="col-md-2">
-                <select class="form-control" name="optName" id="sel1">
-                    {% for name in productsName %}
-                    <option>{{ name }}</option>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <div class="ui horizontal segments">
+                    <div class="ui segment">
+                        <select class="form-control" name="optName" id="sel1">
+                            {% for name in productsName %}
+                            <option>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="ui center aligned segment">
+                        <label class="radio-inline">
+                            <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck();" id="S1Check" value='S1'>[顏色]－[尺寸]－[價錢]</label>
+                        <label class="radio-inline">
+                            <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck();" id="S2Check" value='S2'>[顏色 ＆ 價錢] － 尺寸</label>
+                        <label class="radio-inline">
+                            <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck();" id="S3Check" value='S3'>[尺寸 ＆ 價錢] － 顏色</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" style="display:none" id="S1">
+                <ul class="list-group">
+                    <!-- Numeric for loop in Django templates: http://stackoverflow.com/questions/1107737/numeric-for-loop-in-django-templates -->
+                    {% for i in "0123456789" %}
+                    <li class="list-group-item col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <label for="detail">顏色</label>
+                                <input type="text" class="form-control" name="S1color">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="detail">尺寸</label>
+                                <input type="text" class="form-control" name="S1size">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="detail">價錢</label>
+                                <input type="text" class="form-control" name="S1price">
+                            </div>
+                        </div>
+                    </li>
                     {% endfor %}
-                </select>
+                </ul>
             </div>
 
-            <!-- html的name用來給Django得知value以判斷是哪個input;     request.POST.get('optradio')
-            html的id則是用來給js判斷是哪個input;    Document.getElementById('S1Check').checked -->
-            <div class="col-md-9 col-md-offset-1">
-                <label class="radio-inline col-md-3">
-                    <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck();" id="S1Check" value='S1'>[顏色]－[尺寸]－[價錢]</label>
-                <label class="radio-inline col-md-3">
-                    <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck();" id="S2Check" value='S2'>[顏色 ＆ 價錢] － 尺寸</label>
-                <label class="radio-inline col-md-3">
-                    <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck();" id="S3Check" value='S3'>[尺寸 ＆ 價錢] － 顏色</label>
+            <div class="col-md-12" style="display:none" id="S2">
+                <ul class="list-group col-md-8">
+                    {% for i in "0123456789" %}
+                    <li class="list-group-item col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="detail">顏色</label>
+                                <input type="text" class="form-control" name="S2color">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="detail">價錢</label>
+                                <input type="text" class="form-control" name="S2price">
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <ul class="list-group col-md-4">
+                    {% for i in "0123456789" %}
+                    <li class="list-group-item col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="detail">尺寸</label>
+                                <input type="text" class="form-control" name="S2size">
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-        </div>
 
-        <div class="col-md-12" style="display:none" id="S1">
-            <ul class="list-group">
-                <!-- Numeric for loop in Django templates: http://stackoverflow.com/questions/1107737/numeric-for-loop-in-django-templates -->
-                {% for i in "0123456789" %}
-                <li class="list-group-item col-md-12">
-                    <div class="form-group">
-                        <div class="col-md-4">
-                            <label for="detail">顏色</label>
-                            <input type="text" class="form-control" name="S1color">
+            <div class="col-md-12" style="display:none" id="S3">
+                <ul class="list-group col-md-8">
+                    {% for i in "0123456789" %}
+                    <li class="list-group-item col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="detail">尺寸</label>
+                                <input type="text" class="form-control" name="S3size">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="detail">價錢</label>
+                                <input type="text" class="form-control" name="S3price">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="detail">尺寸</label>
-                            <input type="text" class="form-control" name="S1size">
+                    </li>
+                    {% endfor %}
+                </ul>
+                <ul class="list-group col-md-4">
+                    {% for i in "0123456789" %}
+                    <li class="list-group-item col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label for="detail">顏色</label>
+                                <input type="text" class="form-control" name="S3color">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="detail">價錢</label>
-                            <input type="text" class="form-control" name="S1price">
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="col-md-12" style="display:none" id="S2">
-            <ul class="list-group col-md-8">
-                {% for i in "0123456789" %}
-                <li class="list-group-item col-md-12">
-                    <div class="form-group">
-                        <div class="col-md-6">
-                            <label for="detail">顏色</label>
-                            <input type="text" class="form-control" name="S2color">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="detail">價錢</label>
-                            <input type="text" class="form-control" name="S2price">
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-            <ul class="list-group col-md-4">
-                {% for i in "0123456789" %}
-                <li class="list-group-item col-md-12">
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <label for="detail">尺寸</label>
-                            <input type="text" class="form-control" name="S2size">
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="col-md-12" style="display:none" id="S3">
-            <ul class="list-group col-md-8">
-                {% for i in "0123456789" %}
-                <li class="list-group-item col-md-12">
-                    <div class="form-group">
-                        <div class="col-md-6">
-                            <label for="detail">尺寸</label>
-                            <input type="text" class="form-control" name="S3size">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="detail">價錢</label>
-                            <input type="text" class="form-control" name="S3price">
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-            <ul class="list-group col-md-4">
-                {% for i in "0123456789" %}
-                <li class="list-group-item col-md-12">
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <label for="detail">顏色</label>
-                            <input type="text" class="form-control" name="S3color">
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <input type='submit' class="btn btn-success btn-lg btn-block" value='ADD Detail' />
-        <!-- Trigger the modal with a button -->
-        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#AddCheckModal" onclick="javascript:CheckAddModal();">Check Modal</button>
-    </div>
-</form>
-
-<!-- Modal -->
-<div id="AddCheckModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-            <div class="modal-body" id="modalBody">
-                <p>Some text in the modal.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+            <h2 class="ui horizontal divider header"> 結束 </h2>
+            <button type='submit' class="ui right floated green basic labeled icon huge button"><i class="checkmark icon"></i>新增商品內容</button>
         </div>
-
-    </div>
+    </form>
 </div>
 
-<!-- <input type='submit' class="btn btn-success btn-lg btn-block" value='ADD' onclick="CheckAddModal();"/> -->
 {% endblock content %} {% block js-foot %} {{ block.super }}
 <script type="text/javascript">
     function SelectCheck() {
@@ -157,48 +135,6 @@
             document.getElementById('S2').style.display = 'none';
             document.getElementById('S3').style.display = 'block';
         }
-    }
-
-    function CheckAddModal() {
-        var mbHtml = document.getElementById('modalBody');
-        var color = new Array();
-        var size = new Array();
-        var price = new Array();
-        // var nodeList = document.getElementsByName('S2color');
-        // alert(tmnodeListp);  //[object NodeList]
-        // alert(nodeList.length);  //10
-
-        // var nodeList = document.getElementsByName("S2color");
-        // var nodeArray = [];
-        // for (var i = 0; i < nodeList.length; ++i) {
-        //     nodeArray[i] = nodeList[i];
-        //     alert('Array[' + i + ']=' + nodeArray[i].value + ' List[' + i + ']=' + nodeList[i]);
-        // }
-
-        var nodeList = document.getElementsByName('S3color');
-        nodeArray = [].slice.call(nodeList);
-
-        // var nlColor = document.getElementsByName('S1color');  naColor = [].slice.call(nlColor);
-        // var nlSize = document.getElementsByName('S1size');    naSize = [].slice.call(nlSize);
-        // var nlPrice = document.getElementsByName('S1price');  naPrice = [].slice.call(nlPrice);
-
-        alert(nodeList.length);
-        alert(nodeArray.length);
-
-        // for(i=0;i<10;i++){
-        //   color.push = document.getElementById('modalBody').value;
-        // }
-        //
-        // if (document.getElementById('S1Check').checked) {
-        //     mbHtml.innerHTML = 'S1'
-        // } else if (document.getElementById('S2Check').checked) {
-        //     mbHtml.innerHTML = 'S2'
-        // } else if (document.getElementById('S2Check').checked) {
-        //     mbHtml.innerHTML = 'S3';
-        // } else {
-        //     mbHtml.innerHTML = '請選擇新增內容方式並重新確認';
-        // }
-        // $('.ui.modal').modal('show');
     }
 </script>
 {% endblock js-foot %}
