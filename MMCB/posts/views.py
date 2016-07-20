@@ -1,12 +1,15 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 
 from posts.custom_function import req_field_getlist
 from posts.forms import ProductForm, DetailForm, DetailFormSet
 from products.models import Product, Detail
 
-# Create your views here.
+# @login_required
+# @require_http_methods(['POST'])
 def post_list(request):
     queryset = Product.objects.all()
     context = {
@@ -36,8 +39,8 @@ def post_update(request, id=None):
     detail_formset = DetailFormSet(request.POST or None, request.FILES or None, instance=instance)
     if form.is_valid() and detail_formset.is_valid():
         instance = form.save(commit=False)
-        instance.save()
         detail_formset.save()
+        instance.save()
         messages.success(request, 'Item Saved')
         return HttpResponseRedirect(instance.get_absolute_url())
     context = {

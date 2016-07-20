@@ -1,17 +1,16 @@
 {% extends 'posts/base.html' %} {% block title %}{{ title }} | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }}
-<!-- <div class=""> -->
 <div class="ui clearing segment">
     <h1 class="ui left floated header"> {{ title }} </h1>
     <button class="ui right floated green basic button" onclick="javascript:location.href='add_detail';"><i class="add square icon"></i>新增內容</button>
     <button class="ui right floated red basic button" onclick="javascript:location.href='create';"><i class="plus icon"></i> 新增商品</button>
-    <h4 class="ui horizontal divider header"><i class="tag icon"></i> List </h4>
+    <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
     <div class="ui massive selection animated list">
         {% for obj in object_list %}
         <div class="item">
-            <img class="ui avatar image" src="/media/{{ obj.image }}">
-            <div class="content">
+            <img class="ui avatar image" src="{{MEDIA_URL}}/{{ obj.image }}">
+            <div class="middle aligned content">
                 <a class="header" href='/posts/{{obj.id}}/edit'>{{ obj.id }}. {{ obj.name }}</a>
-                <!-- <small>{{obj.date}}</small> -->
+                <small>{{obj.date}}</small>
             </div>
             <div class="right floated content">
                 {% if obj.is_display %}

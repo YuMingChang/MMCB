@@ -16,6 +16,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = '商品'
         verbose_name_plural = '所有商品'
+        ordering = ['-date', 'raiser']
 
     # def __unicode__(self):	It's doesn't work.	solve: http://blog.csdn.net/feifashengwu/article/details/12625719
     def __str__(self):                  # __str__ on Python 3,	__unicode__ on Python 2

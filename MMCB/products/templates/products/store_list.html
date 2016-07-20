@@ -1,14 +1,4 @@
 {% extends 'products/base.html' %} {% block title %}MMCB商品列表 | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }}
-<!-- Main component for a primary marketing message or call to action -->
-<img src="/media/MMCBpic.jpg" class="img-responsive center-block" alt="Responsive image" width="100%">
-<div class="jumbotron">
-    <h1>Navbar example</h1>
-    <p>This example is a quick exercise to illustrate how the default responsive navbar works. It's placed within a <code>.container</code> to limit its width and will scroll with the rest of the page's content.</p>
-    <p>At the smallest breakpoint, the collapse plugin is used to hide the links and show a menu button to toggle the collapsed content.</p>
-    <p>
-        <a class="ui inverted purple button" href="../../components/navbar" role="button">View navbar docs &raquo;</a>
-    </p>
-</div>
 <!-- ##### Semantic-UI Cards #### -->
 <div class="ui special cards">
     <div class="ui four stackable cards">
@@ -22,7 +12,7 @@
                         </div>
                     </div>
                 </div>
-                <img src="/media/{{ obj.image }}">
+                <img src="{{MEDIA_URL}}/{{ obj.image }}">
             </div>
             <div class="content">
                 <a class="header">{{ obj.name }}</a>
@@ -30,7 +20,7 @@
                     <span class="date">在 {{ obj.date }} 加入</span>
                 </div>
                 <!--  縮排成四行文字  -->
-                <div class="description" style='overflow : hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;'>{{ obj.notes | linebreaks }}</div>
+                <div class="description">{{ obj.notes | linebreaks |truncatechars:100 }}</div>
             </div>
             <div class="extra content">
                 <a><i class="users icon"></i> 成團數量：{{ obj.raiser }} </a>

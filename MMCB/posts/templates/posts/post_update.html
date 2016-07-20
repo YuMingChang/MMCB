@@ -3,9 +3,44 @@
     <h1 class="ui left floated header"> {{ title }} </h1>
     <h4 class="ui horizontal divider header"><i class="edit icon"></i> Edit Product </h4>
     <form enctype="multipart/form-data" method="post">
-      {% crispy form %}
-      {% crispy detail_formset %}
-      <button type="submit" class="btn btn-primary">更新</button>
+        {% crispy form %} {% crispy detail_formset %}
+        <button type="submit" class="btn btn-primary">更新</button>
     </form>
 </div>
-{% endblock content %}
+{% endblock content %} {% block js-foot %}{{ block.super }}
+<script type="text/javascript">
+    function ProductDelete() {
+      var delAddress = window.location.href.replace("edit", "Dontdelete");
+        $('#PDModal')
+            .modal({
+              blurring: true,
+              onApprove: function(){
+                window.location.href=delAddress;
+              }
+            })
+            .modal('show');
+    }
+</script>
+{% endblock js-foot %} {% block footer %}{{ block.super }}
+<!-- Modal -->
+<div class="ui small modal" id="PDModal">
+    <i class="close icon"></i>
+    <div class="header">
+        刪除商品
+    </div>
+    <div class="image content">
+        <div class="description">
+          <p>您真的確定要刪除此商品嗎?</p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui black deny button">
+            取消
+        </div>
+        <div class="ui red approve right labeled icon button">
+            刪除確定
+            <i class="remove icon"></i>
+        </div>
+    </div>
+</div>
+{% endblock footer %}
