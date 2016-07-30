@@ -4,11 +4,15 @@ from django.forms.models import inlineformset_factory
 from products.models import Product, Detail
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Button
+from bootstrap3_datetime.widgets import DateTimePicker
 
 class ProductForm(forms.ModelForm):
-
     class Meta:
         model = Product
+        # Test: It test for DatePicker but no idea how to work.
+        date = forms.DateField(
+            widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False}))
         fields = [
             'name',
             'notes',
@@ -17,11 +21,6 @@ class ProductForm(forms.ModelForm):
             'image',
             'is_display',
         ]
-        date = forms.DateField(
-            widget=forms.TextInput(
-                attrs={'type': 'date'}
-            )
-        )
 
     def __init__(self, *args, submit_title='Submit', **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -43,7 +42,7 @@ class DetailForm(forms.ModelForm):
         ]
 
 BaseDetailFormSet = inlineformset_factory(
-    parent_model=Product, model=Detail, fields=('color', 'size', 'price'), extra=1,
+    parent_model=Product, model=Detail, fields=('color', 'size', 'price'), extra=3,
 )
 class DetailFormSet(BaseDetailFormSet):
     def __init__(self, *args, **kwargs):

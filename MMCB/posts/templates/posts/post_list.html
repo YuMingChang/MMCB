@@ -1,8 +1,8 @@
 {% extends 'posts/base.html' %} {% block title %}{{ title }} | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }}
 <div class="ui clearing segment">
     <h1 class="ui left floated header"> {{ title }} </h1>
-    <button class="ui right floated green basic button" onclick="javascript:location.href='add_detail';"><i class="add square icon"></i>新增內容</button>
-    <button class="ui right floated red basic button" onclick="javascript:location.href='create';"><i class="plus icon"></i> 新增商品</button>
+    <button class="ui inverted right floated green button" onclick="javascript:location.href='add_detail';"><i class="add square icon"></i>新增內容</button>
+    <button class="ui inverted right floated red button" onclick="javascript:location.href='create';"><i class="plus icon"></i> 新增商品</button>
     <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
     <div class="ui massive selection animated list">
         {% for obj in object_list %}

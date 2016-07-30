@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 import os
+from django.core.urlresolvers import reverse_lazy
+LOGIN_REDIRECT_URL = reverse_lazy('home')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,11 +40,18 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
 
 THIRD_PARTY_APPS = [
     'crispy_forms',
+    'bootstrap3_datetime',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
 ]
+SITE_ID = 1
 
 LOCAL_APPS = [
     'base',
@@ -51,6 +60,15 @@ LOCAL_APPS = [
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# TLS Port
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mmcbofficial@gmail.com'
+# Application Key
+EMAIL_HOST_PASSWORD = 'yqyzsvvucjehcjzg'
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,6 +91,8 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                "django.core.context_processors.media",
+                "django.core.context_processors.static",
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -80,8 +100,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'MMCB.wsgi.application'
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
 
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+WSGI_APPLICATION = 'MMCB.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases

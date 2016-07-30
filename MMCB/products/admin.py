@@ -7,16 +7,16 @@ from .models import Product, Detail
 
 @admin.register(Detail)
 class DetailAdmin(admin.ModelAdmin):
-    list_display = ['product', 'color', 'size', 'price']
-
+    list_display = ['id', 'product', 'color', 'size', 'price']
+    list_display_links = ['product',]
 class DetailInline(admin.TabularInline):
     model = Detail
     extra = 1
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'raiser', 'date', 'is_display', 'image']
-    # list_display_links = ['name',]
+    list_display = ['id', 'name', 'raiser', 'date', 'is_display', 'image']
+    list_display_links = ['name',]
     list_editable = ['is_display']
     list_filter = ['is_display', 'date']
     search_fields = ['name',]

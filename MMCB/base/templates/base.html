@@ -1,3 +1,9 @@
+<!-- 請注意：
+若是在settings.py當中，有開啟'django.contrib.sites'則此base.html會被
+/venv_python3/lib/python3.5/site-packages/allauth/templates/base.html
+所取代
+ -->
+
 <!DOCTYPE html>
 <html>
 
@@ -6,7 +12,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}/favicon.ico"/>
+    <link rel="shortcut icon" type="image/png" href="{{MEDIA_URL}}/favicon.ico" />
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
     <!-- semantic.ui CSS -->
@@ -26,20 +32,14 @@
             <a class="item" href="/store"><i class="gift icon"></i> 商店 </a>
             <a class="item" href="#"><i class="shop icon"></i> 購物車 </a>
             <a class="item" href="/posts"><i class="info icon"></i> 關於 </a>
-
             <!-- ##### SignUp and LogIn ##### -->
             <div class="right menu">
                 <div class="item">
-                    <div class="ui button">註冊</div>
-                </div>
-                <div class="item">
-                    <form class="ui form" method="post" action="{% url 'logout' %}">
-                        {% if user.is_authenticated %} {% csrf_token %}
-                        <input type="hidden" name="next" value="{% url 'home' %}">
-                        <button class="ui blue button" type="submit">登出</button>
-                        {% else %}
-                        <a class="ui blue button" href="{% url 'login' %}">登入</a> {% endif %}
-                    </form>
+                    <div class="ui large buttons">
+                        <button class="ui green basic button">註冊</button>
+                        <div class="or"></div>
+                        <button class="ui blue basic button">登入</button>
+                    </div>
                 </div>
             </div>
         </div>
