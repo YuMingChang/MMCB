@@ -1,0 +1,52 @@
+{% extends 'posts/base.html' %}
+{% block title %}
+  {{ title }} | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+  {{ block.super }}
+
+  {% load carton_tags %}
+  {% get_cart as cart %}
+  <h1><i class="shop icon"></i> 購物車 </a></h1>
+
+  <table class="table table-inverse">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>商品名稱</th>
+        <th>樣式</th>
+        <th>尺寸</th>
+        <th>單品價錢</th>
+        <th>數量</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart.items %}
+      <tr>
+        <td>{{ item.product.id }}</td>
+        <td>{{ item.product.product.name }}</td>
+        <td>{{ item.product.color }}</td>
+        <td>{{ item.product.size }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.product.price }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><p class="text-xs-left">Total: $NT{{ cart.total }}</p></td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-5">
+      <button class="btn btn-success btn-lg btn-block"> 結帳 </button>
+    </div>
+  </div>
+
+{% endblock content %}

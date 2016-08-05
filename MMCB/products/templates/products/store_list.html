@@ -37,7 +37,7 @@
 </script>
 {% endblock js-foot %} {% block footer %}
 <!-- ##### Add Cart Form #### -->
-<form class="form-horizontal" role="form" method="post" action="/add/">
+<form class="form-horizontal" role="form" method="post">
     {% for obj in Product_ObjList %} {% if obj.is_display %}
     <!-- Modal -->
     <div class="modal fade" id="UMC_Modal{{obj.id}}" role="dialog">
@@ -60,17 +60,20 @@
                         <tbody>
                             <tr>
                                 <td>
+                                  <!-- How to get value of text input field by JavaScript: http://stackoverflow.com/questions/11563638/javascript-how-to-get-value-of-text-input-field -->
+                                  <div class="form-group">
                                     <select class="form-control" id="{{obj.id}}selection" name="selection">
                                         {% for objD in obj.details.all %}
-                                        <option>{{objD}}</option>
+                                        <option>{{objD}}_{{objD.id}}</option>
                                         {% empty %}
                                         <option>Error</option>
                                         {% endfor %}
                                     </select>
+                                  </div>
                                 </td>
                                 <td>
+                                  <div class="form-group">
                                     <select class="form-control" id="{{obj.id}}quantity" name="quantity">
-                                        <option>0</option>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -81,6 +84,7 @@
                                         <option>8</option>
                                         <option>9</option>
                                     </select>
+                                  </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -91,7 +95,8 @@
                     <button type="button" class="ui button" data-dismiss="modal">
                         取消
                     </button>
-                    <button type="button" class="positive ui button"><i class="icon cart"></i> 加入購物車
+                    <button type="button" class="positive ui button" onclick="addCart({{obj.id}})">
+                      <i class="icon cart"></i> 加入購物車
                     </button>
                 </div>
             </div>
@@ -99,4 +104,15 @@
     </div>
     {% endif %} {% endfor %}
 </form>
+
+<script type="text/javascript">
+  function addCart(objID){
+    var sel = document.getElementById(objID+'selection').value;
+    sel = (sel.substr(sel.lastIndexOf('_')+1, sel.length));
+    // alert(sel);
+    var qty = document.getElementById(objID+'quantity').value;
+    // alert(sel+ '  ' + qty);
+    window.location= "/shopping-cart/add/?id="+sel +"&quantity="+qty;
+  }
+</script>
 {% endblock footer %}

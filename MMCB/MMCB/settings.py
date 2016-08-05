@@ -54,11 +54,14 @@ THIRD_PARTY_APPS = [
 SITE_ID = 1
 
 LOCAL_APPS = [
+    'carton',
+    'shopping',
     'base',
     'posts',
     'products',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CART_PRODUCT_MODEL = 'products.models.Detail'
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
