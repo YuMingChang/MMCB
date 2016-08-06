@@ -42,14 +42,13 @@ class DetailForm(forms.ModelForm):
         ]
 
 BaseDetailFormSet = inlineformset_factory(
-    parent_model=Product, model=Detail, fields=('color', 'size', 'price'), extra=3,
+    parent_model=Product, model=Detail, fields=('color', 'size', 'price'), extra=0,
 )
 class DetailFormSet(BaseDetailFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-2'
-        self.helper.field_class = 'col-md-10'
+        self.helper.template = 'bootstrap/table_inline_formset.html'
         self.helper.form_tag = False
         self.helper.disable_csrf = True

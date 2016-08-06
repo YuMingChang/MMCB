@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from .models import Product, Detail
+from products.models import Product, Detail
 
 # Register your models here.
 # Django admin model 漢化顯示文字: http://lishiguang.iteye.com/blog/1328986

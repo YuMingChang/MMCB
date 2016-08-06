@@ -40,7 +40,7 @@ class Detail(models.Model):
         verbose_name_plural = '所有內容'
 
     def __str__(self):                  # __str__ on Python 3,	__unicode__ on Python 2
-        return "Color:" + self.color + "　Size:" + self.size + "　Price:" + str(self.price)
+        return self.color + " - " + self.size
     __repr__ = __str__
 
     def get_absolute_url(self):

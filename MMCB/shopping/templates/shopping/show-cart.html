@@ -9,37 +9,32 @@
   {% load carton_tags %}
   {% get_cart as cart %}
   <h1><i class="shop icon"></i> 購物車 </a></h1>
-
   <table class="table table-inverse">
     <thead>
       <tr>
-        <th>id</th>
-        <th>商品名稱</th>
-        <th>樣式</th>
-        <th>尺寸</th>
-        <th>單品價錢</th>
-        <th>數量</th>
+        <th class="col-md-1">移除</th>
+        <th class="col-md-6">商品名稱</th>
+        <th class="col-md-3">款式</th>
+        <th class="col-md-1">數量</th>
+        <th class="col-md-1">單價</th>
       </tr>
     </thead>
     <tbody>
       {% for item in cart.items %}
       <tr>
-        <td>{{ item.product.id }}</td>
-        <td>{{ item.product.product.name }}</td>
-        <td>{{ item.product.color }}</td>
-        <td>{{ item.product.size }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.product.price }}</td>
+        <td class="col-md-1">
+          <button class="circular negative ui icon button" onclick="delCart({{ item.product.id }})"><i class="minus icon"></i></button>
+        </td>
+        <td class="col-md-6">
+              <img class="ui top aligned rounded tiny image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
+              <span value="P{{ item.product.product.id }}-D{{ item.product.id }}">　{{ item.product.product.name }}</span>
+        </td>
+        <td class="col-md-3">{{ item.product }}</td>
+        <td class="col-md-1">{{ item.quantity }}</td>
+        <td class="col-md-1 text-left">$ {{ item.product.price }}</td>
       </tr>
       {% endfor %}
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><p class="text-xs-left">Total: $NT{{ cart.total }}</p></td>
-      </tr>
+
     </tbody>
   </table>
   <hr>
@@ -48,5 +43,10 @@
       <button class="btn btn-success btn-lg btn-block"> 結帳 </button>
     </div>
   </div>
-
+</table>
+  <script type="text/javascript">
+    function delCart(objID){
+      window.location= "remove/?id="+objID;
+    }
+  </script>
 {% endblock content %}

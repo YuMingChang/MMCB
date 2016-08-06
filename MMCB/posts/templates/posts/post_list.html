@@ -1,24 +1,31 @@
-{% extends 'posts/base.html' %} {% block title %}{{ title }} | {{ block.super }}{% endblock title %} {% block content %} {{ block.super }}
-<div class="ui clearing segment">
-    <h1 class="ui left floated header"> {{ title }} </h1>
-    <button class="ui inverted right floated green button" onclick="javascript:location.href='add_detail';"><i class="add square icon"></i>新增內容</button>
-    <button class="ui inverted right floated red button" onclick="javascript:location.href='create';"><i class="plus icon"></i> 新增商品</button>
-    <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
-    <div class="ui massive selection animated list">
-        {% for obj in object_list %}
-        <div class="item">
-            <img class="ui avatar image" src="{{MEDIA_URL}}/{{ obj.image }}">
-            <div class="middle aligned content">
-                <a class="header" href='/posts/{{obj.id}}/edit'>{{ obj.id }}. {{ obj.name }}</a>
-                <small>{{obj.date}}</small>
-            </div>
-            <div class="right floated content">
-                {% if obj.is_display %}
-                <i class="checkmark icon"></i> {% else %}
-                <i class="remove icon"></i> {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+{% extends 'posts/base.html' %}
+{% block title %}
+  {{ title }} | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+  {{ block.super }}
+  <div class="ui clearing segment">
+      <h1 class="ui left floated header"> {{ title }} </h1>
+      <button class="ui inverted right floated green button" onclick="javascript:location.href='add_detail';"><i class="add square icon"></i>新增內容</button>
+      <button class="ui inverted right floated red button" onclick="javascript:location.href='create';"><i class="plus icon"></i> 新增商品</button>
+      <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
+      <div class="ui massive selection animated list">
+          {% for obj in object_list %}
+          <div class="item">
+              <img class="ui avatar image" src="{{MEDIA_URL}}/{{ obj.image }}">
+              <div class="middle aligned content">
+                  <a class="header" href='/posts/{{obj.id}}/edit'>{{ obj.name }}
+                    【P{{ obj.id }}-{% with obj.details.all|length as count %}C{{count}}{% endwith %}】</a>
+                  <small>{{obj.date}}</small>
+              </div>
+              <div class="right floated content">
+                  {% if obj.is_display %}
+                  <i class="checkmark icon"></i> {% else %}
+                  <i class="remove icon"></i> {% endif %}
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+  </div>
 {% endblock content %}
