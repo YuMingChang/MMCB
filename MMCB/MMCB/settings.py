@@ -94,8 +94,8 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                "django.core.context_processors.media",
-                "django.core.context_processors.static",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -146,10 +146,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'zh-Hant'
 
-# TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Taipei'
 
 USE_I18N = True

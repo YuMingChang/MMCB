@@ -21,12 +21,10 @@ from products import views
 
 urlpatterns = [
     url(r'^$', views.store_list, name='home'),
-    # url(r'^store/', include('products.urls')),
     url(r'^shopping-cart/', include('shopping.urls', namespace='cart')),
-    url(r'^posts/', include('posts.urls', namespace='posts')),
-    # url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^posts/', include('posts.urls', namespace='posts')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # 以下適用於網頁讀取"settings.py"中的 MEDIA_URL 與 MEDIA_ROOT 所用
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

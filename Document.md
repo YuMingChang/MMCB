@@ -1,4 +1,4 @@
-# MaMaCrazyBuy (Django1.9.7)
+# MaMaCrazyBuy (Django1.10)
 
 記載網頁製作所遇到個一些問題，以方便未來他人或自己查閱。
 
@@ -89,7 +89,7 @@ jQuery is a fast and concise **JavaScript Library** that simplifies HTML documen
 Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication.
 
 [Django-allauth Facebook error](https://stackoverflow.com/questions/37876656/django-allauth-facebook-error)
-[Create third party Facebook login in Django](https://www.youtube.com/watch?v=1yqKNQ3ogKQ)
+[Create third party Facebook islogin in Django](https://www.youtube.com/watch?v=1yqKNQ3ogKQ)
 
 ## Recommended Reading
 ### Python3 Learning
@@ -114,3 +114,11 @@ Integrated set of Django applications addressing authentication, registration, a
 
 ### WebDevelopment Material
 * [泡在網上的日子](http://www.jcodecraeer.com/)
+
+### Python Tricks
+* [Initializing Multiple Lists/Line](http://stackoverflow.com/questions/2402646/python-initializing-multiple-lists-line)
+* []()
+
+### Questions
+* [What the difference between using Django redirect and HttpResponseRedirect?](http://stackoverflow.com/questions/13304149/what-the-difference-between-using-django-redirect-and-httpresponseredirect)
+* [request.POST.get('sth') vs request.POST['sth'] - difference?](http://stackoverflow.com/questions/12518517/request-post-getsth-vs-request-poststh-difference)

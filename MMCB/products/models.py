@@ -42,6 +42,3 @@ class Detail(models.Model):
     def __str__(self):                  # __str__ on Python 3,	__unicode__ on Python 2
         return self.color + " - " + self.size
     __repr__ = __str__
-
-    def get_absolute_url(self):
-        return reverse('posts:list')

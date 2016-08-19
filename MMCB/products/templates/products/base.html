@@ -1,14 +1,22 @@
 {% extends 'base.html' %}
-{% block content %}
+  {% block content %}
   {{ block.super }}
   <!-- Main component for a primary marketing message or call to action -->
   <img src="{{MEDIA_URL}}/MMCBpic.jpg" class="img-responsive center-block" alt="Responsive image" width="100%">
   <div class="jumbotron">
-      <h1>Navbar example</h1>
-      <p>This example is a quick exercise to illustrate how the default responsive navbar works. It's placed within a <code>.container</code> to limit its width and will scroll with the rest of the page's content.</p>
-      <p>At the smallest breakpoint, the collapse plugin is used to hide the links and show a menu button to toggle the collapsed content.</p>
-      <p>
-          <a class="ui inverted purple button" href="../../components/navbar" role="button">View navbar docs &raquo;</a>
-      </p>
-  </div>
+      <h2 class="ui header"><i class="pointing right icon"></i>關於我們</h2>
+          <div class="description"><b>我們自己是非常愛買東西的媽媽！這裡秉持便宜也要有好貨，便宜也要有質感的精神～替大家挑好貨。</b>
+            <p></p>
+            <p>中國信託 (822)</p>
+            <p></p>
+            <p>帳號:5325-4026-4159 戶名:劉秋婕</p>
+            <p></p>
+            <p>郵局(700)</p>
+            <p></p>
+            <p>帳號:0031005-1502435 戶名:劉秋婕</p>
+            <p></p>
+            <p>MaMa Crazy Buy謝謝您的購買^^</p>
+            <p></p>
+          </div>
+    </div>
 {% endblock content %}

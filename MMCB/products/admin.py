@@ -9,6 +9,7 @@ from products.models import Product, Detail
 class DetailAdmin(admin.ModelAdmin):
     list_display = ['id', 'product', 'color', 'size', 'price']
     list_display_links = ['product',]
+    search_fields = ['product__name',]
 class DetailInline(admin.TabularInline):
     model = Detail
     extra = 1

@@ -12,9 +12,11 @@ def req_field_get(request, fieldName):      # Get by id of html
 
 def req_field_getlist(request, fieldName):      # Get by name of html
     tmp_list = request.POST.getlist(fieldName)
+    print (tmp_list)
     while '' in tmp_list:
         tmp_list.remove('')
-    return request.POST.getlist(fieldName)
+    print (tmp_list)
+    return tmp_list
     # How to send multiple input field values with same name?
     # http://stackoverflow.com/questions/478382/how-to-send-multiple-input-field-values-with-same-name
 
