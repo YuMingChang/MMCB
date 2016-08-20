@@ -99,13 +99,13 @@ def post_add_detail(request):
                     Detail.objects.create(product=product, color=color_list[i], size=size_list[i], price=price_list[i])
                 color_list, size_list, price_list = ('', '', '')
                 return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
-            elif section == 'S2' and len(lst[1])==len(lst[2]):                  # [Color - Pirce] * Size
+            elif section == 'S2' and len(lst[0])==len(lst[2]):                  # [Color - Pirce] * Size
                 for i in range(len(size_list)):
                     for j in range(len(color_list)):
                         Detail.objects.create(product=product, color=color_list[j], size=size_list[i], price=price_list[j])
                 color_list, size_list, price_list = ('', '', '')
                 return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
-            elif section == 'S3' and len(lst[0])==len(lst[2]):                  # [Size - Price] * Color
+            elif section == 'S3' and len(lst[1])==len(lst[2]):                  # [Size - Price] * Color
                 for i in range(len(color_list)):
                     for j in range(len(size_list)):
                         Detail.objects.create(product=product, color=color_list[i], size=size_list[j], price=price_list[j])

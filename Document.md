@@ -69,6 +69,10 @@ jQuery 是一套物件導向式簡潔輕量級的 **JavaScript Library**。透�
 
 jQuery is a fast and concise **JavaScript Library** that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. jQuery is designed to change the way that you write JavaScript.
 
+* [How To Show And Hide Input Fields Based On Radio Button Selection](http://stackoverflow.com/questions/17621515/how-to-show-and-hide-input-fields-based-on-radio-button-selection)
+* [How do I get values of input element with the same name as an javascript array?](http://stackoverflow.com/questions/7157632/how-do-i-get-values-of-input-element-with-the-same-name-as-an-javascript-array)
+* [How can I know which radio button is selected via jQuery?](http://stackoverflow.com/questions/596351/how-can-i-know-which-radio-button-is-selected-via-jquery)
+
 ### MutipleEvnet
 	$('.ui .item').on({
         mouseenter: function() {
