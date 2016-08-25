@@ -38,7 +38,7 @@
                       </button>
                   </div>
                   <div class="ui center aligned red segment">
-                      <button type="button" class="circular ui massive red icon button" id="eraseBtn" onclick="ClearAllValue()" disabled>
+                      <button type="button" class="circular ui massive red icon button" id="eraseBtn" onclick="ClearAllValue($('input[name=optradio]:checked').val())" disabled>
                           <i class="icon erase"></i>
                       </button>
                   </div>
@@ -157,22 +157,22 @@
       $("select").change(function(){
           $("input[name$='optradio']").removeAttr("disabled");
       })
-      $("input[type$='text']").change(function(){
+      $("input[type$='text']").keypress(function(){
           $("#copyBtn").removeAttr("disabled");
       })
       $("input[name$='optradio']").change(function(){
           $("#eraseBtn").removeAttr("disabled");
       })
 
-      function ClearAllValue() {
+      function ClearAllValue(section) {
           var list = ['color', 'size', 'price'];
-          for(i=1; i<4; i++){
+          // for(i=1; i<4; i++){    // For clearing each section
               for(j=0; j<list.length; j++){
-                  $("input[name$='S" + i + list[j] + "']").each(function() {
+                  $("input[name$='" + section + list[j] + "']").each(function() {
                       $(this).val('');
                   });
               }
-          }
+          // }
       }
       function SetInputValue(itemList, section) {
           if(itemList != null){
@@ -198,7 +198,6 @@
                   });
                   itemList.push(tmpList);
               }
-
               for(j=0; j<section.length; j++){    // Set values from itemList into others.
                   if(section[j] != inputSection){
                       SetInputValue(itemList, section[j]);

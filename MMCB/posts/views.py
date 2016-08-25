@@ -92,27 +92,32 @@ def post_add_detail(request):
                 while '' in tmp:
                     tmp.remove('')
             context['input_list'] = lst
-
             product = Product.objects.get(id=selObj)
-            if section == 'S1' and all(len(x) == len(lst[2]) for x in lst):     # Color - Size - Price
-                for i in range(len(price_list)):
-                    Detail.objects.create(product=product, color=color_list[i], size=size_list[i], price=price_list[i])
-                color_list, size_list, price_list = ('', '', '')
-                return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
-            elif section == 'S2' and len(lst[0])==len(lst[2]):                  # [Color - Pirce] * Size
-                for i in range(len(size_list)):
-                    for j in range(len(color_list)):
-                        Detail.objects.create(product=product, color=color_list[j], size=size_list[i], price=price_list[j])
-                color_list, size_list, price_list = ('', '', '')
-                return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
-            elif section == 'S3' and len(lst[1])==len(lst[2]):                  # [Size - Price] * Color
-                for i in range(len(color_list)):
-                    for j in range(len(size_list)):
-                        Detail.objects.create(product=product, color=color_list[i], size=size_list[j], price=price_list[j])
-                color_list, size_list, price_list = ('', '', '')
-                return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
-            else:
-                errors.append("資料輸入有缺少，請重新確認！")
+            try:
+                created_flag = False
+                if all(len(x) == 0 for x in lst):
+                    created_flag = False
+                elif section == 'S1' and all(len(x) == len(lst[2]) for x in lst):     # Color - Size - Price
+                    for i in range(len(price_list)):
+                        Detail.objects.create(product=product, color=color_list[i], size=size_list[i], price=price_list[i])
+                    created_flag = True
+                elif section == 'S2' and len(lst[0])==len(lst[2]):                  # [Color - Pirce] * Size
+                    for i in range(len(size_list)):
+                        for j in range(len(color_list)):
+                            Detail.objects.create(product=product, color=color_list[j], size=size_list[i], price=price_list[j])
+                    created_flag = True
+                elif section == 'S3' and len(lst[1])==len(lst[2]):                  # [Size - Price] * Color
+                    for i in range(len(color_list)):
+                        for j in range(len(size_list)):
+                            Detail.objects.create(product=product, color=color_list[i], size=size_list[j], price=price_list[j])
+                    created_flag = True
+                if created_flag:
+                    color_list, size_list, price_list = ('', '', '')
+                    return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
+                else:
+                    errors.append("資料輸入有所缺少，請重新確認！")
+            except ValueError:
+                errors.append("資料輸入型態有誤，請重新確認！")
         else:
             errors.append("請記得選擇所新增商品，填寫內容後再次確認！")
     return render(request, 'posts/post_add_detail.html', context)
