@@ -1,13 +1,14 @@
 <!-- 請注意：
 若是在settings.py當中，有開啟'django.contrib.sites'則此base.html會被
 /venv_python3/lib/python3.5/site-packages/allauth/templates/base.html
-所取代
- -->
+所取代 -->
+
 
 <!DOCTYPE html>
 <html>
 
 <head>
+
     <!-- Required meta tags always come first -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,27 +55,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.js"></script>
     <script type="text/javascript">
-        // $('.ui.pink.menu')
-        // .on('click', '.item', function() {
-        //   if(!$(this).hasClass('dropdown')) {
-        //     $(this)
-        //     .addClass('active')
-        //     .siblings('.item')
-        //     .removeClass('active');
-        //   }
-        // });
-        // $('.ui .item').on('click', function() {
-        //     $('.ui .item').removeClass('active');
-        //     $(this).addClass('active');
-        // });
-        // $('.ui .item').on()
-        //     .mouseenter(function() {
-        //         $('.ui .item').removeClass('active');
-        //         $(this).addClass('active');
-        //     })
-        //     .mouseleave(function() {
-        //         $('.ui .item').removeClass('active');
-        //     });
         $('.ui .item').on({
             mouseenter: function() {
                 $(this).removeClass('active');
@@ -86,26 +66,9 @@
         });
         //切頁而所切頁面的class無法變為active class，僅按下當下有效果
     </script>
-    {% endblock js-foot %} {% block footer %}{% endblock footer %}
+    {% endblock js-foot %}
+    {% block footer %}
+    {% endblock footer %}
 </body>
-<!--
-░░░░░░░░░░░░░▄███▄▄▄
-░░░░░░░░░▄▄▄██▀▀▀▀███▄
-░░░░░░░▄▀▀░░░░░░░░░░░▀█
-░░░░▄▄▀░░░░░░░░░░░░░░░▀█     /
-░░░█░░░░░▀▄░░▄▀░░░░░░░░█    /
-░░░▐██▄░░▀▄▀▀▄▀░░▄██▀░▐▌   /
-░░░█▀█░▀░░░▀▀░░░▀░█▀░░▐▌  /
-░░░█░░▀▐░░░░░░░░▌▀░░░░░█  \    YEEEEEEEEEEEE!!!!!!
-░░░█░░░░░░░░░░░░░░░░░░░█   \
-░░░░█░░▀▄░░░░▄▀░░░░░░░░█    \
-░░░░█░░░░░░░░░░░▄▄░░░░█
-░░░░░█▀██▀▀▀▀██▀░░░░░░█
-░░░░░█░░▀████▀░░░░░░░█
-░░░░░░█░░░░░░░░░░░░▄█
-░░░░░░░██░░░░░█▄▄▀▀░█
-░░░░░░░░▀▀█▀▀▀▀░░░░░░█
-░░░░░░░░░█░░░░░░░░░░░░█
--->
 
 </html>

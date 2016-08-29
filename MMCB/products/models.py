@@ -30,7 +30,7 @@ class Product(models.Model):
 class Detail(models.Model):
     # Django _set error: “'Product' object has no attribute 'detail_set'”:
     # http://stackoverflow.com/questions/10466522/django-set-error-campaign-object-has-no-attribute-charity-set
-    product     = models.ForeignKey('Product', verbose_name = '商品', related_name='details')                              # 商品外鍵
+    product     = models.ForeignKey('Product', verbose_name = '商品')                              # 商品外鍵
     color       = models.CharField('商品樣式', max_length = 10)                                     # 商品顏色
     size        = models.CharField('商品尺寸', max_length = 10)                                     # 商品尺寸
     price       = models.PositiveIntegerField('商品價格')                                           # 商品價格

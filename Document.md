@@ -14,6 +14,10 @@
 ### Static files
 
 	
+## Model.py
+
+* [ugettext() vs. ugettext_lazy()](http://stackoverflow.com/questions/4160770/when-should-i-use-ugettext-lazy)
+
 
 ## Template Tag
 Django 在 django.template 子模組中實作了一個 recursive descent parser。當你的 template 被讀入時，會經過這個 parser 處理成 AST，接著一個 renderer 負責將這個 AST 輸出成字串。[Github](https://github.com/uranusjr/django-tutorial-for-programmers/blob/master/29-template-tags-explained.md)
@@ -54,6 +58,10 @@ Defines a block that can be overridden by child templates. See [Template inherit
 
 ### include
 
+
+### dict
+
+* [How to Access dict elements in templates](http://stackoverflow.com/questions/1275735/how-to-access-dictionary-element-in-django-template)
 
 ## JavaScript
 ### getElement

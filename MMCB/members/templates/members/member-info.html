@@ -1,0 +1,23 @@
+{% extends 'members/base.html' %}
+{% block title %}{{ title }} | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{{ block.super }}
+    <div class="ui segments">
+        <div class="ui segment">
+            {% load crispy_forms_tags %}
+            {% crispy form %}
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js-foot %}
+{{ block.super }}
+<script type="text/javascript">
+    $('.ui.checkbox').checkbox('is checked')
+</script>
+{% endblock js-foot %}
+
+{% block footer %}
+{{ block.super }}
+{% endblock footer %}

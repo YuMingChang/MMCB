@@ -20,9 +20,10 @@ from django.contrib import admin
 from products import views
 
 urlpatterns = [
-    url(r'^$', views.store_list, name='home'),
-    url(r'^shopping-cart/', include('shopping.urls', namespace='cart')),
+    url(r'^$', views.store_list, name='store'),
+    url(r'^cart/', include('shopping.urls', namespace='cart')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^member/', include('members.urls', namespace='member')),
     url(r'^admin/', admin.site.urls),
     url(r'^posts/', include('posts.urls', namespace='posts')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

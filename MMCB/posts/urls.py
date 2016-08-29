@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^$', views.post_list, name='list'),                           # READ(Retreive)
     url(r'^create/$', views.post_create, name='create'),                # CREATE(Create Prodcut)
     url(r'^add_detail/$', views.post_add_detail, name='add_detail'),    # CREATE(Add Detail)
+    url(r'^(?P<id>\d+)/add_detail/$', views.post_add_detail, name='add_detail'),    # CREATE(Add Detail)
     url(r'^(?P<id>\d+)/edit/$', views.post_update, name='update'),      # UPDATE
     url(r'^(?P<id>\d+)/delete/$', views.post_delete, name='delete'),    # DELETE
     url(r'^meta/$', views.meta, name='meta'),

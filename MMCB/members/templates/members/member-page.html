@@ -1,0 +1,39 @@
+{% extends 'members/base.html' %}
+{% block title %}{{ title }} | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{{ block.super }}
+    {% if request.user.personalinfo_set.all.count == 0 %}
+    <div class="ui success large message">
+        <div class="header">使用者已註冊成功. </div>
+        <p>請點擊「資料編輯」新增內容</p>
+    </div>
+    {% else %}
+    <h3 class="ui top attached header">個人資料 (PersonalInfo)</h3>
+    <div class="ui attached segment">
+        <div class="ui middle aligned divided list">
+            <div class="item">
+                <div class="header">{{ request.user.personalinfo_set.all.0 }}</div>
+                <div class="ui list">
+                    <div class="item">User: {{ request.user.personalinfo_set.all.0.user }}</div>
+                    <div class="item">Name: {{ request.user.personalinfo_set.all.0.name }}</div>
+                    <div class="item">Sexual: {{ request.user.personalinfo_set.all.0.sexual }}</div>
+                    <div class="item">Birthday: {{ request.user.personalinfo_set.all.0.birthday }}</div>
+                    <div class="item">Phone: {{ request.user.personalinfo_set.all.0.phone }}</div>
+                    <div class="item">E-mail: {{ request.user.personalinfo_set.all.0.email }}</div>
+                    <div class="item">Bank_Account: {{ request.user.personalinfo_set.all.0.accounts }}</div>
+                    <div class="item">Money: {{ request.user.personalinfo_set.all.0.money }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock content %}
+
+{% block js-foot %}
+{{ block.super }}
+{% endblock js-foot %}
+
+{% block footer %}
+{{ block.super }}
+{% endblock footer %}

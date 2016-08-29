@@ -6,15 +6,14 @@
 {% block content %}
   {{ block.super }}
   <div class="ui clearing segment">
-      <h1 class="ui left floated header" id="tt"> {{ title }} </h1>
+      <h1 class="ui left floated header"> {{ title }} </h1>
       <h4 class="ui horizontal divider header"><i class="write icon"></i> Edit Product </h4>
-      <form class="form-horizontal" method='POST' action=''>
-          {% csrf_token %}
+      <form class="form-horizontal" method='POST' action=''>{% csrf_token %}
           <div class="form-group">
               <div class="ui horizontal segments">
                   <div class="ui green segment">
                       <label>新增商品目標：</label>
-                      <select class="form-control" name="optName" id="objSel">
+                      <select class="form-control" name="selOption" id="objSel">
                           <option disabled selected value> -- 請選擇 -- </option>
                           {% for name in object_list %}
                             <option value={{name.id}}>{{ name }}</option>
@@ -25,20 +24,20 @@
                       <label for="example-text-input" class="col-form-label" style="float:left;">新增內容方式：</label>
                       <div class="col-md-12">
                           <label class="radio-inline">
-                              <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck({{input_list}});" id="radioS1" value="S1" disabled>[顏色]－[尺寸]－[價錢]</label>
+                              <input class="radio" type="radio" name="selRadio" onclick="javascript:SelectCheck({{input_list}});" id="radioS1" value="S1" disabled>[顏色]－[尺寸]－[價錢]</label>
                           <label class="radio-inline">
-                              <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck({{input_list}});" id="radioS2" value="S2" disabled>[顏色 ＆ 價錢] － 尺寸</label>
+                              <input class="radio" type="radio" name="selRadio" onclick="javascript:SelectCheck({{input_list}});" id="radioS2" value="S2" disabled>[顏色 ＆ 價錢] － 尺寸</label>
                           <label class="radio-inline">
-                              <input class="radio" type="radio" name="optradio" onclick="javascript:SelectCheck({{input_list}});" id="radioS3" value="S3" disabled>[尺寸 ＆ 價錢] － 顏色</label>
+                              <input class="radio" type="radio" name="selRadio" onclick="javascript:SelectCheck({{input_list}});" id="radioS3" value="S3" disabled>[尺寸 ＆ 價錢] － 顏色</label>
                       </div>
                   </div>
                   <div class="ui center aligned yellow segment">
-                      <button type="button" class="circular ui massive yellow icon button" id="copyBtn" onclick="CopyInputValue($('input[name=optradio]:checked').val());" disabled>
+                      <button type="button" class="circular ui massive yellow icon button" id="copyBtn" onclick="CopyInputValue($('input[name=selRadio]:checked').val());" disabled>
                           <i class="icon copy"></i>
                       </button>
                   </div>
                   <div class="ui center aligned red segment">
-                      <button type="button" class="circular ui massive red icon button" id="eraseBtn" onclick="ClearAllValue($('input[name=optradio]:checked').val())" disabled>
+                      <button type="button" class="circular ui massive red icon button" id="eraseBtn" onclick="ClearAllValue($('input[name=selRadio]:checked').val())" disabled>
                           <i class="icon erase"></i>
                       </button>
                   </div>
@@ -154,13 +153,21 @@
 {% block js-foot %}
   {{ block.super }}
   <script type="text/javascript">
-      $("select").change(function(){
-          $("input[name$='optradio']").removeAttr("disabled");
+      var adr = location.pathname;
+      var patt = /\d+/g;
+      $("select[name$='selOption']").children().each(function(){
+            if($(this).val() == adr.match(patt)){
+              $(this).attr('selected', true);
+              $("input[name$='selRadio']").removeAttr("disabled");
+            }
+          })
+      $("select[name$='selOption']").change(function(){
+          $("input[name$='selRadio']").removeAttr("disabled");
       })
       $("input[type$='text']").keypress(function(){
           $("#copyBtn").removeAttr("disabled");
       })
-      $("input[name$='optradio']").change(function(){
+      $("input[name$='selRadio']").change(function(){
           $("#eraseBtn").removeAttr("disabled");
       })
 

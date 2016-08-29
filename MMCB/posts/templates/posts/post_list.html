@@ -1,21 +1,21 @@
 {% extends 'posts/base.html' %}
 {% block title %}
-  {{ title }} | {{ block.super }}
+    {{ title }} | {{ block.super }}
 {% endblock title %}
 
 {% block content %}
   {{ block.super }}
   <div class="ui clearing segment">
       <h1 class="ui left floated header"> {{ title }} </h1>
-      <button class="ui inverted right floated green button" onclick="javascript:location.href='add_detail';"><i class="add square icon"></i>新增內容</button>
-      <button class="ui inverted right floated red button" onclick="javascript:location.href='create';"><i class="plus icon"></i> 新增商品</button>
+      <a href="{% url 'posts:add_detail' %}"><button class="ui inverted right floated green button"><i class="add square icon"></i>新增內容</button></a>
+      <a href="{% url 'posts:create' %}"><button class="ui inverted right floated red button"><i class="plus icon"></i> 新增商品</button></a>
       <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
       <div class="ui massive selection animated list">
           {% for obj in object_list %}
           <div class="item">
               <img class="ui avatar image" src="{{MEDIA_URL}}/{{ obj.image }}">
               <div class="middle aligned content">
-                  <a class="header" href='/posts/{{obj.id}}/edit'>{{ obj.name }}
+                  <a class="header" href={% url 'posts:update' id=obj.id %}>{{ obj.name }}
                     【P{{ obj.id }}-{% with obj.details.all|length as count %}C{{count}}{% endwith %}】</a>
                   <small>{{obj.date}}</small>
               </div>

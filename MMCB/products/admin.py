@@ -7,8 +7,9 @@ from products.models import Product, Detail
 
 @admin.register(Detail)
 class DetailAdmin(admin.ModelAdmin):
+    raw_id_fields = ('product',)
     list_display = ['id', 'product', 'color', 'size', 'price']
-    list_display_links = ['product',]
+    # list_display_links = ['product',]
     search_fields = ['product__name',]
 class DetailInline(admin.TabularInline):
     model = Detail

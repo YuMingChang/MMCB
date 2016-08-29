@@ -10,7 +10,7 @@ def add(request):
     product = Detail.objects.get(id=request.GET.get('id'))
     quantity = request.GET.get('quantity');
     cart.add(product, quantity, price=product.price)
-    return redirect('home')
+    return redirect('store')
 
 
 def remove(request):

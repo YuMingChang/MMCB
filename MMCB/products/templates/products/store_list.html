@@ -1,126 +1,127 @@
 {% extends 'products/base.html' %}
-  {% block title %}MMCB商品列表 | {{ block.super }}
-{% endblock title %}
+    {% block title %}
+        MMCB商品列表 | {{ block.super }}
+    {% endblock title %}
 
-{% block content %}
-  {{ block.super }}
-  <!-- ##### Semantic-UI Cards #### -->
-  <div class="ui special cards">
-      <div class="ui four stackable cards">
+    {% block content %}
+        {{ block.super }}
+        <!-- ##### Semantic-UI Cards #### -->
+        <div class="ui special cards">
+            <div class="ui four stackable cards">
+                {% for obj in Product_ObjList %}
+                  {% if obj.is_display %}
+                    <div class="ui centered card">
+                        <div class="blurring dimmable image">
+                            <div class="ui inverted dimmer">
+                                <div class="content">
+                                    <div class="center">
+                                        <div class="ui inverted pink button" data-toggle="modal" data-target="#UMC_Modal{{obj.id}}">Add Cart</div>
+                                    </div>
+                                </div>
+                            </div><img src="{{MEDIA_URL}}/{{ obj.image }}">
+                            <!-- <div class="ui red ribbon label"><i class="thumbs outline up icon"></i>Hot</div> -->
+                        </div>
+                        <div class="content">
+                            <a class="header">{{ obj.name }}</a>
+                            <div class="meta">
+                                <span class="date">在 {{ obj.date }} 加入</span>
+                            </div>
+                            <div class="description">{{ obj.notes |linebreaks |truncatechars:100 }}</div>
+                        </div>
+                        <div class="extra content">
+                            <a><i class="users icon"></i> 成團數量：{{ obj.raiser }} </a>
+                        </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock content %}
+
+    {% block js-foot %}
+      {{block.super}}
+      <script type="text/javascript">
+          $('.special.cards .image').dimmer({
+              on: 'hover'
+          });
+
+          function addCart(objID){
+            var sel = document.getElementById(objID+'selection').value;
+            var qty = document.getElementById(objID+'quantity').value;
+            window.location= "/shopping-cart/add/?id="+sel+"&quantity="+qty;
+          }
+      </script>
+    {% endblock js-foot %}
+
+    {% block footer %}
+      <!-- ##### Add Cart Form #### -->
+      <form class="form-horizontal" role="form" method="post">
           {% for obj in Product_ObjList %}
-            {% if obj.is_display %}
-              <div class="ui centered card">
-                  <div class="blurring dimmable image">
-                      <div class="ui inverted dimmer">
-                          <div class="content">
-                              <div class="center">
-                                  <div class="ui inverted pink button" data-toggle="modal" data-target="#UMC_Modal{{obj.id}}">Add Cart</div>
-                              </div>
+              {% if obj.is_display %}
+              <!-- Modal -->
+              <div class="modal fade" id="UMC_Modal{{obj.id}}" role="dialog">
+                  <div class="modal-dialog ">
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title" value="objName">{{obj.name}}</h4>
                           </div>
-                      </div><img src="{{MEDIA_URL}}/{{ obj.image }}">
-                      <!-- <div class="ui red ribbon label"><i class="thumbs outline up icon"></i>Hot</div> -->
-                  </div>
-                  <div class="content">
-                      <a class="header">{{ obj.name }}</a>
-                      <div class="meta">
-                          <span class="date">在 {{ obj.date }} 加入</span>
+                          <div class="modal-body">
+                              {{ obj.notes | linebreaks }}
+                              <table class="table table-hover">
+                                  <thead>
+                                      <tr>
+                                          <th class="col-md-9">選擇(Selection)</th>
+                                          <th class="col-md-3">數量(Quantity)</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td class="col-md-9">
+                                            <!-- How to get value of text input field by JavaScript: http://stackoverflow.com/questions/11563638/javascript-how-to-get-value-of-text-input-field -->
+                                              <div class="form-group">
+                                                  <select class="form-control" id="{{obj.id}}selection" name="selection">
+                                                      {% for objD in obj.detail_set.all %}
+                                                          <option value="{{objD.id}}">{{objD}}</option>
+                                                      {% empty %}
+                                                          <option value=-1>Error</option>
+                                                      {% endfor %}
+                                                  </select>
+                                              </div>
+                                          </td>
+                                          <td class="col-md-3">
+                                              <div class="form-group">
+                                                  <select class="form-control" id="{{obj.id}}quantity" name="quantity">
+                                                      <option>1</option>
+                                                      <option>2</option>
+                                                      <option>3</option>
+                                                      <option>4</option>
+                                                      <option>5</option>
+                                                      <option>6</option>
+                                                      <option>7</option>
+                                                      <option>8</option>
+                                                      <option>9</option>
+                                                  </select>
+                                              </div>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                          <!-- Modal Footer -->
+                          <div class="modal-footer">
+                              <button type="button" class="ui button" data-dismiss="modal">
+                                  取消
+                              </button>
+                              <button type="button" class="positive ui button" onclick="addCart({{obj.id}})">
+                                  <i class="icon cart"></i> 加入購物車
+                              </button>
+                          </div>
                       </div>
-                      <div class="description">{{ obj.notes |linebreaks |truncatechars:100 }}</div>
-                  </div>
-                  <div class="extra content">
-                      <a><i class="users icon"></i> 成團數量：{{ obj.raiser }} </a>
                   </div>
               </div>
             {% endif %}
-          {% endfor %}
-      </div>
-  </div>
-{% endblock content %}
-
-{% block js-foot %}
-  {{block.super}}
-  <script type="text/javascript">
-      $('.special.cards .image').dimmer({
-          on: 'hover'
-      });
-
-      function addCart(objID){
-        var sel = document.getElementById(objID+'selection').value;
-        var qty = document.getElementById(objID+'quantity').value;
-        window.location= "/shopping-cart/add/?id="+sel+"&quantity="+qty;
-      }
-  </script>
-{% endblock js-foot %}
-
-{% block footer %}
-  <!-- ##### Add Cart Form #### -->
-  <form class="form-horizontal" role="form" method="post">
-      {% for obj in Product_ObjList %}
-        {% if obj.is_display %}
-        <!-- Modal -->
-        <div class="modal fade" id="UMC_Modal{{obj.id}}" role="dialog">
-            <div class="modal-dialog ">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" value="objName">{{obj.name}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        {{ obj.notes | linebreaks }}
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="col-md-9">選擇(Selection)</th>
-                                    <th class="col-md-3">數量(Quantity)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="col-md-9">
-                                      <!-- How to get value of text input field by JavaScript: http://stackoverflow.com/questions/11563638/javascript-how-to-get-value-of-text-input-field -->
-                                      <div class="form-group">
-                                        <select class="form-control" id="{{obj.id}}selection" name="selection">
-                                            {% for objD in obj.details.all %}
-                                              <option value="{{objD.id}}">{{objD}}</option>
-                                              {% empty %}
-                                              <option value=-1>Error</option>
-                                            {% endfor %}
-                                        </select>
-                                      </div>
-                                    </td>
-                                    <td class="col-md-3">
-                                      <div class="form-group">
-                                        <select class="form-control" id="{{obj.id}}quantity" name="quantity">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                            <option>6</option>
-                                            <option>7</option>
-                                            <option>8</option>
-                                            <option>9</option>
-                                        </select>
-                                      </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Modal Footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="ui button" data-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="button" class="positive ui button" onclick="addCart({{obj.id}})">
-                          <i class="icon cart"></i> 加入購物車
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-      {% endif %}
-    {% endfor %}
-  </form>
-{% endblock footer %}
+        {% endfor %}
+      </form>
+    {% endblock footer %}

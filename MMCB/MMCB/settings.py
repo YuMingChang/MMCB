@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 from django.core.urlresolvers import reverse_lazy
-LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGIN_REDIRECT_URL = reverse_lazy('store')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -59,6 +59,7 @@ LOCAL_APPS = [
     'base',
     'posts',
     'products',
+    'members',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CART_PRODUCT_MODEL = 'products.models.Detail'

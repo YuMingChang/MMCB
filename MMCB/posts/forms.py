@@ -30,7 +30,6 @@ class ProductForm(forms.ModelForm):
             self.helper.add_input(Submit('submit', submit_title))
         self.helper.add_input(Button('delete', '移除商品', css_class='btn btn-danger', onclick='javascript:ProductDelete();'))
 
-
 class DetailForm(forms.ModelForm):
     class Meta:
         model = Detail

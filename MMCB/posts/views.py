@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_http_methods
-from django.contrib.admin.views.decorators import staff_member_required
 
 from posts.forms import ProductForm, DetailForm, DetailFormSet
 from products.models import Product, Detail
@@ -15,7 +14,6 @@ def meta(request):
         html.append('<tr><td>{0}</td><td>{1}</td></tr>'.format(k, v))
     return HttpResponse('<table>{0}</table>'.format('\n'.join(html)))
 
-@staff_member_required
 def post_list(request):
     queryset = Product.objects.all()
     context = {
@@ -24,7 +22,6 @@ def post_list(request):
     }
     return render(request, 'posts/post_list.html', context)
 
-@staff_member_required
 def post_create(request):
     form = ProductForm(request.POST or None, request.FILES or None, submit_title='新增商品')
     if form.is_valid():
@@ -40,7 +37,6 @@ def post_create(request):
     }
     return render(request, 'posts/post_create.html', context)
 
-@staff_member_required
 def post_update(request, id=None):
     instance = get_object_or_404(Product, id=id)
     form = ProductForm(request.POST or None, request.FILES or None, instance=instance, submit_title='更新商品')
@@ -59,7 +55,6 @@ def post_update(request, id=None):
     }
     return render(request, 'posts/post_update.html', context)
 
-@staff_member_required
 def post_delete(request, id=None):
     instance = get_object_or_404(Product, id=id)
     instance.delete()
@@ -67,21 +62,21 @@ def post_delete(request, id=None):
     return redirect(instance.get_absolute_url())
 
 
-@staff_member_required
-def post_add_detail(request):
+def post_add_detail(request, id=None):
     queryset = Product.objects.all()
     errors = []
     context = {
         'title' : '新增商品內容',
         'object_list' : queryset,
+        'selID' : id,
         'errors' : errors,
     }
 
     # 求Django常用语法，接受get和post参数的方法: http://zhidao.baidu.com/question/554222227.html
     # [request.POST.get('sth') vs request.POST['sth'] - difference?](http://stackoverflow.com/questions/12518517/request-post-getsth-vs-request-poststh-difference)
     if request.POST:
-        section = request.POST.get('optradio')      # 從網頁回傳所選「新增商品內容格式」 (Radio Button)
-        selObj  = request.POST.get('optName')       # 從網頁回傳所選「新增商品目標的名稱」(Select List)
+        section = request.POST.get('selRadio')      # 從網頁回傳所選「新增商品內容格式」 (Radio Button)
+        selObj  = request.POST.get('selOption')       # 從網頁回傳所選「新增商品目標的名稱」(Select List)
         if section != None and selObj != None:      # Check section is a NoneType or not(RadioBox has been check or not.)
             color_list, size_list, price_list = ([] for i in range(3))      # Initializing Multiple Lists/Line
             color_list  = request.POST.getlist(section + 'color')
