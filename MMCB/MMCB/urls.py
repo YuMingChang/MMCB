@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^cart/', include('shopping.urls', namespace='cart')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^member/', include('members.urls', namespace='member')),
+    url(r'^checkout/', include('checkout.urls', namespace='checkout')),
     url(r'^admin/', admin.site.urls),
     url(r'^posts/', include('posts.urls', namespace='posts')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

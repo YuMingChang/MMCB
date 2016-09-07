@@ -9,29 +9,29 @@
   {% load carton_tags %}
   {% get_cart as cart %}
   <h1><i class="shop icon"></i> 購物車 </a></h1>
-  <table class="table table-inverse">
+  <table class="ui table">
     <thead>
       <tr>
-        <th class="col-md-1">移除</th>
-        <th class="col-md-6">商品名稱</th>
-        <th class="col-md-3">款式</th>
-        <th class="col-md-1">數量</th>
-        <th class="col-md-1">單價</th>
+        <th class="one wide">移除</th>
+        <th class="seven wide">商品名稱</th>
+        <th class="six wide">款式</th>
+        <th class="one wide">數量</th>
+        <th class="one wide">單價</th>
       </tr>
     </thead>
     <tbody>
       {% for item in cart.items %}
       <tr>
-        <td class="col-md-1">
-          <button class="circular negative ui icon button" onclick="delCart({{ item.product.id }})"><i class="minus icon"></i></button>
+        <td class="middle aligned">
+          <button class="circular ui basic negative icon button"><i class="minus icon" onclick="delCart({{ item.product.id }})"></i></button>
         </td>
-        <td class="col-md-6">
-              <img class="ui top aligned rounded tiny image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
-              <span value="P{{ item.product.product.id }}-D{{ item.product.id }}">　{{ item.product.product.name }}</span>
+        <td class="">
+          <img class="ui middle aligned rounded tiny image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
+          <span value="P{{ item.product.product.id }}-D{{ item.product.id }}">　{{ item.product.product.name }}</span>
         </td>
-        <td class="col-md-3">{{ item.product }}</td>
-        <td class="col-md-1">{{ item.quantity }}</td>
-        <td class="col-md-1 text-left">$ {{ item.product.price }}</td>
+        <td class="middle aligned">{{ item.product }}</td>
+        <td class="middle aligned">{{ item.quantity }}</td>
+        <td class="middle aligned">$ {{ item.product.price }}</td>
       </tr>
       {% endfor %}
 
@@ -40,7 +40,7 @@
   <hr>
   <div class="row">
     <div class="col-md-2 col-md-offset-5">
-      <button class="btn btn-success btn-lg btn-block"> 結帳 </button>
+      <a href="{% url 'checkout:page' %}"><button class="btn btn-success btn-lg btn-block"> 結帳 </button></a>
     </div>
   </div>
 </table>

@@ -3,6 +3,7 @@
 
 {% block content %}
 {{ block.super }}
+{% if request.user.is_superuser %}
       <div class="ui segments">
         <div class="ui segment">
             <div class="ui middle aligned divided list">
@@ -80,6 +81,7 @@
             </div>
         </div>
     </div>
+{% endif %}
 {% endblock content %}
 
 {% block js-foot %}

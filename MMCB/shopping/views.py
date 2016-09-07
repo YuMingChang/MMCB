@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from carton.cart import Cart
@@ -8,7 +7,7 @@ from products.models import Detail
 def add(request):
     cart = Cart(request.session)
     product = Detail.objects.get(id=request.GET.get('id'))
-    quantity = request.GET.get('quantity');
+    quantity = request.GET.get('quantity')
     cart.add(product, quantity, price=product.price)
     return redirect('store')
 
@@ -18,6 +17,7 @@ def remove(request):
     product = Detail.objects.get(id=request.GET.get('id'))
     cart.remove(product)
     return redirect('cart:shopping-cart-show')
+
 
 def clear(request):
     cart = Cart(request.session)

@@ -1,7 +1,8 @@
 from django import forms
 from members.models import PersonalInfo
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Button
+from crispy_forms.layout import Submit
+
 
 class PersonalInfoForm(forms.ModelForm):
     class Meta:
@@ -15,7 +16,8 @@ class PersonalInfoForm(forms.ModelForm):
             'email',
             'accounts',
         ]
-        widgets = {'user' : forms.HiddenInput()}
+        widgets = {'user': forms.HiddenInput()}
+
     def __init__(self, *args, **kwargs):
         super(PersonalInfoForm, self).__init__(*args, **kwargs)
 

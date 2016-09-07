@@ -6,13 +6,14 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Button
 from bootstrap3_datetime.widgets import DateTimePicker
 
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         # Test: It test for DatePicker but no idea how to work.
         date = forms.DateField(
-            widget=DateTimePicker(options={"format": "YYYY-MM-DD",
-                                       "pickTime": False}))
+            widget=DateTimePicker(
+                options={"format": "YYYY-MM-DD", "pickTime": False}))
         fields = [
             'name',
             'notes',
@@ -28,7 +29,10 @@ class ProductForm(forms.ModelForm):
         self.helper.form_tag = False
         if submit_title:
             self.helper.add_input(Submit('submit', submit_title))
-        self.helper.add_input(Button('delete', '移除商品', css_class='btn btn-danger', onclick='javascript:ProductDelete();'))
+        self.helper.add_input(Button(
+            'delete', '移除商品',
+            css_class='btn btn-danger', onclick='javascript:ProductDelete();'))
+
 
 class DetailForm(forms.ModelForm):
     class Meta:
@@ -41,8 +45,11 @@ class DetailForm(forms.ModelForm):
         ]
 
 BaseDetailFormSet = inlineformset_factory(
-    parent_model=Product, model=Detail, fields=('color', 'size', 'price'), extra=0,
+    parent_model=Product, model=Detail,
+    fields=('color', 'size', 'price'), extra=0,
 )
+
+
 class DetailFormSet(BaseDetailFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

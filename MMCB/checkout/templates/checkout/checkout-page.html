@@ -1,0 +1,60 @@
+{% extends 'checkout/base.html' %}
+{% block title %}{{ title }} | {{ block.super }}{% endblock title %}
+
+{% block content %}
+{{ block.super }}
+{% load carton_tags %}{% get_cart as cart %}
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th style="display:none">Image</th>
+                <th style="display:none">Description</th>
+                <th style="display:none">Quantity</th>
+                <th sㄟtyle="display:none">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart.items %}
+            <tr>
+                <td class="one wide disabled middle aligned">
+                <div class="disabled ui image">
+                    <div class="floating ui grey circular label">{{ item.quantity }}</div>
+                        <img class="ui tiny rounded image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
+                    </div>
+                </td>
+                <td class="ten wide middle aligned">{{ item.product.product.name }}{{ item.product }}</td>
+                <td class="zero wide middle aligned">{{ item.quantity }}</td>
+                <td class="one wide middle aligned">$ {{ item.product.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="ui hidden divider"></div>
+    <table class="ui very basic table">
+        <thead>
+            <tr>
+                <th><h3 class="ui header">總計</h3></th>
+                <th class="right aligned">
+                    <div class="ui statistic">
+                        <div class="value">{% load humanize %}
+                          $ {{ cart.total|intcomma:False }}
+                        </div>
+                        <div class="label">TWD </div>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+    </table>
+    <a class="item" href={% url 'cart:shopping-cart-show' %}><i class="cart icon"></i>返回購物車</a>
+    <div class="ui pink message">
+      </p>每週二，刷永豐信用卡單筆「滿1,000元送100元刷卡金」。單日限回饋100元，單平台限回饋300元，需登錄。了解更多。（活動期間：2016/7/1~9/30 ）*謹慎理財信用至上</p>
+    </div>
+{% endblock content %}
+
+{% block js-foot %}
+{{ block.super }}
+{% endblock js-foot %}
+
+{% block footer %}
+{{ block.super }}
+{% endblock footer %}

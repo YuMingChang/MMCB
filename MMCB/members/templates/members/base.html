@@ -5,10 +5,10 @@
             <a class="item" href={% url 'member:page' %}><h1 class="ui center aligned icon header"><i class="child icon"></i>個人資訊</h1></a>
             <a class="item" href={% url 'member:info' %}><h1 class="ui center aligned icon header"><i class="edit icon"></i>資料編輯</h1></a>
             <a class="item" href={% url 'member:info' %}><h1 class="ui center aligned icon header"><i class="circular hand peace icon"></i>Yabby</h1></a>
-            <a class="item" href={% url 'member:info' %}><h1 class="ui center aligned icon header"><i class="shopping bag icon"></i>已訂購物單</h1></a>
+            <a class="item" href={% url 'member:shoppinglist' %}><h1 class="ui center aligned icon header"><i class="shopping bag icon"></i>購物清單</h1></a>
             <a class="item" href={% url 'member:others' %}><h1 class="ui center aligned icon header"><i class="help icon"></i>其他</h1></a>
         </div>
-        <h4 class="ui horizontal divider header"><i class="icon"></i> {{ title }} </h4>
+        <h4 class="ui horizontal divider header"><i class="pointing right icon"></i> {{ title }} </h4>
         {% if errors %}
         <div class="col md 12">
             <div class="ui error message">
@@ -27,8 +27,8 @@
 {{ block.super }}
     <script type="text/javascript">
         $('.ui .item .header').on({
-            mouseenter: function() { $(this).addClass('blue'); },
-            mouseleave: function() { $(this).removeClass('blue'); }
+            mouseenter: function() { $(this).addClass('pink'); },
+            mouseleave: function() { $(this).removeClass('pink'); }
         });
     </script>
 {% endblock js-foot %}

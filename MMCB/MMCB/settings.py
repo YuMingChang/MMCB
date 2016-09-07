@@ -41,6 +41,7 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.humanize'
 ]
 
 THIRD_PARTY_APPS = [
@@ -60,6 +61,7 @@ LOCAL_APPS = [
     'posts',
     'products',
     'members',
+    'checkout',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CART_PRODUCT_MODEL = 'products.models.Detail'

@@ -8,6 +8,81 @@
             {% load crispy_forms_tags %}
             {% crispy form %}
         </div>
+        <!-- <div class="ui segment">
+            <div class="ui middle aligned divided list">
+                {% for person in person_list %}
+                <div class="item">
+                    <div class="header">{{ person.name }}</div>
+                    <div class="ui list">
+                        <div class="item">ID: {{ person.id }}</div>
+                        <div class="item">User: {{ person.user }}</div>
+                        <div class="item">Name: {{ person.name }}</div>
+                        <div class="item">Sexual: {{ person.sexual }}</div>
+                        <div class="item">Birthday: {{ person.birthday }}</div>
+                        <div class="item">Phone: {{ person.phone }}</div>
+                        <div class="item">E-mail: {{ person.email }}</div>
+                        <div class="item">Bank_Account: {{ person.accounts }}</div>
+                        <div class="item">Money: {{ person.money }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="ui segment">
+            <form action="" class="ui form" method='POST'>{% csrf_token %}
+                <h3 class="ui top attached header">個人資料 </h3>
+                <div class="ui attached segment">
+                  <div class="eight wide field">
+                      <lable for='name'>姓名</lable>
+                      <input type="text" id='name' name="personal[name]" placeholder="Full Name" value={{request.user.socialaccount_set.all.0.extra_data.name}}>
+                  </div>
+                  <div class="two fields">
+                      <div class="grouped fields">
+                          <label>性別</label>
+                          <div class="inline fields">
+                            <div class="field">
+                              <div class="ui radio checkbox">
+                                <input type="radio" name="personal[sexual]" id='female' checked="True" tabindex="0" class="hidden" value="F">
+                                <label for='female'>女性</label>
+                              </div>
+                            </div>
+                            <div class="field">
+                              <div class="ui radio checkbox">
+                                <input type="radio" name="personal[sexual]" id='male' tabindex="0" class="hidden" value="M">
+                                <label for='male'>男性</label>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="field">
+                          <label for='birthday'>生日</label>
+                          <input type="text" id='birthday' name="personal[birthday]" placeholder="Birthday" value="">
+                      </div>
+                  </div>
+                  <div class="two fields">
+                      <div class="field">
+                          <label for='phone'>手機</label>
+                          <input type="tel" id='phone' name="personal[phone]" maxlength="10" placeholder="Phone" value="">
+                      </div>
+                      <div class="field">
+                          <label for='mail'>信箱</label>
+                          <input type="email" id='mail' name="personal[email]" placeholder="E-mail" value={% if request.user.email %}{{ request.user.email }}{%else%}{{request.user.emailaddress_set.all.0.email}}{%endif%}>
+                      </div>
+                  </div>
+                  <div class="two fields">
+                      <div class="field">
+                          <label for='card_number'>匯款帳號後五碼</label>
+                          <input type="number" id='card_number' name="personal[accounts]" maxlength="5" placeholder="Card Number">
+                      </div>
+                      <div class="field">
+                          <label for='money'>儲值金</label>
+                          <input type="text" id='money' name="personal[money]" placeholder="Money">
+                      </div>
+                  </div>
+                </div>
+                <button class="ui button" type="submit">確定</button>
+            </form>
+        </div> -->
     </div>
 {% endblock content %}
 

@@ -14,10 +14,13 @@
 ### Static files
 
 	
-## Model.py
+## Models.py
 
 * [ugettext() vs. ugettext_lazy()](http://stackoverflow.com/questions/4160770/when-should-i-use-ugettext-lazy)
 
+## Views.py
+
+* [request.POST or None](http://stackoverflow.com/questions/35891598/handling-post-data-in-django-forms)
 
 ## Template Tag
 Django 在 django.template 子模組中實作了一個 recursive descent parser。當你的 template 被讀入時，會經過這個 parser 處理成 AST，接著一個 renderer 負責將這個 AST 輸出成字串。[Github](https://github.com/uranusjr/django-tutorial-for-programmers/blob/master/29-template-tags-explained.md)
@@ -134,3 +137,24 @@ Integrated set of Django applications addressing authentication, registration, a
 ### Questions
 * [What the difference between using Django redirect and HttpResponseRedirect?](http://stackoverflow.com/questions/13304149/what-the-difference-between-using-django-redirect-and-httpresponseredirect)
 * [request.POST.get('sth') vs request.POST['sth'] - difference?](http://stackoverflow.com/questions/12518517/request-post-getsth-vs-request-poststh-difference)
+
+### BUG TAG
+* when you reconstructed, **urlpatterns names** and **user's permission** need to care
+* the space on the menu bar need to fixed.
+* realize Bootstrap & SemanticUI **grid** difference.
+* unification of the **argument name** in views and templates.
+* please dont use button onclick redirect address, like (base.html):
+
+	DONT Use:
+	
+		<button class="btn" onclick="window.location='{% provider_login_url "facebook" %}'; "> 結帳 </button></a>
+		
+	Use:
+		
+		<a class="item" href="{% url 'store' %}"><i class="gift icon"></i> 商店 </a>
+		or
+		<a href="{% url 'checkout:page' %}"><button class="btn btn-success btn-lg btn-block"> 結帳 </button></a>
+		
+* frontend form page need to interactive with user, plase return feedback like: **errors or messages**.
+* 
+* member/models/field Name 'accounts' -> 'card_number' & 'sexual' -> 'gender' & ForeignKey -> OneToOneField
