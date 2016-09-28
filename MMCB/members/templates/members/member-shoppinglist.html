@@ -3,17 +3,42 @@
 
 {% block content %}
 {{ block.super }}
-<div class="ui segments">
-    <div class="ui segment">
-        {% load crispy_forms_tags %}
-        {% crispy form %}
-    </div>
+<div class="ui piled segment">
+  <table class="ui celled table">
+    <thead>
+      <tr class="center aligned">
+        <th>購買時間</th>
+        <th>商品名稱/商品編號</th>
+        <th>商品總額</th>
+        <th>商品總數量</th>
+        <th>訂單管理</th>
+        <th>訂單狀況</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in order_list %}
+      <tr class="center aligned" data-href="{% url 'member:shoppinglist' %}{{ order.number }}">
+        <td>{{ order.order_date }}</td>
+        <td><a href="{% url 'member:shoppinglist' %}{{order.number}}">{{ order.number }}</a></td>
+        <td>${{ order.total }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ order.get_status_display }}</td>
+        <td>{{ order.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock content %}
 
 {% block js-foot %}
 {{ block.super }}
 <script type="text/javascript">
+jQuery(document).ready(function($) {
+    $(".center.aligned").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
 </script>
 {% endblock js-foot %}
 

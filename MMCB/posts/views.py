@@ -5,6 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from posts.forms import ProductForm, DetailFormSet
 from products.models import Product, Detail
+from checkout.models import PurchaseOrder
 
 
 @staff_member_required
@@ -29,7 +30,7 @@ def post_page(request):
 def post_products_list(request):
     queryset = Product.objects.all()
     context = {
-        'title': '商品列表',
+        'title': '商品管理列表',
         'object_list': queryset,
     }
     return render(request, 'posts/post_products_list.html', context)
@@ -127,8 +128,11 @@ def post_detail_add(request, id=None):
                         all(len(x) == len(lst[2]) for x in lst)):
                     for i in range(len(price_list)):
                         Detail.objects.create(
-                            product=product, color=color_list[i],
-                            size=size_list[i], price=price_list[i])
+                            product=product,
+                            color=color_list[i],
+                            size=size_list[i],
+                            price=price_list[i]
+                        )
                     created_flag = True
 
                 # [Color - Pirce] * Size
@@ -136,8 +140,11 @@ def post_detail_add(request, id=None):
                     for i in range(len(size_list)):
                         for j in range(len(color_list)):
                             Detail.objects.create(
-                                product=product, color=color_list[j],
-                                size=size_list[i], price=price_list[j])
+                                product=product,
+                                color=color_list[j],
+                                size=size_list[i],
+                                price=price_list[j]
+                            )
                     created_flag = True
 
                 # [Size - Price] * Color
@@ -145,13 +152,15 @@ def post_detail_add(request, id=None):
                     for i in range(len(color_list)):
                         for j in range(len(size_list)):
                             Detail.objects.create(
-                                product=product, color=color_list[i],
-                                size=size_list[j], price=price_list[j])
+                                product=product,
+                                color=color_list[i],
+                                size=size_list[j],
+                                price=price_list[j]
+                            )
                     created_flag = True
                 if created_flag:
                     color_list, size_list, price_list = ('', '', '')
-                    return HttpResponseRedirect('/posts/{id}/edit'.format(
-                                                                    id=selObj))
+                    return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
                 else:
                     errors.append("資料輸入有所缺少，請重新確認！")
             except ValueError:
@@ -162,3 +171,57 @@ def post_detail_add(request, id=None):
 
 # What the difference between using Django redirect and HttpResponseRedirect?:
 # http://stackoverflow.com/questions/13304149/what-the-difference-between-using-django-redirect-and-httpresponseredirect
+
+
+@staff_member_required
+def post_orders_list(request):
+    queryset = PurchaseOrder.objects.all()
+    context = {
+        'title': '訂單管理列表',
+        'order_list': queryset,
+    }
+    return render(request, 'posts/post_orders_list.html', context)
+
+
+@staff_member_required
+def posts_order(request, number):
+    order = get_object_or_404(PurchaseOrder, number=number)
+    context = {
+        'title': '訂單',
+        'myorder': order,
+        'all_status': order.ORDER_STATUS,
+    }
+    return render(request, 'posts/post_order.html', context)
+
+
+@staff_member_required
+def posts_order_update(request, number, do):
+    errors = []
+    order = get_object_or_404(PurchaseOrder, number=number)
+    status = order.status
+    if do is not None:
+        # if status=='PA' and do in ['PC', 'WS', 'SN']:
+        #     order.status = do
+        # elif status=='PC' and do in ['UP', 'WS', 'SN']:
+        #     order.status = do
+        # elif status=='WS' and do in ['SN']:
+        #     order.status = do
+        # elif status=='AB':
+        # elif status=='CA':
+        # elif status=='AC':
+        # elif status=='AD':
+        if do in ['UP', 'PA', 'PC', 'WS', 'SN', 'AB', 'CA', 'AC', 'AD']:
+            order.status = do
+            order.save()
+        else:
+            errors.append('動作錯誤，請重新執行！')
+        # 'UnPaid': 'UP',
+        # 'Paid': 'PA',
+        # 'PaidComfirm': 'PC',
+        # 'WaitToSend': 'WS',
+        # 'Sent': 'SN',
+        # 'Abandon': 'AB',
+        # 'CancelAbandon': 'CA',
+        # 'AbandonComfirm': 'AC',
+        # 'Abandoned': 'AD',
+    return redirect('posts:order', number)

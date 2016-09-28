@@ -9,7 +9,7 @@ class PersonalInfo(models.Model):
         ('M', '男性'),
         ('F', '女性'),
     )
-    user = models.ForeignKey(allauth.app_settings.USER_MODEL)
+    user = models.OneToOneField(allauth.app_settings.USER_MODEL)
     name = models.CharField(_('姓名'), max_length=20)
     sexual = models.CharField(_('性別'), max_length=1, choices=SEXUAL)
     birthday = models.DateField(_('生日'), help_text=_('範例：XXXX/XX/XX'))

@@ -1,36 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
 {{ block.super }}
-        <div class="ui five item menu">
-            <a class="item" href={% url 'member:page' %}><h1 class="ui center aligned icon header"><i class="child icon"></i>個人資訊</h1></a>
-            <a class="item" href={% url 'member:info' %}><h1 class="ui center aligned icon header"><i class="edit icon"></i>資料編輯</h1></a>
-            <a class="item" href={% url 'member:info' %}><h1 class="ui center aligned icon header"><i class="circular hand peace icon"></i>Yabby</h1></a>
-            <a class="item" href={% url 'member:shoppinglist' %}><h1 class="ui center aligned icon header"><i class="shopping bag icon"></i>購物清單</h1></a>
-            <a class="item" href={% url 'member:others' %}><h1 class="ui center aligned icon header"><i class="help icon"></i>其他</h1></a>
-        </div>
-        <h4 class="ui horizontal divider header"><i class="pointing right icon"></i> {{ title }} </h4>
-        {% if errors %}
-        <div class="col md 12">
-            <div class="ui error message">
-                <div class="header">您提交的內容有一些錯誤 </div>
-                <ul class="list">
-                    {% for e in errors %}
-                      <li>{{e}}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        {% endif %}
+<div class="ui five item menu">
+    <a class="item" href={% url 'member:page' %}><h1 class="ui center aligned icon header"><i class="child icon"></i>個人資訊</h1></a>
+    <a class="item" href={% url 'member:info' %}><h1 class="ui center aligned icon header"><i class="edit icon"></i>資料編輯</h1></a>
+    <a class="item" href={% url 'member:info' %}><h1 class="ui center aligned icon header"><i class="circular hand peace icon"></i>Yabby</h1></a>
+    <a class="item" href={% url 'member:shoppinglist' %}><h1 class="ui center aligned icon header"><i class="shopping bag icon"></i>購物清單</h1></a>
+    <a class="item" href={% url 'member:others' %}><h1 class="ui center aligned icon header"><i class="help icon"></i>其他</h1></a>
+</div>
+<h4 class="ui horizontal divider header"><i class="pointing right icon"></i> {{ title }} </h4>
+{% if errors %}
+<div class="ui error message">
+  <i class="close icon"></i>
+  <div class="header">您提交的內容有一些錯誤 </div>
+  <ul class="list">
+    {% for error in errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 {% endblock content %}
 
 {% block js-foot %}
 {{ block.super }}
-    <script type="text/javascript">
-        $('.ui .item .header').on({
-            mouseenter: function() { $(this).addClass('pink'); },
-            mouseleave: function() { $(this).removeClass('pink'); }
-        });
-    </script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.ui .item .header').on({
+        mouseenter: function() { $(this).addClass('pink'); },
+        mouseleave: function() { $(this).removeClass('pink'); }
+    });
+});
+</script>
 {% endblock js-foot %}
 
 {% block footer %}

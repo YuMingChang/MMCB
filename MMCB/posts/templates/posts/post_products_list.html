@@ -6,7 +6,8 @@
 {% block content %}
   {{ block.super }}
   <div class="ui clearing segment">
-      <h1 class="ui left floated header"> {{ title }} </h1>
+      <h1 class="ui left floated header"> {{ title }} / </h1>
+      <a href="{% url 'posts:orderlist' %}"><button class="ui basic teal large button">訂單管理頁面</button></a>
       <a href="{% url 'posts:add_detail' %}"><button class="ui inverted right floated green button"><i class="add square icon"></i>新增內容</button></a>
       <a href="{% url 'posts:create' %}"><button class="ui inverted right floated red button"><i class="plus icon"></i> 新增商品</button></a>
       <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
@@ -15,7 +16,7 @@
           <div class="item">
               <img class="ui avatar image" src="{{MEDIA_URL}}/{{ obj.image }}">
               <div class="middle aligned content">
-                  <a class="header" href={% url 'posts:update' id=obj.id %}>{{ obj.name }}
+                  <a class="header" href="{% url 'posts:update' id=obj.id %}">{{ obj.name }}
                     【P{{ obj.id }}-{% with obj.details.all|length as count %}C{{count}}{% endwith %}】</a>
                   <small>{{obj.date}}</small>
               </div>

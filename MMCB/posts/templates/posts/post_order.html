@@ -1,0 +1,117 @@
+{% extends 'posts/base.html' %}
+{% block title %}
+    {{ title }} | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+{{ block.super }}
+<div class="ui segments">
+  <div class="ui horizontal segments">
+    <div class="ui center aligned segment">
+      <p>訂單編號：{{ myorder.number }}</p>
+    </div>
+    <div class="ui center aligned segment">
+      <p>買家：{{ myorder.shopper }}</p>
+    </div>
+    <div class="ui center aligned segment">
+      <p>購買日期：{{ myorder.order_date }}</p>
+    </div>
+  </div>
+  <div class="ui clearing segment">
+    <div class="ui right aligned grid">
+      <div class="left floated left aligned six wide column">
+        <a href="{% url 'posts:orderlist' %}"><button class="ui green basic button">返回訂單列表</button></a>
+      </div>
+      <div class="right floated right aligned six wide column">
+        <div class="ui selection dropdown">
+          <input type="hidden" name="status">
+          <i class="dropdown icon"></i>
+          <div class="default text">更改 訂單狀況</div>
+          <div class="menu">
+            {% for key, value in all_status %}
+            <div class="item" data-value="{{ key }}">{{ value }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui segment">
+    <table class="ui celled table" id='goodsTable'>
+      <thead>
+        <tr class="center aligned">
+          <th>商品名稱/商品編號</th>
+          <th>商品單價</th>
+          <th>商品數量/商品總價</th>
+          <th>運費</th>
+          <th>結帳總金額</th>
+          <th>訂單狀況</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for good in myorder.sold_goods.all %}
+        <tr class="center aligned">
+          <!-- <td class="left aligned">　{{ good.product }} ({{ good }})</td> -->
+          <td class="left aligned">
+            <a class="ui big image label">
+              <img src="{{MEDIA_URL}}/{{ good.product.image }}"> {{ good.product }}
+              <div class="detail">{{ good }}</div>
+            </a>
+          </td>
+          <td id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
+          <td name="tdQtySum">{{ myorder.order_notes_nonono  }}</td>
+          {% if forloop.first %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">{{ myorder.get_status_display }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="ui segment">
+  <h4 class="ui header">關於：</h4>
+    <p>運費：{{ myorder.freight }}</p>
+    <p>總額：{{ myorder.total }}</p>
+    <p>賣家的話：{{ myorder.notes }}</p>
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block js-foot %}
+{{ block.super }}
+<script type="text/javascript">
+
+$(document).ready(function(){
+  var j = "{{ myorder.order_notes }}";
+  var j = j.replace(/&#39;/g, "'");
+  var j = j.replace(/'/g, '"');
+  var qppJson = jQuery.parseJSON( j );
+  var priceNL = document.getElementsByName("tdPrice");
+  var qtysumNL = document.getElementsByName("tdQtySum");
+  for (i = 0; i <	priceNL.length; i++) {
+    for (j=0; j<qppJson.length; j++){
+      if (qppJson[j].product_pk == priceNL[i].id){
+        qtysumNL[i].innerHTML = qppJson[j].quantity + " / $" + qppJson[j].price*qppJson[j].quantity
+      }
+    }
+  }
+
+  $('.ui.dropdown').dropdown({
+    onChange: function(key, value){
+      if (confirm('您確定要把訂單狀態更改為「motion」嗎？'.replace('motion', value) )) { //.replace('motion', display)
+        window.location.href = "{% url 'posts:order_update' number=myorder.number do='dodo' %}".replace('dodo', key);
+      } else {
+        // Do nothing!
+      }
+    }
+  });
+});
+</script>
+{% endblock js-foot %}
+
+{% block footer %}
+{{ block.super }}
+{% endblock footer %}

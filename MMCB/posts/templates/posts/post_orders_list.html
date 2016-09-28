@@ -1,0 +1,83 @@
+{% extends 'posts/base.html' %}
+{% block title %}
+    {{ title }} | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+{{ block.super }}
+<div class="ui clearing segment">
+  <div class="ui right aligned grid">
+    <div class="left floated left aligned six wide column">
+      <h1 class="ui left floated header"> {{ title }} / </h1>
+      <a href="{% url 'posts:productlist' %}"><button class="ui basic teal large button">訂單管理頁面</button></a>
+    </div>
+    <div class="right floated right aligned six wide column">
+      <div class="ui right aligned category search">
+        <div class="ui icon input">
+          <input type="text" class="prompt" placeholder="Search User">
+          <i class="search icon"></i>
+        </div>
+        <div class="results"></div>
+      </div>
+    </div>
+  </div>
+  <h4 class="ui horizontal divider header"><i class="file text outline icon"></i> Order List </h4>
+  <div class="ui big relaxed divided list">
+  {% for order in order_list %}
+  <div class="item">
+    {% if order.status == 'UP' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large money middle aligned icon"></i>
+    {% elif order.status == 'PA' %}
+    <div class="right floated content">
+      <button class="ui orange basic button" onclick="yesorno({{ order.number }}, 'PC', '確認已付款')">確認已付款</button>
+      <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '確認已付款')">商品準備中</button>
+      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '確認已付款')">商品已寄出</button>
+    </div>
+    <i class="large alarm outline middle aligned icon"></i>
+    {% elif order.status == 'PC' %}
+    <div class="right floated content">
+      <button class="ui yellow basic button" onclick="yesorno({{ order.number }}, 'UP', '改為待付款狀態')">改為待付款狀態</button>
+      <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '確認已付款')">商品準備中</button>
+      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '確認已付款')">商品已寄出</button>
+    </div>
+    <i class="large checkmark middle aligned icon"></i>
+    {% elif order.status == 'WS' %}
+    <div class="right floated content">
+      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '確認已付款')">商品已寄出</button>
+    </div>
+    <i class="large archive middle aligned icon"></i>
+    {% elif order.status == 'SN' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large shipping middle aligned icon"></i>
+    {% elif order.status == 'AB' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large trash outline middle aligned icon"></i>
+    {% elif order.status == 'CA' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large reply middle aligned icon"></i>
+    {% elif order.status == 'AC' %}
+    <div class="right floated content">
+      <button class="ui red basic button" onclick="yesorno({{ order.number }}, 'AC', '確認放棄此訂單')">確認放棄此訂單</button>
+    </div>
+    <i class="large remove middle aligned icon"></i>
+    {% elif order.status == 'AD' %}<i class="large trash middle aligned icon"></i>
+    {% endif %}
+    <div class="content">
+      <a class="header" href="{% url 'posts:order' number=order.number %}">{{ order.shopper }} ({{ order.order_date }})</a>
+      <div class="description">{{ order.get_status_display }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+{% endblock content %}
+
+{% block js-foot %}
+{{ block.super }}
+<script type="text/javascript">
+function yesorno(number ,dowhat, display){
+  if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display) )) {
+    window.location.href = "{% url 'posts:order_update' number=666 do='dodo' %}".replace(666, number).replace('dodo', dowhat);
+  } else {
+    // Do nothing!
+  }
+};
+</script>
+{% endblock js-foot %}
+
+{% block footer %}
+{{ block.super }}
+{% endblock footer %}

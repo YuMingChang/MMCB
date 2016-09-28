@@ -7,18 +7,18 @@
     <table class="ui table">
         <thead>
             <tr>
-                <th style="display:none">Image</th>
-                <th style="display:none">Description</th>
-                <th style="display:none">Quantity</th>
-                <th sㄟtyle="display:none">Price</th>
+                <th id='Image'>圖片</th>
+                <th id='Description'>商品 - 規格</th>
+                <th id='Quantity'>數量</th>
+                <th id='Price'>金額</th>
             </tr>
         </thead>
         <tbody>
             {% for item in cart.items %}
             <tr>
-                <td class="one wide disabled middle aligned">
-                <div class="disabled ui image">
-                    <div class="floating ui grey circular label">{{ item.quantity }}</div>
+                <td class="one wide middle aligned">
+                    <div class="disabled ui image">
+                        <div class="floating ui grey circular label">{{ item.quantity }}</div>
                         <img class="ui tiny rounded image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
                     </div>
                 </td>
@@ -29,23 +29,59 @@
             {% endfor %}
         </tbody>
     </table>
-    <div class="ui hidden divider"></div>
-    <table class="ui very basic table">
+    <form class="form-horizontal" method='POST' action=''>{% csrf_token %}
+      <div class="ui hidden divider"></div>
+      <div class="ui right aligned grid">
+        <div class="left floated left aligned six wide column">
+          <div class="grouped fields">
+            <label for="delivery">選擇你的運送方式：</label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="delivery" value="7-11" data-value="{{ cart.total }}">
+                <label>7-11 取貨付款 $60元</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="delivery" value="postoffice" data-value="">
+                <label>郵寄 $80元</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="delivery" value="homedelivery" data-value="{{ cart.total }}">
+                <label>宅配 $120元</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="right floated left aligned ten wide column">
+          <div class="field">
+            <label for="comment">給買家的話（備註）:</label>
+            <textarea class="form-control" rows="5" name="shopper_notes"></textarea>
+          </div>
+        </div>
+      </div>
+      <table class="ui very basic table">
         <thead>
-            <tr>
-                <th><h3 class="ui header">總計</h3></th>
-                <th class="right aligned">
-                    <div class="ui statistic">
-                        <div class="value">{% load humanize %}
-                          $ {{ cart.total|intcomma:False }}
-                        </div>
-                        <div class="label">TWD </div>
-                    </div>
-                </th>
-            </tr>
+          <tr>
+            <th><h3 class="ui header">總計</h3></th>
+            <th class="right aligned">
+              <div class="ui statistic">
+                <div class="value" id="total">{% load humanize %}
+                  $ {{ cart.total|intcomma:False }}
+                </div>
+                <div class="label">TWD </div>
+              </div>
+            </th>
+          </tr>
         </thead>
-    </table>
-    <a class="item" href={% url 'cart:shopping-cart-show' %}><i class="cart icon"></i>返回購物車</a>
+      </table>
+      <div class="row">
+        <a href="{% url 'cart:shopping-cart-show' %}"><button type='button' class="ui inverted red huge button"> 返回購物車 </button></a>
+        <button type='submit' class="ui right floated inverted green huge button"><i class="checkmark icon"></i> 結帳 </button>
+      </div>
+    </form>
     <div class="ui pink message">
       </p>每週二，刷永豐信用卡單筆「滿1,000元送100元刷卡金」。單日限回饋100元，單平台限回饋300元，需登錄。了解更多。（活動期間：2016/7/1~9/30 ）*謹慎理財信用至上</p>
     </div>
@@ -53,6 +89,27 @@
 
 {% block js-foot %}
 {{ block.super }}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.ui.radio.checkbox').checkbox({
+    onChange: function(){
+      var all_cost = $("#total").text().replace('$', '').replace(',', '');
+      // var re = /^\D/g
+      if($(this).val()=='7-11'){
+        // total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        // alert((all_cost.replace(re, '')));
+        $("#total").text("$ " + (parseInt(all_cost)+60).toString());
+      }else if($(this).val()=='postoffice'){
+        $("#total").text("$ " + (parseInt(all_cost)+80).toString());
+      }else if($(this).val()=='homedelivery'){
+        $("#total").text("$ " + (parseInt(all_cost)+120).toString());
+      }else{
+        $("#total").text("ERROR!!");
+      }
+    }
+  });
+})
+</script>
 {% endblock js-foot %}
 
 {% block footer %}

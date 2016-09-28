@@ -84,7 +84,9 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'MMCB.middleware.MinifyHTMLMiddleware'
 ]
+COMPRESS_HTML = False
 
 ROOT_URLCONF = 'MMCB.urls'
 

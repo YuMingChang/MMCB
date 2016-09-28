@@ -10,7 +10,7 @@ class Product(models.Model):
     raiser = models.PositiveIntegerField('募集人數')
     date = models.DateField('刊登日期', default=datetime.date.today)
     image = models.ImageField('商品圖片', upload_to='ProductImages',
-                                                        null=True, blank=True)
+                              null=True, blank=True)
     is_display = models.BooleanField('展示與否', default=True)
 
     class Meta:
@@ -41,7 +41,6 @@ class Detail(models.Model):
         verbose_name = '內容'
         verbose_name_plural = '所有內容'
 
-    # __str__ on Python 3,	__unicode__ on Python 2
     def __str__(self):
         return self.color + " - " + self.size
     __repr__ = __str__

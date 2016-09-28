@@ -1,4 +1,9 @@
 from django.db import models
+from django.utils import timezone
+from django.core.validators import MinValueValidator
+from members.models import PersonalInfo
+from products.models import Detail
+
 
 # Create your models here.
 
@@ -24,3 +29,47 @@ from django.db import models
 # 賣家出貨資訊:
 # 出貨資料：出貨進度、預計出貨方式、預計出貨時間
 # 給買家的話
+
+
+class PurchaseOrder(models.Model):
+    STATUS = {
+        'UnPaid': 'UP',
+        'Paid': 'PA',
+        'PaidComfirm': 'PC',
+        'WaitToSend': 'WS',
+        'Sent': 'SN',
+        'Abandon': 'AB',
+        'CancelAbandon': 'CA',
+        'AbandonComfirm': 'AC',
+        'Abandoned': 'AD',
+    }
+    ORDER_STATUS = (
+        (STATUS['UnPaid'], '待付款/匯款'),
+        (STATUS['Paid'], '通知已付款'),
+        (STATUS['PaidComfirm'], '確認已付款'),
+        (STATUS['WaitToSend'], '商品準備中'),
+        (STATUS['Sent'], '商品已寄出'),
+        (STATUS['Abandon'], '放棄此訂單'),
+        (STATUS['CancelAbandon'], '取消放棄此訂單'),
+        (STATUS['AbandonComfirm'], '待賣家確認放棄'),
+        (STATUS['Abandoned'], '已放棄'),
+    )
+
+    number = models.DecimalField('訂單編號', max_digits=16, decimal_places=0,
+                                 validators=[MinValueValidator(0)])
+    shopper = models.ForeignKey(PersonalInfo, verbose_name='買家')
+    order_date = models.DateTimeField('訂購時間', default=timezone.now)
+    sold_goods = models.ManyToManyField(Detail, verbose_name='已買商品')
+    freight = models.PositiveIntegerField('運費')
+    total = models.PositiveIntegerField('總額')
+    notes = models.TextField('備註', max_length=200)
+    status = models.CharField(max_length=2, choices=ORDER_STATUS, default=STATUS['UnPaid'])
+    order_notes = models.TextField('訂單清單', default='')
+
+    class Meta:
+        verbose_name = '購物清單'
+        verbose_name_plural = '所有購物清單'
+        ordering = ['-order_date']
+
+    def get_sold_goods(self):
+        return "\n".join([str(good) for good in self.sold_goods.all()])

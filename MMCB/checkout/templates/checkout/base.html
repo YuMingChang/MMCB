@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}{{ block.super }}
 <div class="ui three steps">
-  <div class="step">
-    <i class="truck icon"></i>
+  <div class="step" id="cart_step">
+    <i class="shop icon"></i>
     <div class="content">
-      <div class="title">Shipping</div>
-      <div class="description">Choose your shipping options</div>
+      <div class="title">購物車</div>
+      <div class="description">MyCart</div>
     </div>
   </div>
-  <div class="active step">
+  <div class="active step" id="ordercomfirm_step">
     <i class="payment icon"></i>
     <div class="content">
-      <div class="title">Billing</div>
-      <div class="description">Enter billing information</div>
+      <div class="title">訂單確認</div>
+      <div class="description">Confirm Order</div>
     </div>
   </div>
-  <div class="disabled step">
+  <div class="disabled step" id="orderinfo_step">
     <i class="info icon"></i>
     <div class="content">
-      <div class="title">Confirm Order</div>
+      <div class="title">訂單資訊</div>
+      <div class="description">MyOrder</div>
     </div>
   </div>
 </div>
@@ -26,8 +27,6 @@
 
 {% block js-foot %}
 {{ block.super }}
-    <script type="text/javascript">
-    </script>
 {% endblock js-foot %}
 
 {% block footer %}

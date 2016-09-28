@@ -7,8 +7,7 @@ urlpatterns = [
     url(r'^$', views.post_page, name='page'),
     url(r'^products/', include([
         # READ(Retreive)
-        url(r'^$', views.post_products_list, name='list'),
-
+        url(r'^$', views.post_products_list, name='productlist'),
         # CREATE(Prodcut)
         url(r'^create/$', views.post_product_add, name='create'),
 
@@ -30,6 +29,15 @@ urlpatterns = [
         # UPDATE
         # DELETE
     ], namespace='checkouts')),
+    url(r'^orders/', include([
+        # READ(Retreive)
+        url(r'^$', views.post_orders_list, name='orderlist'),
+        url(r'^(?P<number>\d+)/$', views.posts_order, name='order'),
+        # CREATE(Prodcut)
+        # UPDATE
+        url(r'^(?P<number>\d+)/(?P<do>.+)/$', views.posts_order_update, name='order_update'),
+        # DELETE
+    ])),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # 以下適用於網頁讀取"settings.py"中的 MEDIA_URL 與 MEDIA_ROOT 所用
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
