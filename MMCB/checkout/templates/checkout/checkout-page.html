@@ -4,87 +4,89 @@
 {% block content %}
 {{ block.super }}
 {% load carton_tags %}{% get_cart as cart %}
-    <table class="ui table">
-        <thead>
-            <tr>
-                <th id='Image'>圖片</th>
-                <th id='Description'>商品 - 規格</th>
-                <th id='Quantity'>數量</th>
-                <th id='Price'>金額</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart.items %}
-            <tr>
-                <td class="one wide middle aligned">
-                    <div class="disabled ui image">
-                        <div class="floating ui grey circular label">{{ item.quantity }}</div>
-                        <img class="ui tiny rounded image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
-                    </div>
-                </td>
-                <td class="ten wide middle aligned">{{ item.product.product.name }}{{ item.product }}</td>
-                <td class="zero wide middle aligned">{{ item.quantity }}</td>
-                <td class="one wide middle aligned">$ {{ item.product.price }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <form class="form-horizontal" method='POST' action=''>{% csrf_token %}
-      <div class="ui hidden divider"></div>
-      <div class="ui right aligned grid">
-        <div class="left floated left aligned six wide column">
-          <div class="grouped fields">
-            <label for="delivery">選擇你的運送方式：</label>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="delivery" value="7-11" data-value="{{ cart.total }}">
-                <label>7-11 取貨付款 $60元</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="delivery" value="postoffice" data-value="">
-                <label>郵寄 $80元</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="delivery" value="homedelivery" data-value="{{ cart.total }}">
-                <label>宅配 $120元</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="right floated left aligned ten wide column">
-          <div class="field">
-            <label for="comment">給買家的話（備註）:</label>
-            <textarea class="form-control" rows="5" name="shopper_notes"></textarea>
-          </div>
-        </div>
-      </div>
-      <table class="ui very basic table">
-        <thead>
-          <tr>
-            <th><h3 class="ui header">總計</h3></th>
-            <th class="right aligned">
-              <div class="ui statistic">
-                <div class="value" id="total">{% load humanize %}
-                  $ {{ cart.total|intcomma:False }}
+<button type="button" name="button" onclick="openSevenMap('http://127.0.0.1:8000/checkout/')"></button>
+<table class="ui table">
+    <thead>
+        <tr>
+            <th id='Image'>圖片</th>
+            <th id='Description'>商品 - 規格</th>
+            <th id='Quantity'>數量</th>
+            <th id='Price'>金額</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart.items %}
+        <tr>
+            <td class="one wide middle aligned">
+                <div class="disabled ui image">
+                    <div class="floating ui grey circular label">{{ item.quantity }}</div>
+                    <img class="ui tiny rounded image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
                 </div>
-                <div class="label">TWD </div>
-              </div>
-            </th>
-          </tr>
-        </thead>
-      </table>
-      <div class="row">
-        <a href="{% url 'cart:shopping-cart-show' %}"><button type='button' class="ui inverted red huge button"> 返回購物車 </button></a>
-        <button type='submit' class="ui right floated inverted green huge button"><i class="checkmark icon"></i> 結帳 </button>
+            </td>
+            <td class="ten wide middle aligned">{{ item.product.product.name }}{{ item.product }}</td>
+            <td class="zero wide middle aligned">{{ item.quantity }}</td>
+            <td class="one wide middle aligned">$ {{ item.product.price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form class="ui form" method='POST' action='' id="myform">{% csrf_token %}
+  <div class="ui hidden divider"></div>
+  <div class="ui right aligned grid">
+    <div class="left floated left aligned six wide column">
+      <div class="grouped fields">
+        <label for="delivery">選擇你的運送方式：</label>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="delivery" value="7-11" onclick="CostTotal(100);">
+            <label>7-11 取貨付款 $60元</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="delivery" value="postoffice" onclick="CostTotal({{ cart.total }});">
+            <label>郵寄 $80元</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="delivery" value="homedelivery" onclick="CostTotal(100);">
+            <label>宅配 $120元</label>
+          </div>
+        </div>
       </div>
-    </form>
-    <div class="ui pink message">
-      </p>每週二，刷永豐信用卡單筆「滿1,000元送100元刷卡金」。單日限回饋100元，單平台限回饋300元，需登錄。了解更多。（活動期間：2016/7/1~9/30 ）*謹慎理財信用至上</p>
     </div>
+    <div class="right floated left aligned ten wide column">
+      <div class="field">
+        <label for="comment">給買家的話（備註）:</label>
+        <textarea class="form-control" rows="5" name="shopper_notes"></textarea>
+      </div>
+    </div>
+  </div>
+  <table class="ui very basic table">
+    <thead>
+      <tr>
+        <th><h3 class="ui header">總計</h3></th>
+        <th class="right aligned">
+          <div class="ui statistic">
+            <div class="value" id="total">{% load humanize %}
+              $ {{ cart.total|intcomma:False }}
+            </div>
+            <div class="label">TWD </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+  </table>
+  <div class="row">
+    <a href="{% url 'cart:shopping-cart-show' %}"><button type='button' class="ui inverted red huge button"> 返回購物車 </button></a>
+    <button type='submit' class="ui right floated inverted green huge button"><i class="checkmark icon"></i> 結帳 </button>
+  </div>
+  <div class="ui error message"></div>
+</form>
+<div class="ui pink message">
+  </p>每週二，刷永豐信用卡單筆「滿1,000元送100元刷卡金」。單日限回饋100元，單平台限回饋300元，需登錄。了解更多。（活動期間：2016/7/1~9/30 ）*謹慎理財信用至上</p>
+</div>
 {% endblock content %}
 
 {% block js-foot %}
@@ -93,21 +95,43 @@
 $(document).ready(function(){
   $('.ui.radio.checkbox').checkbox({
     onChange: function(){
-      var all_cost = $("#total").text().replace('$', '').replace(',', '');
-      // var re = /^\D/g
+      var all_cost = "{{ cost_total }}";
       if($(this).val()=='7-11'){
-        // total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        // alert((all_cost.replace(re, '')));
-        $("#total").text("$ " + (parseInt(all_cost)+60).toString());
+        all_cost = parseInt(all_cost) + 60;
       }else if($(this).val()=='postoffice'){
-        $("#total").text("$ " + (parseInt(all_cost)+80).toString());
+        all_cost = parseInt(all_cost) + 80;
       }else if($(this).val()=='homedelivery'){
-        $("#total").text("$ " + (parseInt(all_cost)+120).toString());
+        all_cost = parseInt(all_cost) + 120;
       }else{
         $("#total").text("ERROR!!");
+        return false;
+      }
+      $("#total").text("$ " + all_cost.toLocaleString());
+    }
+  });
+  $('.ui.form')
+  .form({
+    fields: {
+      delivery: {
+        identifier: 'delivery',
+        rules: [
+          {
+            type   : 'checked',
+            prompt : '請選擇您的運送方式'
+          }
+        ]
       }
     }
   });
+
+  var sevenWindow = null;
+  function openSevenMap(host) {
+    if (sevenWindow) {
+      sevenWindow.close();
+    }
+    document.domain = 'ruten.com.tw';
+    sevenWindow = window.open(host + "/sevenmap/ecmap.php?fn=returnSevenStore", "_blank", "width=1002px, height=589px, directories=no, menubar=no, toolbar=no, resizable=no");
+  }
 })
 </script>
 {% endblock js-foot %}

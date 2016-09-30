@@ -71,19 +71,50 @@
     </table>
   </div>
   <div class="ui segment">
-  <h4 class="ui header">關於：</h4>
-    <p>運費：{{ myorder.freight }}</p>
-    <p>總額：{{ myorder.total }}</p>
-    <p>賣家的話：{{ myorder.notes }}</p>
+    <table class="ui compact celled definition table">
+      <thead class="full-width">
+        <tr>
+          <th colspan=2>買家資料</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="four wide">姓名（收件人）</td>
+          <td>{{ buyer.name }}</td>
+        </tr>
+        <tr>
+          <td>性別</td>
+          <td>{{ buyer.get_sexual_display }}</td>
+        </tr>
+        <tr>
+          <td>生日</td>
+          <td>{{ buyer.birthday }}</td>
+        </tr>
+        <tr>
+          <td>電話</td>
+          <td>{{ buyer.phone }}</td>
+        </tr>
+        <tr>
+          <td>住址</td>
+          <td>{{ buyer.address }}</td>
+        </tr>
+        <tr>
+          <td>信箱</td>
+          <td>{{ buyer.email }}</td>
+        </tr>
+        <tr>
+          <td>銀行帳號後五碼</td>
+          <td>{{ buyer.accounts }}</td>
+        </tr>
+      </tbody>
+    </div>
   </div>
-
 </div>
 {% endblock content %}
 
 {% block js-foot %}
 {{ block.super }}
 <script type="text/javascript">
-
 $(document).ready(function(){
   var j = "{{ myorder.order_notes }}";
   var j = j.replace(/&#39;/g, "'");

@@ -1,10 +1,11 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
-
 from posts.forms import ProductForm, DetailFormSet
 from products.models import Product, Detail
+from members.models import PersonalInfo
 from checkout.models import PurchaseOrder
 
 
@@ -175,10 +176,22 @@ def post_detail_add(request, id=None):
 
 @staff_member_required
 def post_orders_list(request):
+    errors = []
     queryset = PurchaseOrder.objects.all()
+    if request.method == 'GET' and 'search_name' in request.GET:
+        try:
+            search_name = request.GET['search_name']
+            personal = PersonalInfo.objects.filter(name__icontains=search_name)
+            queryset = PurchaseOrder.objects.filter(shopper=personal)
+            if personal.exists() is False or queryset.exists() is None:
+                errors.append('搜尋不到資料，請重新嘗試！')
+                queryset = PurchaseOrder.objects.all()
+        except:
+            pass
     context = {
         'title': '訂單管理列表',
         'order_list': queryset,
+        'errors': errors,
     }
     return render(request, 'posts/post_orders_list.html', context)
 
@@ -186,9 +199,11 @@ def post_orders_list(request):
 @staff_member_required
 def posts_order(request, number):
     order = get_object_or_404(PurchaseOrder, number=number)
+    buyer = get_object_or_404(PersonalInfo, id=order.shopper.id)
     context = {
         'title': '訂單',
         'myorder': order,
+        'buyer': buyer,
         'all_status': order.ORDER_STATUS,
     }
     return render(request, 'posts/post_order.html', context)
@@ -196,32 +211,9 @@ def posts_order(request, number):
 
 @staff_member_required
 def posts_order_update(request, number, do):
-    errors = []
     order = get_object_or_404(PurchaseOrder, number=number)
-    status = order.status
     if do is not None:
-        # if status=='PA' and do in ['PC', 'WS', 'SN']:
-        #     order.status = do
-        # elif status=='PC' and do in ['UP', 'WS', 'SN']:
-        #     order.status = do
-        # elif status=='WS' and do in ['SN']:
-        #     order.status = do
-        # elif status=='AB':
-        # elif status=='CA':
-        # elif status=='AC':
-        # elif status=='AD':
         if do in ['UP', 'PA', 'PC', 'WS', 'SN', 'AB', 'CA', 'AC', 'AD']:
             order.status = do
             order.save()
-        else:
-            errors.append('動作錯誤，請重新執行！')
-        # 'UnPaid': 'UP',
-        # 'Paid': 'PA',
-        # 'PaidComfirm': 'PC',
-        # 'WaitToSend': 'WS',
-        # 'Sent': 'SN',
-        # 'Abandon': 'AB',
-        # 'CancelAbandon': 'CA',
-        # 'AbandonComfirm': 'AC',
-        # 'Abandoned': 'AD',
-    return redirect('posts:order', number)
+    return redirect(reverse('posts:order', kwargs={'number': number}))

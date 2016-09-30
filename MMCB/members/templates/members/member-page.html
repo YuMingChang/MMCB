@@ -12,16 +12,12 @@
     <table class="ui compact celled definition table">
       <thead class="full-width">
         <tr>
-          <th colspan=2>個人資料 (PersonalInfo){{request.user.id}}</th>
+          <th colspan=2>個人資料 (Personal Information)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="four wide">使用者</td>
-          <td>{{ request.user.personalinfo.user }}</td>
-        </tr>
-        <tr>
-          <td>姓名</td>
+          <td class="four wide">姓名（收件人）</td>
           <td>{{ request.user.personalinfo.name }}</td>
         </tr>
         <tr>
@@ -37,6 +33,10 @@
           <td>{{ request.user.personalinfo.phone }}</td>
         </tr>
         <tr>
+          <td>住址</td>
+          <td>{{ request.user.personalinfo.address }}</td>
+        </tr>
+        <tr>
           <td>信箱</td>
           <td>{{ request.user.personalinfo.email }}</td>
         </tr>
@@ -49,6 +49,7 @@
           <td>{{ request.user.personalinfo.money }}</td>
         </tr> -->
       </tbody>
+    </table>
     </div>
     {% endif %}
 {% endblock content %}

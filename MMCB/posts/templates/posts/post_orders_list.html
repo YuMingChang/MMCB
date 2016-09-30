@@ -14,8 +14,13 @@
     <div class="right floated right aligned six wide column">
       <div class="ui right aligned category search">
         <div class="ui icon input">
-          <input type="text" class="prompt" placeholder="Search User">
-          <i class="search icon"></i>
+          <form class="" action="" method="get">
+            <div class="ui icon input">
+              <input class="prompt" type="text" name='search_name' placeholder="Search buyer">
+              <i class="search icon"></i>
+            </div>
+            <a href="{% url 'posts:orderlist' %}"><i class="icon remove"></i></a>
+          </form>
         </div>
         <div class="results"></div>
       </div>
@@ -25,32 +30,32 @@
   <div class="ui big relaxed divided list">
   {% for order in order_list %}
   <div class="item">
-    {% if order.status == 'UP' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large money middle aligned icon"></i>
+    {% if order.status == 'UP' %}<!-- <div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div> --><i class="large money middle aligned icon"></i>
     {% elif order.status == 'PA' %}
     <div class="right floated content">
       <button class="ui orange basic button" onclick="yesorno({{ order.number }}, 'PC', '確認已付款')">確認已付款</button>
-      <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '確認已付款')">商品準備中</button>
-      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '確認已付款')">商品已寄出</button>
+      <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '商品準備中')">商品準備中</button>
+      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '商品已寄出')">商品已寄出</button>
     </div>
     <i class="large alarm outline middle aligned icon"></i>
     {% elif order.status == 'PC' %}
     <div class="right floated content">
       <button class="ui yellow basic button" onclick="yesorno({{ order.number }}, 'UP', '改為待付款狀態')">改為待付款狀態</button>
-      <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '確認已付款')">商品準備中</button>
-      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '確認已付款')">商品已寄出</button>
+      <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '商品準備中')">商品準備中</button>
+      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '商品已寄出')">商品已寄出</button>
     </div>
     <i class="large checkmark middle aligned icon"></i>
     {% elif order.status == 'WS' %}
     <div class="right floated content">
-      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '確認已付款')">商品已寄出</button>
+      <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '商品已寄出')">商品已寄出</button>
     </div>
     <i class="large archive middle aligned icon"></i>
-    {% elif order.status == 'SN' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large shipping middle aligned icon"></i>
-    {% elif order.status == 'AB' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large trash outline middle aligned icon"></i>
-    {% elif order.status == 'CA' %}<div class="right floated content">（此為訂單狀態）由買家發出，賣家無此狀態</div><i class="large reply middle aligned icon"></i>
+    {% elif order.status == 'SN' %}<i class="large shipping middle aligned icon"></i>
+    {% elif order.status == 'AB' %}<i class="large trash outline middle aligned icon"></i>
+    {% elif order.status == 'CA' %}<i class="large reply middle aligned icon"></i>
     {% elif order.status == 'AC' %}
     <div class="right floated content">
-      <button class="ui red basic button" onclick="yesorno({{ order.number }}, 'AC', '確認放棄此訂單')">確認放棄此訂單</button>
+      <button class="ui red basic button" onclick="yesorno({{ order.number }}, 'AD', '確認放棄此訂單')">確認放棄此訂單</button>
     </div>
     <i class="large remove middle aligned icon"></i>
     {% elif order.status == 'AD' %}<i class="large trash middle aligned icon"></i>
@@ -75,6 +80,19 @@ function yesorno(number ,dowhat, display){
     // Do nothing!
   }
 };
+// jQuery(document).ready( function(){
+//   var currentURL = window.location.href;
+//   var searchURL = currentURL.substring(0, 35)
+//   // initializes with default endpoint /search/{query}
+//   $('.ui.search')
+//     .search({
+//       apiSettings: {
+//         url: searchURL + '?search_name={search_name}'
+//       },
+//       type: 'category'
+//     })
+//   ;
+// })
 </script>
 {% endblock js-foot %}
 

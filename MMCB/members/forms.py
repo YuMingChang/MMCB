@@ -1,7 +1,8 @@
 from django import forms
 from members.models import PersonalInfo
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Submit, Fieldset
+from crispy_forms.bootstrap import StrictButton
 
 
 class PersonalInfoForm(forms.ModelForm):
@@ -14,6 +15,7 @@ class PersonalInfoForm(forms.ModelForm):
             'birthday',
             'phone',
             'email',
+            'address',
             'accounts',
         ]
         widgets = {'user': forms.HiddenInput()}
@@ -24,6 +26,5 @@ class PersonalInfoForm(forms.ModelForm):
         # If you pass FormHelper constructor a form instance
         # It builds a default layout with all its fields
         self.helper = FormHelper(self)
-
         # You can dynamically adjust your layout
         self.helper.layout.append(Submit('save', '確定'))

@@ -77,6 +77,17 @@ The window.location object can be used to get the current page address (URL) and
 
 `Reference:`[w3schools Window Location](http://www.w3schools.com/js/js_window_location.asp)
 
+### Django TemplateTag Variables in JS
+The {{variable}} is substituted directly into the HTML. Do a view source; it isn't a "variable" or anything like it. It's just rendered text.
+
+Having said that, you can put this kind of substitution into your JavaScript.
+
+	<script type="text/javascript"> 
+	   var a = "{{someDjangoVariable}}";
+	</script>
+
+[Django Template Variables and Javascript](http://stackoverflow.com/questions/298772/django-template-variables-and-javascript)
+
 ## jQuery
 jQuery 是一套物件導向式簡潔輕量級的 **JavaScript Library**。透過 jQuery 你可以用最精簡少量的程式碼來輕鬆達到跨瀏覽器 DOM 操作、事件處理、設計頁面元素動態效果、AJAX 互動等。
 
@@ -107,6 +118,7 @@ Integrated set of Django applications addressing authentication, registration, a
 
 [Django-allauth Facebook error](https://stackoverflow.com/questions/37876656/django-allauth-facebook-error)
 [Create third party Facebook islogin in Django](https://www.youtube.com/watch?v=1yqKNQ3ogKQ)
+[How to clean up Django login message from framework](http://stackoverflow.com/questions/25744425/how-to-clean-up-django-login-message-from-framework)
 
 ## Recommended Reading
 ### Python3 Learning

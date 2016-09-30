@@ -10,7 +10,7 @@ class PersonalInfo(models.Model):
         ('F', '女性'),
     )
     user = models.OneToOneField(allauth.app_settings.USER_MODEL)
-    name = models.CharField(_('姓名'), max_length=20)
+    name = models.CharField(_('姓名（收件人）'), max_length=20)
     sexual = models.CharField(_('性別'), max_length=1, choices=SEXUAL)
     birthday = models.DateField(_('生日'), help_text=_('範例：XXXX/XX/XX'))
     phone = models.CharField(
@@ -18,6 +18,7 @@ class PersonalInfo(models.Model):
         validators=[validators.RegexValidator(
                             r'^09\d{8}$', _('請輸入正確的手機號碼'), 'invalid')])
     email = models.EmailField()
+    address = models.CharField('住址', max_length=150)
     # called 'card_number' when this reconstructure.
     accounts = models.CharField(
         _('匯款帳號後五碼'), max_length=5, help_text=_('範例：XXXXX'),

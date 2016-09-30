@@ -23,20 +23,6 @@
     <div class="ui floated buttons">
       <a href="{% url 'member:shoppinglist' %}"><button class="ui green basic button">我的購物清單</button></a>
     </div>
-    <div class="ui right floated buttons">
-      {% if myorder.status == 'UP' %}
-      <button class="ui blue basic button">通知已付款</button>
-      <div class="or"></div>
-      <button class="ui red basic button">放棄此訂單</button>
-      {% elif myorder.status == 'PA' %}
-      {% elif myorder.status == 'PC' and user.is_staf %}
-      {% elif myorder.status == 'WS' %}
-      {% elif myorder.status == 'SN' %}
-      {% elif myorder.status == 'AB' %}
-      {% elif myorder.status == 'AC' %}
-      {% elif myorder.status == 'AD' %}
-      {% endif %}
-    </div>
   </div>
   <div class="ui segment">
     <table class="ui celled table" id='goodsTable'>
@@ -100,13 +86,6 @@
       </ol>
     </div>
   </div>
-  <div class="ui piled segment">
-  <h4 class="ui header">關於：</h4>
-    <p>運費：{{ myorder.freight }}</p>
-    <p>總額：{{ myorder.total }}</p>
-    <p>賣家的話：{{ myorder.notes }}</p>
-  </div>
-
 </div>
 
 {% endblock content %}

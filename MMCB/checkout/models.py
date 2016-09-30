@@ -62,7 +62,7 @@ class PurchaseOrder(models.Model):
     sold_goods = models.ManyToManyField(Detail, verbose_name='已買商品')
     freight = models.PositiveIntegerField('運費')
     total = models.PositiveIntegerField('總額')
-    notes = models.TextField('備註', max_length=200)
+    notes = models.TextField('備註', max_length=200, default='')
     status = models.CharField(max_length=2, choices=ORDER_STATUS, default=STATUS['UnPaid'])
     order_notes = models.TextField('訂單清單', default='')
 

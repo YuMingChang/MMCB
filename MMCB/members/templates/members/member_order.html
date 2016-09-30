@@ -45,7 +45,7 @@
           <th>商品數量/商品總價</th>
           <th>運費</th>
           <th>結帳總金額</th>
-          <th>訂單狀況</th>
+          <th colspan="2">訂單狀況 / 狀況</th>
         </tr>
       </thead>
       <tbody>
@@ -64,6 +64,16 @@
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">{{ myorder.get_status_display }}</td>
+          {% if myorder.status == 'UP' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large money middle aligned icon"></i></td>
+          {% elif myorder.status == 'PA' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large alarm outline middle aligned icon"></i></td>
+          {% elif myorder.status == 'PC' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large checkmark middle aligned icon"></i></td>
+          {% elif myorder.status == 'WS' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large archive middle aligned icon"></i></td>
+          {% elif myorder.status == 'SN' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large shipping middle aligned icon"></i></td>
+          {% elif myorder.status == 'AB' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash outline middle aligned icon"></i></td>
+          {% elif myorder.status == 'CA' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large reply middle aligned icon"></i></td>
+          {% elif myorder.status == 'AC' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large remove middle aligned icon"></i></td>
+          {% elif myorder.status == 'AD' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash middle aligned icon"></i></td>
+          {% endif %}
           {% endif %}
         </tr>
         {% endfor %}
@@ -98,12 +108,6 @@
       ．配送資料是定時與超商作資料交換，如遇通知卻取不到貨的情況，可利用<a href="https://eservice.7-11.com.tw/E-Tracking/search.aspx">超商系統</a>查詢。
     </div>
   </div>
-  <div class="ui segment">
-  <h4 class="ui header">這是標題</h4>
-    <p>運費：{{ myorder.freight }}</p>
-    <p>總額：{{ myorder.total }}</p>
-    <p>賣家的話：{{ myorder.notes }}</p>
-  </div>
 
 </div>
 {% endblock content %}
@@ -113,7 +117,7 @@
 <script type="text/javascript">
 function yesorno(dowhat, display){
   if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display) )) {
-      window.document.location = "{% url 'member:orderstatus' number=myorder.number do='dodo' %}".replace('dodo', dowhat);
+    window.document.location = "{% url 'member:orderstatus' number=myorder.number do='dodo' %}".replace('dodo', dowhat);
   } else {
     // Do nothing!
   }

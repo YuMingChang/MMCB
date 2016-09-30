@@ -11,8 +11,8 @@
         <th>商品名稱/商品編號</th>
         <th>商品總額</th>
         <th>商品總數量</th>
-        <th>訂單管理</th>
-        <th>訂單狀況</th>
+        <th colspan="2">訂單管理 / 狀態</th>
+        <!-- <th>訂單狀況</th> -->
       </tr>
     </thead>
     <tbody>
@@ -23,7 +23,16 @@
         <td>${{ order.total }}</td>
         <td>{{ order.order_date }}</td>
         <td>{{ order.get_status_display }}</td>
-        <td>{{ order.status }}</td>
+        {% if order.status == 'UP' %}<td><i class="large money middle aligned icon"></i></td>
+        {% elif order.status == 'PA' %}<td><i class="large alarm outline middle aligned icon"></i></td>
+        {% elif order.status == 'PC' %}<td><i class="large checkmark middle aligned icon"></i></td>
+        {% elif order.status == 'WS' %}<td><i class="large archive middle aligned icon"></i></td>
+        {% elif order.status == 'SN' %}<td><i class="large shipping middle aligned icon"></i></td>
+        {% elif order.status == 'AB' %}<td><i class="large trash outline middle aligned icon"></i></td>
+        {% elif order.status == 'CA' %}<td><i class="large reply middle aligned icon"></i></td>
+        {% elif order.status == 'AC' %}<td><i class="large remove middle aligned icon"></i></td>
+        {% elif order.status == 'AD' %}<td><i class="large trash middle aligned icon"></i></td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>
@@ -34,11 +43,11 @@
 {% block js-foot %}
 {{ block.super }}
 <script type="text/javascript">
-jQuery(document).ready(function($) {
-    $(".center.aligned").click(function() {
-        window.document.location = $(this).data("href");
-    });
-});
+// jQuery(document).ready(function($) {
+//     $(".center.aligned").click(function() {
+//         window.document.location = $(this).data("href");
+//     });
+// });
 </script>
 {% endblock js-foot %}
 
