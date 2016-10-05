@@ -17,7 +17,7 @@
               <img class="ui avatar image" src="{{MEDIA_URL}}/{{ obj.image }}">
               <div class="middle aligned content">
                   <a class="header" href="{% url 'posts:update' id=obj.id %}">{{ obj.name }}
-                    【P{{ obj.id }}-{% with obj.details.all|length as count %}C{{count}}{% endwith %}】</a>
+                    【P{{ obj.id }}-{% with obj.detail_set.all|length as count %}C{{count}}{% endwith %}】</a>
                   <small>{{obj.date}}</small>
               </div>
               <div class="right floated content">

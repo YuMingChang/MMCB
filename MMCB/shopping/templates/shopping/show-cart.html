@@ -4,40 +4,41 @@
 {% endblock title %}
 
 {% block content %}
-  {{ block.super }}
+{{ block.super }}
 
-  {% load carton_tags %}
-  {% get_cart as cart %}
-  <div class="ui three steps">
-  <div class="active step">
-    <i class="shop icon"></i>
-    <div class="content">
-      <div class="title">購物車</div>
-      <div class="description">MyCart</div>
-    </div>
+{% load carton_tags %}
+{% get_cart as cart %}
+<div class="ui three steps">
+<div class="active step">
+  <i class="shop icon"></i>
+  <div class="content">
+    <div class="title">購物車</div>
+    <div class="description">MyCart</div>
   </div>
-  <div class="disabled step">
-    <i class="payment icon"></i>
-    <div class="content">
-      <div class="title">訂單確認</div>
-      <div class="description">Confirm Order</div>
-    </div>
+</div>
+<div class="disabled step">
+  <i class="payment icon"></i>
+  <div class="content">
+    <div class="title">訂單確認</div>
+    <div class="description">Confirm Order</div>
   </div>
-  <div class="disabled step">
-    <i class="info icon"></i>
-    <div class="content">
-      <div class="title">訂單資訊</div>
-      <div class="description">MyOrder</div>
-    </div>
+</div>
+<div class="disabled step">
+  <i class="info icon"></i>
+  <div class="content">
+    <div class="title">訂單資訊</div>
+    <div class="description">MyOrder</div>
   </div>
-  </div>
+</div>
+</div>
+<form class="ui form" method='POST'>{% csrf_token %}
   <table class="ui table">
     <thead>
       <tr>
         <th class="one wide">移除</th>
-        <th class="seven wide">商品名稱</th>
-        <th class="six wide">款式</th>
-        <th class="one wide">數量</th>
+        <th class="six wide">商品名稱</th>
+        <th class="five wide">款式</th>
+        <th class="two wide center aligned">數量</th>
         <th class="one wide">單價</th>
       </tr>
     </thead>
@@ -47,30 +48,52 @@
         <td class="middle aligned">
           <button class="circular ui basic negative icon button"><i class="minus icon" onclick="delCart({{ item.product.id }})"></i></button>
         </td>
-        <td class="">
+        <td>
           <img class="ui middle aligned rounded tiny image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
           <span value="P{{ item.product.product.id }}-D{{ item.product.id }}">　{{ item.product.product.name }}</span>
         </td>
         <td class="middle aligned">{{ item.product }}</td>
-        <td class="middle aligned">{{ item.quantity }}</td>
+        <td class="middle aligned">
+          <div class="ui action input">
+            <button type="button" class="ui negative icon button" data-type="minus" onclick="quantityPM({{forloop.counter0}}, '-')"><i class="minus icon"></i></button>
+            <div class="one wide">
+              <input type="text" name="quantity" maxlength="2" value="{{ item.quantity }}" min="1" max="99" class="form-control input-number">
+            </div>
+            <button type="button" class="ui positive icon button" data-type="plus" onclick="quantityPM({{forloop.counter0}}, '+')"><i class="plus icon"></i></button>
+          </div>
+        </td>
         <td class="middle aligned">$ {{ item.product.price }}</td>
       </tr>
       {% endfor %}
-
     </tbody>
   </table>
   <hr>
-  {% if cart.is_empty != TrueN %}
+  {% if cart.is_empty != True %}
   <div class="row">
     <div class="col-md-2 col-md-offset-5">
-      <a href="{% url 'checkout:page' %}"><button class="btn btn-success btn-lg btn-block"> 確定 </button></a>
+      <button type="submit" class="btn btn-success btn-lg btn-block"> 確定 </button></a>
     </div>
   </div>
   {% endif %}
   </table>
-  <script type="text/javascript">
-    function delCart(objID){
-      window.location= "remove/?id="+objID;
+</form>
+
+<script type="text/javascript">
+  function delCart(objID){
+    window.location= "remove/?id="+objID;
+  }
+  $('.ui.icon.button').click( function(){
+  });
+  function quantityPM(num, mark) {
+    var input_quantity = document.getElementsByName("quantity");
+    var minValue =  parseInt($('.input-number').attr('min'));
+    var maxValue =  parseInt($('.input-number').attr('max'));
+    var quantity = parseInt(input_quantity[num].value);
+    if (mark == '+' && quantity >= minValue && quantity < maxValue){
+      input_quantity[num].value = quantity+1
+    }else if (mark == '-'  && quantity > minValue && quantity <= maxValue) {
+      input_quantity[num].value = quantity-1
     }
-  </script>
+  };
+</script>
 {% endblock content %}

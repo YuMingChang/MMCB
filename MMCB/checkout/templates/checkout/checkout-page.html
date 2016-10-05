@@ -4,7 +4,6 @@
 {% block content %}
 {{ block.super }}
 {% load carton_tags %}{% get_cart as cart %}
-<button type="button" name="button" onclick="openSevenMap('http://127.0.0.1:8000/checkout/')"></button>
 <table class="ui table">
     <thead>
         <tr>
@@ -123,15 +122,6 @@ $(document).ready(function(){
       }
     }
   });
-
-  var sevenWindow = null;
-  function openSevenMap(host) {
-    if (sevenWindow) {
-      sevenWindow.close();
-    }
-    document.domain = 'ruten.com.tw';
-    sevenWindow = window.open(host + "/sevenmap/ecmap.php?fn=returnSevenStore", "_blank", "width=1002px, height=589px, directories=no, menubar=no, toolbar=no, resizable=no");
-  }
 })
 </script>
 {% endblock js-foot %}

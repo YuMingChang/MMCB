@@ -1,13 +1,16 @@
 from django import forms
 from members.models import PersonalInfo
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Fieldset
-from crispy_forms.bootstrap import StrictButton
+from crispy_forms.layout import Submit
+from bootstrap3_datetime.widgets import DateTimePicker
 
 
 class PersonalInfoForm(forms.ModelForm):
     class Meta:
         model = PersonalInfo
+        birthday = forms.DateField(
+        widget=DateTimePicker(options={"format": "YYYY-MM-DD",
+                                       "pickTime": False}))
         fields = [
             'user',
             'name',

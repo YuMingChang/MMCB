@@ -14,26 +14,44 @@
     <div class="ui center aligned segment">
       <p>購買日期：{{ myorder.order_date }}</p>
     </div>
+    {% if myorder.date_remittance %}
+    <div class="ui center aligned segment">
+      <p>匯款日期/時間：{{ myorder.date_remittance }}</p>
+    </div>
+    {% endif %}
   </div>
   <div class="ui clearing segment">
-    <div class="ui floated buttons">
-      <a href="{% url 'member:shoppinglist' %}"><button class="ui green basic button">我的購物清單</button></a>
-    </div>
-    <div class="ui right floated buttons">
-      {% if myorder.status == 'UP' %}
-      <!-- <a href="{% url 'member:orderstatus' number=myorder.number do='PA' %}"><button class="ui blue basic button">通知已付款</button></a> -->
-      <button class="ui blue basic button" onclick="yesorno('PA', '通知已付款')">通知已付款</button>
-      <div class="or"></div>
-      <button class="ui red basic button" onclick="yesorno('AB', '放棄此訂單')">放棄此訂單</button>
-      {% elif myorder.status == 'PA' %}
-      {% elif myorder.status == 'PC' and user.is_staf %}
-      {% elif myorder.status == 'WS' %}
-      {% elif myorder.status == 'SN' %}
-      {% elif myorder.status == 'AB' %}
-      {% elif myorder.status == 'AC' %}
-      <button class="ui orange basic button" onclick="yesorno('CA', '取消放棄此訂單')">取消放棄此訂單</button>
-      {% elif myorder.status == 'AD' %}
+    <div class="ui right aligned grid">
+      <div class="left floated left aligned eight wide column">
+        <a href="{% url 'member:shoppinglist' %}"><button class="ui green basic button">我的購物清單</button></a>
+      </div>
+      {% if myorder.date_remittance == None %}
+      <div class="four wide column">
+        <div class="input-group date" id='datetimepicker'>
+          <input type="text" class="form-control" id="datetime" placeholder="匯款日期/時間"/>
+          <div class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+          </div>
+        </div>
+      </div>
       {% endif %}
+      <div class="right floated left aligned four wide column">
+        {% if myorder.status == 'UP' %}
+          <div class="ui buttons">
+            <button class="ui blue basic button" onclick="yesorno('PA', '通知已付款')">通知已付款</button>
+              <div class="or"></div>
+            <button class="ui red basic button" onclick="yesorno('AB', '放棄此訂單')">放棄此訂單</button>
+          </div>
+        {% elif myorder.status == 'PA' %}
+        {% elif myorder.status == 'PC' and user.is_staf %}
+        {% elif myorder.status == 'WS' %}
+        {% elif myorder.status == 'SN' %}
+        {% elif myorder.status == 'AB' %}
+        {% elif myorder.status == 'AC' %}
+        <button class="ui orange basic button" onclick="yesorno('CA', '取消放棄此訂單')">取消放棄此訂單</button>
+        {% elif myorder.status == 'AD' %}
+        {% endif %}
+      </div>
     </div>
   </div>
   <div class="ui segment">
@@ -116,8 +134,14 @@
 {{ block.super }}
 <script type="text/javascript">
 function yesorno(dowhat, display){
+  var datetime = $('#datetime').val();
+  var datetime = datetime.replace(/\//g, '-');
+  if (dowhat == 'PA' && datetime == ''){
+    alert('請記得選擇您的「匯款日期與時間」再點選"通知已付款"，謝謝。');
+    return false;
+  }
   if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display) )) {
-    window.document.location = "{% url 'member:orderstatus' number=myorder.number do='dodo' %}".replace('dodo', dowhat);
+    window.document.location = "{% url 'member:orderstatus' number=myorder.number do='dodo' remittime='None' %}".replace('dodo', dowhat).replace('None', datetime);
   } else {
     // Do nothing!
   }
@@ -137,6 +161,12 @@ $(document).ready(function(){
       }
     }
   }
+});
+$(function () {
+    $('#datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        useCurrent: false, //Important! See issue #1075
+    });
 });
 </script>
 {% endblock js-foot %}

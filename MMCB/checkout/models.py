@@ -65,6 +65,7 @@ class PurchaseOrder(models.Model):
     notes = models.TextField('備註', max_length=200, default='')
     status = models.CharField(max_length=2, choices=ORDER_STATUS, default=STATUS['UnPaid'])
     order_notes = models.TextField('訂單清單', default='')
+    date_remittance = models.DateField('匯款日期', blank=True, null=True)
 
     class Meta:
         verbose_name = '購物清單'

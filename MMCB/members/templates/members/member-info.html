@@ -59,7 +59,9 @@
 {% block js-foot %}
 {{ block.super }}
 <script type="text/javascript">
-$('.ui.checkbox').checkbox('is checked')
+$(document).ready(function() {
+    $('.ui.checkbox').checkbox('is checked');
+});
 </script>
 {% endblock js-foot %}
 

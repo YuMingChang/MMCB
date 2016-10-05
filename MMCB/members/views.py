@@ -7,12 +7,19 @@ from allauth.socialaccount.models import SocialAccount
 from members.models import PersonalInfo
 from members.forms import PersonalInfoForm
 from checkout.models import PurchaseOrder
+from carton.cart import Cart
+from datetime import datetime
 
 
 @login_required
 def member_page(request):
+    errors = []
+    cart = Cart(request.session)
+    if not cart.is_empty:
+        errors.append('您還有商品在購物車內尚未結帳')
     context = {
         'title': '個人資訊',
+        'errors': errors,
     }
     return render(request, 'members/member-page.html', context)
 
@@ -78,13 +85,18 @@ def member_order(request, number=None):
 
 
 @login_required
-def member_orderstatus(request, number=None, do=None):
+def member_orderstatus(request, number=None, do=None, remittime=None):
     errors = []
     try:
         order = get_object_or_404(PurchaseOrder, number=float(number))
         status = order.status
         if do is not None:
             if status == 'UP' and do == 'PA':
+                try:
+                    order.date_remittance = datetime.strptime(remittime, "%Y-%m-%d %H:%M")
+                    order.save()
+                except:
+                    pass
                 order.status = 'PA'
             elif status == 'UP' and do == 'AB':
                 order.status = 'AC'
