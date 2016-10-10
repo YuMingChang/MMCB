@@ -1,32 +1,29 @@
 {% extends 'posts/base.html' %}
-{% block title %}
-    {{ title }} | {{ block.super }}
-{% endblock title %}
+{% block title %} {{ title }} | {{ block.super }} {% endblock title %}
 
 {% block content %}
-  {{ block.super }}
-  <div class="ui clearing segment">
-      <h1 class="ui left floated header"> {{ title }} / </h1>
-      <a href="{% url 'posts:orderlist' %}"><button class="ui basic teal large button">訂單管理頁面</button></a>
-      <a href="{% url 'posts:add_detail' %}"><button class="ui inverted right floated green button"><i class="add square icon"></i>新增內容</button></a>
-      <a href="{% url 'posts:create' %}"><button class="ui inverted right floated red button"><i class="plus icon"></i> 新增商品</button></a>
-      <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
-      <div class="ui massive selection animated list">
-          {% for obj in object_list %}
-          <div class="item">
-              <img class="ui avatar image" src="{{MEDIA_URL}}/{{ obj.image }}">
-              <div class="middle aligned content">
-                  <a class="header" href="{% url 'posts:update' id=obj.id %}">{{ obj.name }}
-                    【P{{ obj.id }}-{% with obj.detail_set.all|length as count %}C{{count}}{% endwith %}】</a>
-                  <small>{{obj.date}}</small>
-              </div>
-              <div class="right floated content">
-                  {% if obj.is_display %}
-                  <i class="checkmark icon"></i> {% else %}
-                  <i class="remove icon"></i> {% endif %}
-              </div>
-          </div>
-          {% endfor %}
+<div class="ui clearing segment">
+  <h1 class="ui left floated header"> {{ title }} / </h1>
+  <a href="{% url 'posts:orderlist' %}"><button class="ui basic teal large button">訂單管理頁面</button></a>
+  <a href="{% url 'posts:add_detail' %}"><button class="ui right floated green basic button"><i class="add square icon"></i>新增內容</button></a>
+  <a href="{% url 'posts:create' %}"><button class="ui right floated red basic button"><i class="plus icon"></i> 新增商品</button></a>
+  <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
+  <div class="ui massive selection animated list">
+    {% for good in good_queryset %}
+    <div class="item">
+      <img class="ui avatar image" src="{{MEDIA_URL}}/{{ good.image }}">
+      <div class="middle aligned content">
+        <a class="header" href="{% url 'posts:update' good_id=good.id %}">{{ good.name }}
+                    【P{{ good.id }}-{% with good.detail_set.all|length as count %}C{{count}}{% endwith %}】</a>
+        <small>{{good.date}}</small>
       </div>
+      <div class="right floated content">
+        {% if good.is_display %}
+        <i class="checkmark icon"></i> {% else %}
+        <i class="remove icon"></i> {% endif %}
+      </div>
+    </div>
+    {% endfor %}
   </div>
+</div>
 {% endblock content %}

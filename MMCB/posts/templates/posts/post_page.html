@@ -1,15 +1,13 @@
-{% extends 'posts/base.html' %}{% block title %}
-{{ title }} | {{ block.super }}
-{% endblock title %}
+{% extends 'posts/base.html' %}
+{% block title %} {{ title }} | {{ block.super }} {% endblock title %}
 
-{% block content %}
-{{ block.super }}{% load crispy_forms_tags %}
+{% block content %} {{ block.super }}
 <div class="ui center aligned clearing segment">
-    <h1 class="ui horizontal divider header"><i class="tag icon"></i>  {{ title }}  </h1>
-    <div class="ui massive buttons">
-      <a href="{% url 'posts:productlist' %}"><button class="ui inverted blue button">商品頁面</button></a>
-      <div class="or"></div>
-      <a href="{% url 'posts:orderlist' %}"><button class="ui inverted green button">訂單頁面</button></a>
-    </div>
+  <h1 class="ui horizontal divider header"><i class="tag icon"></i>  {{ title }}  </h1>
+  <div class="ui massive buttons">
+    <a href="{% url 'posts:productlist' %}"><button class="ui blue basic button">商品頁面</button></a>
+    <div class="or"></div>
+    <a href="{% url 'posts:orderlist' %}"><button class="ui green basic button">訂單頁面</button></a>
+  </div>
 </div>
 {% endblock content %}

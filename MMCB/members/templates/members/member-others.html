@@ -1,93 +1,82 @@
 {% extends 'members/base.html' %}
 {% block title %}{{ title }} | {{ block.super }}{% endblock title %}
 
-{% block content %}
-{{ block.super }}
-{% if request.user.is_superuser %}
-      <div class="ui segments">
-        <div class="ui segment">
-            <div class="ui middle aligned divided list">
-                {% for user in qs_user %}
-                <div class="item">
-                    <div class="header">{{ user.username }}</div>
-                    <div class="header">{{ user.password }}</div>
-                    <div class="ui list">
-                        <div class="item">First_Name: {{ user.first_name }}</div>
-                        <div class="item">Last_Name: {{ user.last_name }}</div>
-                        <div class="item">Email: {{ user.email }}</div>
-                        <div class="item">Is_Active: {{ user.is_active }}</div>
-                        <div class="item">Is_Staff: {{ user.is_staff }}</div>
-                        <div class="item">Is_superuser: {{ user.is_superuser }}</div>
-                        <div class="item">Last_Login: {{ user.last_login }}</div>
-                        <div class="item">Date_Joined: {{ user.date_joined }}</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+{% block content %} {{ block.super }}{% if request.user.is_superuser %}
+<div class="ui segments">
+  <div class="ui segment">
+    <div class="ui middle aligned divided list">
+      {% for user in qs_user %}
+      <div class="item">
+        <div class="header">{{ user.username }}</div>
+        <div class="header">{{ user.password }}</div>
+        <div class="ui list">
+          <div class="item">First_Name: {{ user.first_name }}</div>
+          <div class="item">Last_Name: {{ user.last_name }}</div>
+          <div class="item">Email: {{ user.email }}</div>
+          <div class="item">Is_Active: {{ user.is_active }}</div>
+          <div class="item">Is_Staff: {{ user.is_staff }}</div>
+          <div class="item">Is_superuser: {{ user.is_superuser }}</div>
+          <div class="item">Last_Login: {{ user.last_login }}</div>
+          <div class="item">Date_Joined: {{ user.date_joined }}</div>
         </div>
-
-        <h3 class="ui top attached header">信箱 (EmailAddress)</h3>
-        <div class="ui attached segment">
-            <div class="ui middle aligned divided list">
-                {% for mail in qs_email %}
-                <div class="item">
-                    <div class="header">{{ mail.user }}</div>
-                    <div class="ui list">
-                        <div class="item">Email: {{ mail.email }}</div>
-                        <div class="item">Verified: {{ mail.verified }}</div>
-                        <div class="item">Primary: {{ mail.primary }}</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <h3 class="ui top attached header">個人資料 (PersonalInfo)</h3>
-        <div class="ui attached segment">
-            <div class="ui middle aligned divided list">
-                {% for person in qs_personal %}
-                <div class="item">
-                    <div class="header">{{ person.name }}</div>
-                    <div class="ui list">
-                        <div class="item">User: {{ person.user }}</div>
-                        <div class="item">Name: {{ person.name }}</div>
-                        <div class="item">Sexual: {{ person.sexual }}</div>
-                        <div class="item">Birthday: {{ person.birthday }}</div>
-                        <div class="item">Phone: {{ person.phone }}</div>
-                        <div class="item">E-mail: {{ person.email }}</div>
-                        <div class="item">Bank_Account: {{ person.accounts }}</div>
-                        <div class="item">Money: {{ person.money }}</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <h3 class="ui top attached header">FaceBook (SocialAccount)</h3>
-        <div class="ui attached segment">
-            <div class="ui middle aligned divided list">
-                {% for fb in qs_facebook %}
-                <div class="item">
-                    <div class="header">{{ fb.user }}</div>
-                    <div class="ui list">
-                        <div class="item">Provider: {{ fb.provider }}</div>
-                        <div class="item">UID: {{ fb.uid }}</div>
-                        <div class="item">Last_login: {{ fb.last_login }}</div>
-                        <div class="item">Date_joined: {{ fb.date_joined }}</div>
-                        <div class="item">Extra_data: {{ fb.extra_data }}</div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+      </div>
+      {% endfor %}
     </div>
-{% endif %}
-{% endblock content %}
+  </div>
 
-{% block js-foot %}
-{{ block.super }}
-{% endblock js-foot %}
+  <h3 class="ui top attached header">信箱 (EmailAddress)</h3>
+  <div class="ui attached segment">
+    <div class="ui middle aligned divided list">
+      {% for mail in qs_email %}
+      <div class="item">
+        <div class="header">{{ mail.user }}</div>
+        <div class="ui list">
+          <div class="item">Email: {{ mail.email }}</div>
+          <div class="item">Verified: {{ mail.verified }}</div>
+          <div class="item">Primary: {{ mail.primary }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
-{% block footer %}
-{{ block.super }}
-{% endblock footer %}
+  <h3 class="ui top attached header">個人資料 (PersonalInfo)</h3>
+  <div class="ui attached segment">
+    <div class="ui middle aligned divided list">
+      {% for person in qs_personal %}
+      <div class="item">
+        <div class="header">{{ person.name }}</div>
+        <div class="ui list">
+          <div class="item">User: {{ person.user }}</div>
+          <div class="item">Name: {{ person.name }}</div>
+          <div class="item">Sexual: {{ person.sexual }}</div>
+          <div class="item">Birthday: {{ person.birthday }}</div>
+          <div class="item">Phone: {{ person.phone }}</div>
+          <div class="item">E-mail: {{ person.email }}</div>
+          <div class="item">Bank_Account: {{ person.accounts }}</div>
+          <div class="item">Money: {{ person.money }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <h3 class="ui top attached header">FaceBook (SocialAccount)</h3>
+  <div class="ui attached segment">
+    <div class="ui middle aligned divided list">
+      {% for fb in qs_facebook %}
+      <div class="item">
+        <div class="header">{{ fb.user }}</div>
+        <div class="ui list">
+          <div class="item">Provider: {{ fb.provider }}</div>
+          <div class="item">UID: {{ fb.uid }}</div>
+          <div class="item">Last_login: {{ fb.last_login }}</div>
+          <div class="item">Date_joined: {{ fb.date_joined }}</div>
+          <div class="item">Extra_data: {{ fb.extra_data }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %} {% endblock content %}

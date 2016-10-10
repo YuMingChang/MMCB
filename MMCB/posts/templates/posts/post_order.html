@@ -1,10 +1,7 @@
 {% extends 'posts/base.html' %}
-{% block title %}
-    {{ title }} | {{ block.super }}
-{% endblock title %}
+{% block title %} {{ title }} | {{ block.super }} {% endblock title %}
 
-{% block content %}
-{{ block.super }}
+{% block content %} {{ block.super }}
 <div class="ui segments">
   <div class="ui horizontal segments">
     <div class="ui center aligned segment">
@@ -51,15 +48,14 @@
       <tbody>
         {% for good in myorder.sold_goods.all %}
         <tr class="center aligned">
-          <!-- <td class="left aligned">　{{ good.product }} ({{ good }})</td> -->
           <td class="left aligned">
             <a class="ui big image label">
               <img src="{{MEDIA_URL}}/{{ good.product.image }}"> {{ good.product }}
               <div class="detail">{{ good }}</div>
             </a>
           </td>
-          <td id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
-          <td name="tdQtySum">{{ myorder.order_notes_nonono  }}</td>
+          <td class="middle aligned" id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
+          <td class="middle aligned" name="tdQtySum">{{ myorder.order_notes_nonono }}</td>
           {% if forloop.first %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
@@ -107,42 +103,37 @@
           <td>{{ buyer.accounts }}</td>
         </tr>
       </tbody>
-    </div>
   </div>
+</div>
 </div>
 {% endblock content %}
 
-{% block js-foot %}
-{{ block.super }}
+{% block js-foot %} {{ block.super }}
 <script type="text/javascript">
-$(document).ready(function(){
-  var j = "{{ myorder.order_notes }}";
-  var j = j.replace(/&#39;/g, "'");
-  var j = j.replace(/'/g, '"');
-  var qppJson = jQuery.parseJSON( j );
-  var priceNL = document.getElementsByName("tdPrice");
-  var qtysumNL = document.getElementsByName("tdQtySum");
-  for (i = 0; i <	priceNL.length; i++) {
-    for (j=0; j<qppJson.length; j++){
-      if (qppJson[j].product_pk == priceNL[i].id){
-        qtysumNL[i].innerHTML = qppJson[j].quantity + " / $" + qppJson[j].price*qppJson[j].quantity
+  $(document).ready(function() {
+    var j = "{{ myorder.order_notes }}";
+    var j = j.replace(/&#39;/g, "'");
+    var j = j.replace(/'/g, '"');
+    var qppJson = jQuery.parseJSON(j);
+    var priceNL = document.getElementsByName("tdPrice");
+    var qtysumNL = document.getElementsByName("tdQtySum");
+    for (i = 0; i < priceNL.length; i++) {
+      for (j = 0; j < qppJson.length; j++) {
+        if (qppJson[j].product_pk == priceNL[i].id) {
+          qtysumNL[i].innerHTML = qppJson[j].quantity + " / $" + qppJson[j].price * qppJson[j].quantity
+        }
       }
     }
-  }
 
-  $('.ui.dropdown').dropdown({
-    onChange: function(key, value){
-      if (confirm('您確定要把訂單狀態更改為「motion」嗎？'.replace('motion', value) )) { //.replace('motion', display)
-        window.location.href = "{% url 'posts:order_update' number=myorder.number do='dodo' %}".replace('dodo', key);
-      } else {
-        // Do nothing!
+    $('.ui.dropdown').dropdown({
+      onChange: function(key, value) {
+        if (confirm('您確定要把訂單狀態更改為「motion」嗎？'.replace('motion', value))) { //.replace('motion', display)
+          window.location.href = "{% url 'posts:order_update' number=myorder.number do='dodo' %}".replace('dodo', key);
+        } else {
+          // Do nothing!
+        }
       }
-    }
+    });
   });
-});
 </script>
 {% endblock js-foot %}
-
-{% block footer %}
-{{ block.super }}
-{% endblock footer %}

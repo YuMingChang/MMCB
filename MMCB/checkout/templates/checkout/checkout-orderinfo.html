@@ -1,8 +1,7 @@
 {% extends 'checkout/base.html' %}
 {% block title %}{{ title }} | {{ block.super }}{% endblock title %}
 
-{% block content %}
-{{ block.super }}
+{% block content %} {{ block.super }}
 <div class="ui positive message">
   <div class="header">你已成功購買 </div>
   <p>恭喜你，你已成功購買以下商品</p>
@@ -39,15 +38,14 @@
       <tbody>
         {% for good in myorder.sold_goods.all %}
         <tr class="center aligned">
-          <!-- <td class="left aligned">　{{ good.product }} ({{ good }})</td> -->
           <td class="left aligned">
             <a class="ui big image label">
               <img src="{{MEDIA_URL}}/{{ good.product.image }}"> {{ good.product }}
               <div class="detail">{{ good }}</div>
             </a>
           </td>
-          <td id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
-          <td name="tdQtySum">{{ myorder.order_notes_nonono  }}</td>
+          <td class="middle aligned" id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
+          <td class="middle aligned" name="tdQtySum">{{ myorder.order_notes_nonono }}</td>
           {% if forloop.first %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
@@ -60,12 +58,12 @@
   </div>
   <div class="ui segment">
     <div class="ui warning message">
-      <div class="header"><i class="warning icon"></i>
-        您選擇使用7-11取貨付款服務，請注意以下取貨注意事項：</div><br/>
-      ．到貨時，系統將發手機簡訊與email通知您取件時間。<br/>
-      ．請務必於<span class="style2">7天內</span>至您所指定的門市取貨。<br/>
-      ．若逾期未領，貨品將直接退還給賣家，您的帳號將累積一次未取貨次數。<br/>
-      ．配送資料是定時與超商作資料交換，如遇通知卻取不到貨的情況，可利用<a href="https://eservice.7-11.com.tw/E-Tracking/search.aspx">超商系統</a>查詢。
+      <div class="header"><i class="warning icon"></i> 您選擇使用7-11取貨付款服務，請注意以下取貨注意事項：
+      </div><br/> ．到貨時，系統將發手機簡訊與email通知您取件時間。
+      <br/> ．請務必於
+      <span class="style2">7天內</span>至您所指定的門市取貨。<br/> ．若逾期未領，貨品將直接退還給賣家，您的帳號將累積一次未取貨次數。
+      <br/> ．配送資料是定時與超商作資料交換，如遇通知卻取不到貨的情況，可利用
+      <a href="https://eservice.7-11.com.tw/E-Tracking/search.aspx">超商系統</a>查詢。
     </div>
     <div class="ui info message">
       <i class="close icon"></i>
@@ -76,7 +74,8 @@
             <li value=" - ">戶名：劉秋婕</li>
             <li value=" - ">銀行帳號：5325-4026-4159</li>
           </ol>
-        </li></br>
+        </li>
+        </br>
         <li value=" * ">銀行名稱與代號：郵局(700)
           <ol>
             <li value=" - ">戶名：劉秋婕</li>
@@ -87,33 +86,27 @@
     </div>
   </div>
 </div>
-
 {% endblock content %}
 
-{% block js-foot %}
-{{ block.super }}
+{% block js-foot %} {{ block.super }}
 <script type="text/javascript">
-$(document).ready(function(){
-  document.getElementsByClassName("step")[0].setAttribute("class", "step");
-  document.getElementsByClassName("step")[1].setAttribute("class", "step");
-  document.getElementsByClassName("step")[2].setAttribute("class", "active step");
-  var j = "{{ myorder.order_notes }}";
-  var j = j.replace(/&#39;/g, "'");
-  var j = j.replace(/'/g, '"');
-  var qppJson = jQuery.parseJSON( j );
-  var priceNL = document.getElementsByName("tdPrice");
-  var qtysumNL = document.getElementsByName("tdQtySum");
-  for (i = 0; i <	priceNL.length; i++) {
-    for (j=0; j<qppJson.length; j++){
-      if (qppJson[j].product_pk == priceNL[i].id){
-        qtysumNL[i].innerHTML = qppJson[j].quantity + " / $" + qppJson[j].price*qppJson[j].quantity
+  $(document).ready(function() {
+    document.getElementsByClassName("step")[0].setAttribute("class", "step");
+    document.getElementsByClassName("step")[1].setAttribute("class", "step");
+    document.getElementsByClassName("step")[2].setAttribute("class", "active step");
+    var j = "{{ myorder.order_notes }}";
+    var j = j.replace(/&#39;/g, "'");
+    var j = j.replace(/'/g, '"');
+    var qppJson = jQuery.parseJSON(j);
+    var priceNL = document.getElementsByName("tdPrice");
+    var qtysumNL = document.getElementsByName("tdQtySum");
+    for (i = 0; i < priceNL.length; i++) {
+      for (j = 0; j < qppJson.length; j++) {
+        if (qppJson[j].product_pk == priceNL[i].id) {
+          qtysumNL[i].innerHTML = qppJson[j].quantity + " / $" + qppJson[j].price * qppJson[j].quantity
+        }
       }
     }
-  }
-});
+  });
 </script>
 {% endblock js-foot %}
-
-{% block footer %}
-{{ block.super }}
-{% endblock footer %}

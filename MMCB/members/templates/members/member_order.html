@@ -1,8 +1,7 @@
 {% extends 'members/base.html' %}
 {% block title %}{{ title }} | {{ block.super }}{% endblock title %}
 
-{% block content %}
-{{ block.super }}
+{% block content %} {{ block.super }}
 <div class="ui segments">
   <div class="ui horizontal segments">
     <div class="ui center aligned segment">
@@ -28,29 +27,27 @@
       {% if myorder.date_remittance == None %}
       <div class="four wide column">
         <div class="input-group date" id='datetimepicker'>
-          <input type="text" class="form-control" id="datetime" placeholder="匯款日期/時間"/>
+          <input type="text" class="form-control" id="datetime" placeholder="匯款日期/時間" />
           <div class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar"></span>
+            <span class="glyphicon glyphicon-calendar"></span>
           </div>
         </div>
       </div>
       {% endif %}
       <div class="right floated left aligned four wide column">
         {% if myorder.status == 'UP' %}
-          <div class="ui buttons">
-            <button class="ui blue basic button" onclick="yesorno('PA', '通知已付款')">通知已付款</button>
-              <div class="or"></div>
-            <button class="ui red basic button" onclick="yesorno('AB', '放棄此訂單')">放棄此訂單</button>
-          </div>
+        <div class="ui buttons">
+          <button class="ui blue basic button" onclick="yesorno('PA', '通知已付款')">通知已付款</button>
+          <div class="or"></div>
+          <button class="ui red basic button" onclick="yesorno('AB', '放棄此訂單')">放棄此訂單</button>
+        </div>
         {% elif myorder.status == 'PA' %}
         {% elif myorder.status == 'PC' and user.is_staf %}
         {% elif myorder.status == 'WS' %}
         {% elif myorder.status == 'SN' %}
         {% elif myorder.status == 'AB' %}
         {% elif myorder.status == 'AC' %}
-        <button class="ui orange basic button" onclick="yesorno('CA', '取消放棄此訂單')">取消放棄此訂單</button>
-        {% elif myorder.status == 'AD' %}
-        {% endif %}
+        <button class="ui orange basic button" onclick="yesorno('CA', '取消放棄此訂單')">取消放棄此訂單</button> {% elif myorder.status == 'AD' %} {% endif %}
       </div>
     </div>
   </div>
@@ -76,23 +73,31 @@
               <div class="detail">{{ good }}</div>
             </a>
           </td>
-          <td id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
-          <td name="tdQtySum">{{ myorder.order_notes_nonono  }}</td>
+          <td class="middle aligned" id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
+          <td class="middle aligned" name="tdQtySum">{{ myorder.order_notes_nonono }}</td>
           {% if forloop.first %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">{{ myorder.get_status_display }}</td>
-          {% if myorder.status == 'UP' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large money middle aligned icon"></i></td>
-          {% elif myorder.status == 'PA' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large alarm outline middle aligned icon"></i></td>
-          {% elif myorder.status == 'PC' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large checkmark middle aligned icon"></i></td>
-          {% elif myorder.status == 'WS' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large archive middle aligned icon"></i></td>
-          {% elif myorder.status == 'SN' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large shipping middle aligned icon"></i></td>
-          {% elif myorder.status == 'AB' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash outline middle aligned icon"></i></td>
-          {% elif myorder.status == 'CA' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large reply middle aligned icon"></i></td>
-          {% elif myorder.status == 'AC' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large remove middle aligned icon"></i></td>
-          {% elif myorder.status == 'AD' %}<td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash middle aligned icon"></i></td>
-          {% endif %}
-          {% endif %}
+          {% if myorder.status == 'UP' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large money middle aligned icon"></i></td>
+          {% elif myorder.status == 'PA' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large alarm outline middle aligned icon"></i></td>
+          {% elif myorder.status == 'PC' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large checkmark middle aligned icon"></i></td>
+          {% elif myorder.status == 'WS' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large archive middle aligned icon"></i></td>
+          {% elif myorder.status == 'SN' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large shipping middle aligned icon"></i></td>
+          {% elif myorder.status == 'AB' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash outline middle aligned icon"></i></td>
+          {% elif myorder.status == 'CA' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large reply middle aligned icon"></i></td>
+          {% elif myorder.status == 'AC' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large remove middle aligned icon"></i></td>
+          {% elif myorder.status == 'AD' %}
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash middle aligned icon"></i></td>
+          {% endif %} {% endif %}
         </tr>
         {% endfor %}
       </tbody>
@@ -108,7 +113,8 @@
             <li value=" - ">戶名：劉秋婕</li>
             <li value=" - ">銀行帳號：5325-4026-4159</li>
           </ol>
-        </li></br>
+        </li>
+        </br>
         <li value=" * ">銀行名稱與代號：郵局(700)
           <ol>
             <li value=" - ">戶名：劉秋婕</li>
@@ -118,59 +124,54 @@
       </ol>
     </div>
     <div class="ui warning message">
-      <div class="header"><i class="warning icon"></i>
-        您選擇使用7-11取貨付款服務，請注意以下取貨注意事項：</div><br/>
-      ．到貨時，系統將發手機簡訊與email通知您取件時間。<br/>
-      ．請務必於<span class="style2">7天內</span>至您所指定的門市取貨。<br/>
-      ．若逾期未領，貨品將直接退還給賣家，您的帳號將累積一次未取貨次數。<br/>
-      ．配送資料是定時與超商作資料交換，如遇通知卻取不到貨的情況，可利用<a href="https://eservice.7-11.com.tw/E-Tracking/search.aspx">超商系統</a>查詢。
+      <div class="header"><i class="warning icon"></i> 您選擇使用7-11取貨付款服務，請注意以下取貨注意事項：
+      </div><br/> ．到貨時，系統將發手機簡訊與email通知您取件時間。
+      <br/> ．請務必於
+      <span class="style2">7天內</span>至您所指定的門市取貨。<br/> ．若逾期未領，貨品將直接退還給賣家，您的帳號將累積一次未取貨次數。
+      <br/> ．配送資料是定時與超商作資料交換，如遇通知卻取不到貨的情況，可利用
+      <a href="https://eservice.7-11.com.tw/E-Tracking/search.aspx">超商系統</a>查詢。
     </div>
   </div>
 
 </div>
 {% endblock content %}
 
-{% block js-foot %}
-{{ block.super }}
+{% block js-foot %} {{ block.super }}
 <script type="text/javascript">
-function yesorno(dowhat, display){
-  var datetime = $('#datetime').val();
-  var datetime = datetime.replace(/\//g, '-');
-  if (dowhat == 'PA' && datetime == ''){
-    alert('請記得選擇您的「匯款日期與時間」再點選"通知已付款"，謝謝。');
-    return false;
-  }
-  if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display) )) {
-    window.document.location = "{% url 'member:orderstatus' number=myorder.number do='dodo' remittime='None' %}".replace('dodo', dowhat).replace('None', datetime);
-  } else {
-    // Do nothing!
-  }
-};
+  function yesorno(dowhat, display) {
+    var datetime = $('#datetime').val();
+    var datetime = datetime.replace(/\//g, '-');
+    if (dowhat == 'PA' && datetime == '') {
+      alert('請記得選擇您的「匯款日期與時間」再點選"通知已付款"，謝謝。');
+      return false;
+    }
+    if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display))) {
+      window.document.location = "{% url 'member:orderstatus' number=myorder.number do='dodo' remittime='None' %}".replace('dodo', dowhat).replace('None', datetime);
+    } else {
+      // Do nothing!
+    }
+  };
 
-$(document).ready(function(){
-  var j = "{{ myorder.order_notes }}";
-  var j = j.replace(/&#39;/g, "'");
-  var j = j.replace(/'/g, '"');
-  var qppJson = jQuery.parseJSON( j );
-  var priceNL = document.getElementsByName("tdPrice");
-  var qtysumNL = document.getElementsByName("tdQtySum");
-  for (i = 0; i <	priceNL.length; i++) {
-    for (j=0; j<qppJson.length; j++){
-      if (qppJson[j].product_pk == priceNL[i].id){
-        qtysumNL[i].innerHTML = qppJson[j].quantity + " / $" + qppJson[j].price*qppJson[j].quantity
+  $(document).ready(function() {
+    var j = "{{ myorder.order_notes }}";
+    var j = j.replace(/&#39;/g, "'");
+    var j = j.replace(/'/g, '"');
+    var qppJson = jQuery.parseJSON(j);
+    var priceNL = document.getElementsByName("tdPrice");
+    var qtysumNL = document.getElementsByName("tdQtySum");
+    for (i = 0; i < priceNL.length; i++) {
+      for (j = 0; j < qppJson.length; j++) {
+        if (qppJson[j].product_pk == priceNL[i].id) {
+          qtysumNL[i].innerHTML = qppJson[j].quantity + " / $" + qppJson[j].price * qppJson[j].quantity
+        }
       }
     }
-  }
-});
-$(function () {
+  });
+  $(function() {
     $('#datetimepicker').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        useCurrent: false, //Important! See issue #1075
+      format: 'YYYY-MM-DD HH:mm',
+      useCurrent: false, //Important! See issue #1075
     });
-});
+  });
 </script>
 {% endblock js-foot %}
-
-{% block footer %}
-{{ block.super }}
-{% endblock footer %}

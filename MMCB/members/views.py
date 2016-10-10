@@ -27,24 +27,24 @@ def member_page(request):
 @login_required
 def member_info(request):
     errors = []
-    form = PersonalInfoForm()
+    info_form = PersonalInfoForm()
     try:
         req_personalinfo = request.user.personalinfo
         # Load if PersonalInfo has been create.
-        instance = get_object_or_404(PersonalInfo, id=req_personalinfo.id)
-        form = PersonalInfoForm(request.POST or None, instance=instance)
+        personal_info = get_object_or_404(PersonalInfo, id=req_personalinfo.id)
+        info_form = PersonalInfoForm(request.POST or None, instance=personal_info)
     except:
         # Create if PersonalInfo has not been create.
-        form = PersonalInfoForm(request.POST or None, initial={'user': request.user.id})
+        info_form = PersonalInfoForm(request.POST or None, initial={'user': request.user.id})
         errors.append("您必須先填寫完整資料，才可以開始大買特買唷～")
     finally:
-        if form.is_valid():
-            instance = form.save(commit=False)
+        if info_form.is_valid():
+            instance = info_form.save(commit=False)
             instance.save()
             return redirect(reverse('member:page'))
     context = {
         'title': '資料編輯',
-        'form': form,
+        'form': info_form,
         'errors': errors,
     }
     return render(request, 'members/member-info.html', context)

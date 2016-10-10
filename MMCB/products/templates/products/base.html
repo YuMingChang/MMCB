@@ -1,22 +1,20 @@
 {% extends 'base.html' %}
-    {% block content %}
-        {{ block.super }}
-        <!-- Main component for a primary marketing message or call to action -->
-        <img src="{{MEDIA_URL}}/MMCBpic.jpg" class="img-responsive center-block" alt="Responsive image" width="100%">
-        <div class="jumbotron">
-            <h2 class="ui header"><i class="pointing right icon"></i>關於我們</h2>
-                <div class="description"><b>我們自己是非常愛買東西的媽媽！這裡秉持便宜也要有好貨，便宜也要有質感的精神～替大家挑好貨。</b>
-                  <p></p>
-                  <p>中國信託 (822)</p>
-                  <p></p>
-                  <p>帳號:5325-4026-4159 戶名:劉秋婕</p>
-                  <p></p>
-                  <p>郵局(700)</p>
-                  <p></p>
-                  <p>帳號:0031005-1502435 戶名:劉秋婕</p>
-                  <p></p>
-                  <p>MaMa Crazy Buy謝謝您的購買^^</p>
-                  <p></p>
-                </div>
-          </div>
+{% block content %} {{ block.super }}
+<img src="{{MEDIA_URL}}/MMCBpic.jpg" class="img-responsive center-block" alt="Responsive image" width="100%">
+<div class="jumbotron">
+  <h2 class="ui header"><i class="pointing right icon"></i>關於我們</h2>
+  <div class="description"><b>我們自己是非常愛買東西的媽媽！這裡秉持便宜也要有好貨，便宜也要有質感的精神～替大家挑好貨。</b>
+    <p></p>
+    <p>中國信託 (822)</p>
+    <p></p>
+    <p>帳號:5325-4026-4159 戶名:劉秋婕</p>
+    <p></p>
+    <p>郵局(700)</p>
+    <p></p>
+    <p>帳號:0031005-1502435 戶名:劉秋婕</p>
+    <p></p>
+    <p>MaMa Crazy Buy謝謝您的購買^^</p>
+    <p></p>
+  </div>
+</div>
 {% endblock content %}

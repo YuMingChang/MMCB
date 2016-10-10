@@ -1,33 +1,31 @@
 {% extends 'checkout/base.html' %}
 {% block title %}{{ title }} | {{ block.super }}{% endblock title %}
 
-{% block content %}
-{{ block.super }}
-{% load carton_tags %}{% get_cart as cart %}
+{% block content %} {{ block.super }}
 <table class="ui table">
-    <thead>
-        <tr>
-            <th id='Image'>圖片</th>
-            <th id='Description'>商品 - 規格</th>
-            <th id='Quantity'>數量</th>
-            <th id='Price'>金額</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in cart.items %}
-        <tr>
-            <td class="one wide middle aligned">
-                <div class="disabled ui image">
-                    <div class="floating ui grey circular label">{{ item.quantity }}</div>
-                    <img class="ui tiny rounded image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
-                </div>
-            </td>
-            <td class="ten wide middle aligned">{{ item.product.product.name }}{{ item.product }}</td>
-            <td class="zero wide middle aligned">{{ item.quantity }}</td>
-            <td class="one wide middle aligned">$ {{ item.product.price }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead>
+    <tr>
+      <th id='Image'>圖片</th>
+      <th id='Description'>商品 - 規格</th>
+      <th id='Quantity'>數量</th>
+      <th id='Price'>金額</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cart.items %}
+    <tr>
+      <td class="one wide middle aligned">
+        <div class="disabled ui image">
+          <div class="floating ui grey circular label">{{ item.quantity }}</div>
+          <img class="ui tiny rounded image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
+        </div>
+      </td>
+      <td class="ten wide middle aligned">{{ item.product.product.name }}{{ item.product }}</td>
+      <td class="zero wide middle aligned">{{ item.quantity }}</td>
+      <td class="one wide middle aligned">$ {{ item.product.price }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 <form class="ui form" method='POST' action='' id="myform">{% csrf_token %}
   <div class="ui hidden divider"></div>
@@ -65,11 +63,11 @@
   <table class="ui very basic table">
     <thead>
       <tr>
-        <th><h3 class="ui header">總計</h3></th>
+        <th>
+          <h3 class="ui header">總計</h3></th>
         <th class="right aligned">
           <div class="ui statistic">
-            <div class="value" id="total">{% load humanize %}
-              $ {{ cart.total|intcomma:False }}
+            <div class="value" id="total">{% load humanize %} $ {{ cart.total|intcomma:False }}
             </div>
             <div class="label">TWD </div>
           </div>
@@ -88,44 +86,40 @@
 </div>
 {% endblock content %}
 
-{% block js-foot %}
-{{ block.super }}
+{% block js-foot %} {{ block.super }}
 <script type="text/javascript">
-$(document).ready(function(){
-  $('.ui.radio.checkbox').checkbox({
-    onChange: function(){
-      var all_cost = "{{ cost_total }}";
-      if($(this).val()=='7-11'){
-        all_cost = parseInt(all_cost) + 60;
-      }else if($(this).val()=='postoffice'){
-        all_cost = parseInt(all_cost) + 80;
-      }else if($(this).val()=='homedelivery'){
-        all_cost = parseInt(all_cost) + 120;
-      }else{
-        $("#total").text("ERROR!!");
-        return false;
+  $(document).ready(function() {
+    document.getElementsByClassName("step")[0].setAttribute("class", "step");
+    document.getElementsByClassName("step")[1].setAttribute("class", "active step");
+
+    $('.ui.radio.checkbox').checkbox({
+      onChange: function() {
+        var all_cost = "{{ cost_total }}";
+        if ($(this).val() == '7-11') {
+          all_cost = parseInt(all_cost) + 60;
+        } else if ($(this).val() == 'postoffice') {
+          all_cost = parseInt(all_cost) + 80;
+        } else if ($(this).val() == 'homedelivery') {
+          all_cost = parseInt(all_cost) + 120;
+        } else {
+          $("#total").text("ERROR!!");
+          return false;
+        }
+        $("#total").text("$ " + all_cost.toLocaleString());
       }
-      $("#total").text("$ " + all_cost.toLocaleString());
-    }
-  });
-  $('.ui.form')
-  .form({
-    fields: {
-      delivery: {
-        identifier: 'delivery',
-        rules: [
-          {
-            type   : 'checked',
-            prompt : '請選擇您的運送方式'
+    });
+    $('.ui.form')
+      .form({
+        fields: {
+          delivery: {
+            identifier: 'delivery',
+            rules: [{
+              type: 'checked',
+              prompt: '請選擇您的運送方式'
+            }]
           }
-        ]
-      }
-    }
-  });
-})
+        }
+      });
+  })
 </script>
 {% endblock js-foot %}
-
-{% block footer %}
-{{ block.super }}
-{% endblock footer %}

@@ -13,13 +13,13 @@ urlpatterns = [
 
         # CREATE(Detail)
         url(r'^add_detail/$', views.post_detail_add, name='add_detail'),
-        url(r'^add_detail/(?P<id>\d+)/$', views.post_detail_add, name='add_detail'),
+        url(r'^add_detail/(?P<good_id>\d+)/$', views.post_detail_add, name='add_detail'),
 
         # UPDATE
-        url(r'^edit/(?P<id>\d+)/$', views.post_product_update, name='update'),
+        url(r'^edit/(?P<good_id>\d+)/$', views.post_product_update, name='update'),
 
         # DELETE
-        url(r'^delete/(?P<id>\d+)/$', views.post_product_delete, name='delete'),
+        url(r'^delete/(?P<good_id>\d+)/$', views.post_product_delete, name='delete'),
         url(r'^meta/$', views.meta, name='meta'),
     ])),
     url(r'^checkouts/', include([

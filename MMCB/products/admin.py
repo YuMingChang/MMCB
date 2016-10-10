@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from products.models import Product, Detail
+from products.models import Product, Detail, Images
 
 
 @admin.register(Detail)
@@ -16,6 +16,17 @@ class DetailInline(admin.TabularInline):
     extra = 1
 
 
+@admin.register(Images)
+class ImagesAdmin(admin.ModelAdmin):
+    raw_id_fields = ('product', )
+    list_display = ['id', 'product', 'image', ]
+
+
+class ImagesInline(admin.TabularInline):
+    model = Images
+    extra = 1
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'raiser', 'date', 'is_display', 'image', ]
@@ -23,8 +34,8 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['is_display', ]
     list_filter = ['is_display', 'date', ]
     search_fields = ['name', ]
-    ordering = ('date', )
+    ordering = ('-date', )
     # fieldsets = ['name']
-    inlines = [DetailInline]
+    inlines = [DetailInline, ImagesInline]
 
 # Django admin model 漢化顯示文字: http://lishiguang.iteye.com/blog/1328986

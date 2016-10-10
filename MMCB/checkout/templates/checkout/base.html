@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
+
 {% block content %}{{ block.super }}
 <div class="ui three steps">
-  <div class="step" id="cart_step">
+  <div class="disabled step" id="cart_step">
     <i class="shop icon"></i>
     <div class="content">
       <div class="title">購物車</div>
       <div class="description">MyCart</div>
     </div>
   </div>
-  <div class="active step" id="ordercomfirm_step">
+  <div class="disabled step" id="ordercomfirm_step">
     <i class="payment icon"></i>
     <div class="content">
       <div class="title">訂單確認</div>
@@ -35,11 +36,3 @@
 </div>
 {% endif %}
 {% endblock content %}
-
-{% block js-foot %}
-{{ block.super }}
-{% endblock js-foot %}
-
-{% block footer %}
-{{ block.super }}
-{% endblock footer %}

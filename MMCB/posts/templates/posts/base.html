@@ -1,16 +1,4 @@
 {% extends 'base.html' %}
-{% block content %}
-{% include "posts/messages_display.html" %}
-{{ block.super }}
-{% if errors %}
-<div class="ui error message">
-  <i class="close icon"></i>
-  <div class="header">錯誤警告</div>
-  <ul class="list">
-    {% for error in errors %}
-    <li>{{ error }}</li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
+
+{% block content %}{{ block.super }}
 {% endblock content%}

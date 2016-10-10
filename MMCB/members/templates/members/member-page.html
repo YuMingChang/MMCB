@@ -1,63 +1,50 @@
 {% extends 'members/base.html' %}
 {% block title %}{{ title }} | {{ block.super }}{% endblock title %}
 
-{% block content %}
-{{ block.super }}
-    {% if request.user.personalinfo is None %}
-    <div class="ui success large message">
-        <div class="header">使用者已註冊成功. </div>
-        <p>請點擊「資料編輯」新增內容</p>
-    </div>
-    {% else %}
-    <table class="ui compact celled definition table">
-      <thead class="full-width">
-        <tr>
-          <th colspan=2>個人資料 (Personal Information)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="four wide">姓名（收件人）</td>
-          <td>{{ request.user.personalinfo.name }}</td>
-        </tr>
-        <tr>
-          <td>性別</td>
-          <td>{{ request.user.personalinfo.get_sexual_display }}</td>
-        </tr>
-        <tr>
-          <td>生日</td>
-          <td>{{ request.user.personalinfo.birthday }}</td>
-        </tr>
-        <tr>
-          <td>電話</td>
-          <td>{{ request.user.personalinfo.phone }}</td>
-        </tr>
-        <tr>
-          <td>住址</td>
-          <td>{{ request.user.personalinfo.address }}</td>
-        </tr>
-        <tr>
-          <td>信箱</td>
-          <td>{{ request.user.personalinfo.email }}</td>
-        </tr>
-        <tr>
-          <td>銀行帳號後五碼</td>
-          <td>{{ request.user.personalinfo.accounts }}</td>
-        </tr>
-        <!-- <tr>
-          <td>儲值金</td>
-          <td>{{ request.user.personalinfo.money }}</td>
-        </tr> -->
-      </tbody>
-    </table>
-    </div>
-    {% endif %}
+{% block content %} {{ block.super }}
+{% if request.user.personalinfo is None %}
+<div class="ui success large message">
+  <div class="header">使用者已註冊成功. </div>
+  <p>請點擊「資料編輯」新增內容</p>
+</div>
+{% else %}
+<table class="ui compact celled definition table">
+  <thead class="full-width">
+    <tr>
+      <th colspan=2>個人資料 (Personal Information)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="four wide">姓名（收件人）</td>
+      <td>{{ request.user.personalinfo.name }}</td>
+    </tr>
+    <tr>
+      <td>性別</td>
+      <td>{{ request.user.personalinfo.get_sexual_display }}</td>
+    </tr>
+    <tr>
+      <td>生日</td>
+      <td>{{ request.user.personalinfo.birthday }}</td>
+    </tr>
+    <tr>
+      <td>電話</td>
+      <td>{{ request.user.personalinfo.phone }}</td>
+    </tr>
+    <tr>
+      <td>住址</td>
+      <td>{{ request.user.personalinfo.address }}</td>
+    </tr>
+    <tr>
+      <td>信箱</td>
+      <td>{{ request.user.personalinfo.email }}</td>
+    </tr>
+    <tr>
+      <td>銀行帳號後五碼</td>
+      <td>{{ request.user.personalinfo.accounts }}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+{% endif %}
 {% endblock content %}
-
-{% block js-foot %}
-{{ block.super }}
-{% endblock js-foot %}
-
-{% block footer %}
-{{ block.super }}
-{% endblock footer %}

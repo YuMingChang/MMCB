@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 import datetime
 
 
 class Product(models.Model):
     name = models.CharField('商品名稱', max_length=20)
     notes = models.TextField('商品描述', blank=True, default='')
-    raiser = models.PositiveIntegerField('募集人數')
+    raiser = models.PositiveIntegerField('募集人數', null=True, blank=True)
     date = models.DateField('刊登日期', default=datetime.date.today)
     image = models.ImageField('商品圖片', upload_to='ProductImages',
                               null=True, blank=True)
@@ -24,9 +24,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     __repr__ = __str__
-
-    def get_absolute_url(self):
-        return reverse('posts:list')
 
 
 class Detail(models.Model):
@@ -47,3 +44,20 @@ class Detail(models.Model):
 
 # Introduce django database Field Type:
 # http://blog.csdn.net/pipisorry/article/details/45725953
+
+
+def get_image_filename(instance, filename):
+    title = instance.product.name
+    slug = slugify(title, allow_unicode=True)
+    return "ProductImages/%s-%s" % (slug, filename)
+
+
+class Images(models.Model):
+    product = models.ForeignKey('Product', verbose_name='商品')
+    image = models.ImageField(upload_to=get_image_filename,
+                              verbose_name='商品內容圖片',
+                              null=True, blank=True, )
+
+    class Meta:
+        verbose_name = '商品圖片'
+        verbose_name_plural = '所有商品圖片'

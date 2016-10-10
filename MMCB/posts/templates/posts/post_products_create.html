@@ -1,18 +1,14 @@
 {% extends 'posts/base.html' %}
-  {% block title %}
-  {{ title }} | {{ block.super }}
-{% endblock title %}
+{% block title %} {{ title }} | {{ block.super }} {% endblock title %}
 
-{% block content %}
-  {{ block.super }}
-  {% load crispy_forms_tags %}
-  <div class="ui clearing segment">
-      <h1 class="ui left floated header"> {{ title }} </h1>
-      <h4 class="ui horizontal divider header"><i class="write icon"></i> Create Product </h4>
-      <form enctype="multipart/form-data" method="post">
-          {% csrf_token %}
-          {{ form|crispy }}
-          <button type="submit" class="btn btn-primary">新增商品</button>
-      </form>
-  </div>
+{% block content %} {{ block.super }} {% load crispy_forms_tags %}
+<div class="ui clearing segment">
+  <h1 class="ui left floated header"> {{ title }} </h1>
+  <a href="{% url 'posts:productlist' %}"><button class="ui right floated blue basic button"></i>返回商品列表</button></a>
+  <h4 class="ui horizontal divider header"><i class="write icon"></i> Create Product </h4>
+  <form enctype="multipart/form-data" method="post">{% csrf_token %}
+    {% crispy form %} {% crispy formset %}
+    <button type="submit" class="btn btn-primary">新增商品</button>
+  </form>
+</div>
 {% endblock content %}

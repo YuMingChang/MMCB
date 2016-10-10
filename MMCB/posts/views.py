@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
-from posts.forms import ProductForm, DetailFormSet
-from products.models import Product, Detail
+from posts.forms import ProductForm, DetailFormSet, ImageFormSet
+from products.models import Product, Detail, Images
 from members.models import PersonalInfo
 from checkout.models import PurchaseOrder
 
@@ -29,71 +29,87 @@ def post_page(request):
 
 @staff_member_required
 def post_products_list(request):
-    queryset = Product.objects.all()
+    good_queryset = Product.objects.all()
     context = {
         'title': '商品管理列表',
-        'object_list': queryset,
+        'good_queryset': good_queryset,
     }
     return render(request, 'posts/post_products_list.html', context)
 
 
 @staff_member_required
 def post_product_add(request):
-    form = ProductForm(
-        request.POST or None, request.FILES or None, submit_title='新增商品')
-    if form.is_valid():
-        instance = form.save(commit=False)
+    product_form = ProductForm(request.POST or None, request.FILES or None, )
+    image_formset = ImageFormSet(
+        request.POST or None, request.FILES or None,
+        queryset=Images.objects.none(),
+    )
+    if product_form.is_valid() and image_formset.is_valid():
+        instance = product_form.save(commit=False)
         instance.save()
+        for form in image_formset.cleaned_data:
+            try:
+                image = form['image']
+                photo = Images(product=instance, image=image)
+                photo.save()
+            except KeyError:
+                pass
         messages.success(request, 'Successfully Created')
-        return HttpResponseRedirect(instance.get_absolute_url())
-    # else:
-        # messages.error(request, 'Not Successfully Created')
+        return redirect(reverse('posts:productlist'))
+    else:
+        messages.error(request, 'Not Successfully Created')
+        print (product_form.errors, image_formset.errors)
     context = {
         'title': '新增商品',
-        'form': form,
+        'form': product_form,
+        'formset': image_formset,
     }
     return render(request, 'posts/post_products_create.html', context)
 
 
 @staff_member_required
-def post_product_update(request, id=None):
-    instance = get_object_or_404(Product, id=id)
-    form = ProductForm(
+def post_product_update(request, good_id=None):
+    good = get_object_or_404(Product, id=good_id)
+    product_form = ProductForm(
         request.POST or None, request.FILES or None,
-        instance=instance, submit_title='更新商品')
+        submit_title='確定修改商品', instance=good, )
     detail_formset = DetailFormSet(
-        request.POST or None, request.FILES or None, instance=instance)
-    if form.is_valid() and detail_formset.is_valid():
-        instance = form.save(commit=False)
+        request.POST or None, request.FILES or None, instance=good, )
+    image_formset = ImageFormSet(
+        request.POST or None, request.FILES or None, instance=good, )
+    if product_form.is_valid() and detail_formset.is_valid() and image_formset.is_valid():
+        good = product_form.save(commit=False)
         detail_formset.save()
-        instance.save()
+        image_formset.save()
+        good.save()
         messages.success(request, 'Item Saved')
-        return HttpResponseRedirect(instance.get_absolute_url())
+        return redirect(reverse('posts:productlist'))
     context = {
         'title': '商品編輯',
-        'instance': instance,
-        'form': form,
-        'detail_formset': detail_formset
+        'good': good,
+        'form': product_form,
+        'detail_formset': detail_formset,
+        'image_formset': image_formset,
     }
     return render(request, 'posts/post_products_update.html', context)
 
 
 @staff_member_required
-def post_product_delete(request, id=None):
-    instance = get_object_or_404(Product, id=id)
-    instance.delete()
+def post_product_delete(request, good_id=None):
+    good = get_object_or_404(Product, id=good_id)
+    good.delete()
     messages.success(request, 'Successfully Deleted')
-    return redirect(instance.get_absolute_url())
+    return redirect(reverse('posts:productlist'))
 
 
 @staff_member_required
-def post_detail_add(request, id=None):
-    queryset = Product.objects.all()
+def post_detail_add(request, good_id=None):
+    goods_id_name = Product.objects.all().values_list('id', 'name')
     errors = []
     context = {
         'title': '新增商品內容',
-        'object_list': queryset,
-        'selID': id,
+        'goods_id_name': goods_id_name,
+        'selID': good_id,
         'errors': errors,
     }
 
@@ -121,12 +137,11 @@ def post_detail_add(request, id=None):
             product = Product.objects.get(id=selObj)
             try:
                 created_flag = False
-                if all(len(x) == 0 for x in lst):
+                if any(len(x) == 0 for x in lst):
                     created_flag = False
 
                 # Color - Size - Price
-                elif (section == 'S1' and
-                        all(len(x) == len(lst[2]) for x in lst)):
+                elif (section == 'S1' and all(len(x) == len(lst[2]) for x in lst)):
                     for i in range(len(price_list)):
                         Detail.objects.create(
                             product=product,
@@ -161,7 +176,7 @@ def post_detail_add(request, id=None):
                     created_flag = True
                 if created_flag:
                     color_list, size_list, price_list = ('', '', '')
-                    return HttpResponseRedirect('/posts/{id}/edit'.format(id=selObj))
+                    return redirect(reverse('posts:update', kwargs={'good_id': selObj}))
                 else:
                     errors.append("資料輸入有所缺少，請重新確認！")
             except ValueError:
@@ -177,20 +192,20 @@ def post_detail_add(request, id=None):
 @staff_member_required
 def post_orders_list(request):
     errors = []
-    queryset = PurchaseOrder.objects.all()
+    order_queryset = PurchaseOrder.objects.all()
     if request.method == 'GET' and 'search_name' in request.GET:
         try:
             search_name = request.GET['search_name']
             personal = PersonalInfo.objects.filter(name__icontains=search_name)
-            queryset = PurchaseOrder.objects.filter(shopper=personal)
-            if personal.exists() is False or queryset.exists() is None:
+            order_queryset = PurchaseOrder.objects.filter(shopper=personal)
+            if personal.exists() is False or order_queryset.exists() is None:
                 errors.append('搜尋不到資料，請重新嘗試！')
-                queryset = PurchaseOrder.objects.all()
+                order_queryset = PurchaseOrder.objects.all()
         except:
             pass
     context = {
         'title': '訂單管理列表',
-        'order_list': queryset,
+        'order_queryset': order_queryset,
         'errors': errors,
     }
     return render(request, 'posts/post_orders_list.html', context)
