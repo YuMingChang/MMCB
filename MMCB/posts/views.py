@@ -29,9 +29,16 @@ def post_page(request):
 
 @staff_member_required
 def post_products_list(request):
+    errors = []
     good_queryset = Product.objects.all()
+    if request.method == 'GET' and 'search_name' in request.GET:
+        try:
+            good_queryset = Product.objects.filter(name__icontains=request.GET.get('search_name', None))
+        except:
+            errors.append('搜尋不到資料，請重新嘗試！')
     context = {
         'title': '商品管理列表',
+        'errors': errors,
         'good_queryset': good_queryset,
     }
     return render(request, 'posts/post_products_list.html', context)
@@ -45,20 +52,20 @@ def post_product_add(request):
         queryset=Images.objects.none(),
     )
     if product_form.is_valid() and image_formset.is_valid():
-        instance = product_form.save(commit=False)
-        instance.save()
-        for form in image_formset.cleaned_data:
-            try:
-                image = form['image']
-                photo = Images(product=instance, image=image)
-                photo.save()
-            except KeyError:
-                pass
-        messages.success(request, 'Successfully Created')
-        return redirect(reverse('posts:productlist'))
-    else:
-        messages.error(request, 'Not Successfully Created')
-        print (product_form.errors, image_formset.errors)
+        try:
+            instance = product_form.save(commit=False)
+            instance.save()
+            for form in image_formset.cleaned_data:
+                try:
+                    image = form['image']
+                    photo = Images(product=instance, image=image)
+                    photo.save()
+                except KeyError:
+                    pass
+            messages.success(request, 'Product Successfully Created')
+            return redirect(reverse('posts:productlist'))
+        except:
+            messages.error(request, 'Product Not Successfully Created')
     context = {
         'title': '新增商品',
         'form': product_form,
@@ -193,21 +200,37 @@ def post_detail_add(request, good_id=None):
 def post_orders_list(request):
     errors = []
     order_queryset = PurchaseOrder.objects.all()
-    if request.method == 'GET' and 'search_name' in request.GET:
+    get_list = ['search_name', 'selOrderStatus', 'search_year', 'search_month']
+    str_search = '你所搜尋的'
+    if request.method == 'GET' and any(sel in request.GET for sel in get_list):
         try:
-            search_name = request.GET['search_name']
-            personal = PersonalInfo.objects.filter(name__icontains=search_name)
-            order_queryset = PurchaseOrder.objects.filter(shopper=personal)
-            if personal.exists() is False or order_queryset.exists() is None:
-                errors.append('搜尋不到資料，請重新嘗試！')
-                order_queryset = PurchaseOrder.objects.all()
-        except:
-            pass
+            buyer, status, year, month = [request.GET.get(item, None) for item in get_list]
+            print ('buyer= {}, status= {}, year= {}, month= {}'.format(buyer, status, year, month))
+            if buyer is not None and buyer != '':
+                personal = PersonalInfo.objects.filter(name__icontains=buyer)
+                order_queryset = PurchaseOrder.objects.filter(shopper=personal)
+                str_search += ' 買家：{} /'.format(buyer)
+                if personal.exists() is False or order_queryset.exists() is None:
+                    errors.append('搜尋不到資料，請重新嘗試！')
+                    order_queryset = PurchaseOrder.objects.all()
+            if year is not None and year != '':
+                order_queryset = order_queryset.filter(order_date__year=year)
+                str_search += ' 年份：{} /'.format(year)
+            if month is not None and month != '':
+                order_queryset = order_queryset.filter(order_date__month=month)
+                str_search += ' 月份：{} /'.format(month)
+            if status is not None:
+                order_queryset = order_queryset.filter(status=status)
+                str_search += ' 狀態：{} /'.format(dict(PurchaseOrder.ORDER_STATUS)[status])
+        except ValueError:
+            errors.append('輸入數值有誤，請重新輸入，謝謝！')
     context = {
         'title': '訂單管理列表',
         'order_queryset': order_queryset,
         'errors': errors,
     }
+    if len(str_search) > 5:
+        context['str_search'] = str_search
     return render(request, 'posts/post_orders_list.html', context)
 
 
@@ -229,6 +252,8 @@ def posts_order_update(request, number, do):
     order = get_object_or_404(PurchaseOrder, number=number)
     if do is not None:
         if do in ['UP', 'PA', 'PC', 'WS', 'SN', 'AB', 'CA', 'AC', 'AD']:
+            if do == 'AD':
+                print ('{}'.format(order.sold_goods.all()))
             order.status = do
             order.save()
     return redirect(reverse('posts:order', kwargs={'number': number}))

@@ -2,59 +2,59 @@
 {% block title %} MMCB商品列表 | {{ block.super }}{% endblock title %}
 
 {% block content %} {{ block.super }}
-<div class="ui segment">
-  {% for item in cart.items_serializable %}
-    <p>{{ item }}</p>
-  {% endfor %}
-</div>
 <div class="ui special cards">
   <div class="ui four stackable cards">
-    {% for obj in Product_ObjList %}
-    {% if obj.is_display %}
-    <div class="ui card">
+    {% for good in Product_ObjList %} {% if good.is_display %}
+    <div class="ui card" id="No{{good.id}}Card">
       <div class="blurring dimmable image">
         <div class="ui inverted dimmer">
           <div class="content">
             <div class="center">
-              <div class="ui inverted pink button" data-toggle="modal" data-target="#UMC_Modal{{obj.id}}">Add Cart</div>
+              <div class="ui inverted pink button" data-toggle="modal" data-target="#CardModal{{good.id}}">Add Cart</div>
             </div>
           </div>
         </div>
-        <img src="{{MEDIA_URL}}/{{ obj.image }}">
+        <img src="{{MEDIA_URL}}/{{ good.image }}">
       </div>
       <div class="content">
-        <a class="header">{{ obj.name }}</a>
+        <a class="header">{{ good.name }}</a>
         <div class="meta">
-          <span class="date">在 {{ obj.date }} 加入</span>
+          <span class="date">於 {{ good.date }} 上架</span>
         </div>
-        <div class="description">{{ obj.notes |linebreaks |truncatechars:100 }}</div>
+        <div class="description">{{ good.notes |linebreaks |truncatechars:100 }}</div>
       </div>
       <div class="extra content">
-        <a><i class="users icon"></i> 成團數量：{{ obj.raiser }} </a>
+        <div class="ui large transparent left icon">
+          <div class="ui list">
+          {% for item in cart.items %} {% for detail in good.detail_set.all %} {% if detail == item.product %}
+            {% if forloop.first %} <span><i class="heart outline icon"></i>你已加入購物車的有：</span> {% endif %}
+            <div class="item">
+              <div class="right floated content">{{ item.product }} / {{ item.quantity }}件</div>
+            </div>
+          {% endif %} {% endfor %} {% endfor %}
+          </div>
+        </div>
       </div>
-      <div class="ui bottom attached basic pink button" data-toggle="modal" data-target="#UMC_Modal{{obj.id}}"><i class="cart icon"></i> Add Cart </div>
+      <div class="ui bottom attached basic pink button" data-toggle="modal" data-target="#CardModal{{good.id}}"><i class="cart icon"></i> Add Cart </div>
     </div>
-    {% endif %}
-    {% endfor %}
+    {% endif %} {% endfor %}
   </div>
 </div>
 {% endblock content %}
 
 {% block footer %}
 <form class="form-horizontal" role="form" method="post">
-  {% for obj in Product_ObjList %}
-  {% if obj.is_display %}
-  <div class="modal fade" id="UMC_Modal{{obj.id}}" role="dialog">
+  {% for good in Product_ObjList %} {% if good.is_display %}
+  <div class="modal fade" id="CardModal{{good.id}}" role="dialog">
     <div class="modal-dialog ">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" value="objName">{{obj.name}}</h4>
+          <h4 class="modal-title">{{good.name}}</h4>
         </div>
-        <div class="modal-body">
-          {{ obj.notes | linebreaks }}
+        <div class="modal-body"> {{ good.notes | linebreaks }}
           <div class="row">
-            <div class="col-md-3"><img src="{{MEDIA_URL}}/{{ obj.image }}" class="img-responsive"></div>
+            <div class="col-md-3"><img src="{{MEDIA_URL}}/{{ good.image }}" class="img-responsive"></div>
             <div class="col-md-9">
               <table class="table">
                 <thead>
@@ -68,22 +68,28 @@
                     <td>
                       <!-- How to get value of text input field by JavaScript: http://stackoverflow.com/questions/11563638/javascript-how-to-get-value-of-text-input-field -->
                       <div class="form-group">
-                        <select class="form-control" id="{{obj.id}}selection" name="selection">
-                            {% for objD in obj.detail_set.all %}
-                            <option value="{{objD.id}}">{{objD}}</option>
-                            {% empty %}
-                            <option value=-1>Error</option>
-                            {% endfor %}
-                          </select>
+                        <select class="form-control" id="No{{good.id}}selItem">
+                          {% for goodItem in good.detail_set.all %}
+                            {% if goodItem.stock == 0 %}
+                            <option value="{{goodItem.id}}" data-stock={{goodItem.stock}} disabled>{{ goodItem }} - (庫存僅剩：{{goodItem.stock}}/件)</option>
+                            {% elif goodItem.stock <= 10 %}
+                            <option value="{{goodItem.id}}" data-stock={{goodItem.stock}}>{{ goodItem }} - (庫存僅剩：{{goodItem.stock}}/件)</option>
+                            {% else %}
+                            <option value="{{goodItem.id}}" data-stock={{goodItem.stock}}>{{ goodItem }}</option>
+                            {% endif %}
+                          {% empty %}
+                          <option value=-1>Error</option>
+                          {% endfor %}
+                        </select>
                       </div>
                     </td>
                     <td>
                       <div class="form-group">
-                        <select class="form-control" id="{{obj.id}}quantity" name="quantity">
-                            {% for num in "123456789" %}
-                            <option>{{ num }}</option>
-                            {% endfor %}
-                          </select>
+                        <select class="form-control" id="No{{good.id}}selQty">
+                          {% for num in "123456789" %}
+                          <option value="{{num}}">{{num}}</option>
+                          {% endfor %}
+                        </select>
                       </div>
                     </td>
                   </tr>
@@ -94,24 +100,23 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="ui button" data-dismiss="modal">取消</button>
-          <button type="button" class="positive ui button" onclick="addCart({{obj.id}})"><i class="icon cart"></i> 加入購物車</button>
+          <button type="button" class="positive ui button" onclick="addCart({{good.id}})"><i class="icon cart"></i> 加入購物車</button>
           <hr>
           <style>
             .bottom-buffer {
               margin-bottom: 30px;
             }
           </style>
-          {% for imgobj in obj.images_set.all %}
+          {% for goodImg in good.images_set.all %}
           <div class="ui segment">
-            <img src="{{MEDIA_URL}}/{{ imgobj.image }}" class="ui fluid rounded image" alt="商品圖片">
+            <img src="{{MEDIA_URL}}/{{ goodImg.image }}" class="ui fluid rounded image" alt="商品圖片">
           </div>
           {% endfor %}
         </div>
       </div>
     </div>
   </div>
-  {% endif %}
-  {% endfor %}
+  {% endif %} {% endfor %}
 </form>
 {% endblock footer %}
 
@@ -121,10 +126,10 @@
     on: 'hover'
   });
 
-  function addCart(objID) {
-    var sel = document.getElementById(objID + 'selection').value;
-    var qty = document.getElementById(objID + 'quantity').value;
-    window.location = "/cart/add/?id=" + sel + "&quantity=" + qty;
+  function addCart(goodID) {
+    var selItemId = $("#No" + goodID + "selItem").val();
+    var selItemQty = $("#No" + goodID + "selQty").val();
+    window.location = "/cart/add/?id=" + selItemId + "&quantity=" + selItemQty;
   }
 </script>
 {% endblock js-foot %}

@@ -53,6 +53,14 @@
           {% endif %}
         </tr>
         {% endfor %}
+        {% if myorder.notes %}
+        <tr>
+          <td colspan="7">
+            <h3>買家的話：</h3>
+            　　{{ myorder.notes }}
+          </td>
+        </tr>
+        {% endif %}
       </tbody>
     </table>
   </div>

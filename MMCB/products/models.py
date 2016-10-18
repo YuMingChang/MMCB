@@ -1,22 +1,27 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.utils.text import slugify
+from django.utils.safestring import mark_safe
 import datetime
 
 
 class Product(models.Model):
     name = models.CharField('商品名稱', max_length=20)
     notes = models.TextField('商品描述', blank=True, default='')
-    raiser = models.PositiveIntegerField('募集人數', null=True, blank=True)
+    # raiser = models.PositiveIntegerField('募集人數', null=True, blank=True)
     date = models.DateField('刊登日期', default=datetime.date.today)
-    image = models.ImageField('商品圖片', upload_to='ProductImages',
+    image = models.ImageField('商品展示圖片', upload_to='ProductImages',
                               null=True, blank=True)
-    is_display = models.BooleanField('展示與否', default=True)
+    is_display = models.BooleanField('是否展示商品', default=True)
+
+    def thumbnail(self):
+        return mark_safe('<img src="/media/%s" width="30" height="30" />' % (self.image))
+    thumbnail.short_description = 'Thumbnail'
 
     class Meta:
         verbose_name = '商品'
         verbose_name_plural = '所有商品'
-        ordering = ['-date', 'raiser']
+        ordering = ['-date', ]
 
     # def __unicode__(self):    It's doesn't work.
     # solve: http://blog.csdn.net/feifashengwu/article/details/12625719
@@ -32,7 +37,10 @@ class Detail(models.Model):
     product = models.ForeignKey('Product', verbose_name='商品')
     color = models.CharField('商品樣式', max_length=10)
     size = models.CharField('商品尺寸', max_length=10)
-    price = models.PositiveIntegerField('商品價格')
+    price = models.PositiveSmallIntegerField('商品價格', default=0)
+    stock = models.PositiveSmallIntegerField('存貨量', default=0)
+    sold = models.PositiveSmallIntegerField('已銷貨量', default=0)
+    total_sold = models.PositiveSmallIntegerField('總已銷貨量', default=0)  
 
     class Meta:
         verbose_name = '內容'

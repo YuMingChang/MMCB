@@ -17,7 +17,7 @@
       {% for item in cart.items %}
       <tr>
         <td class="middle aligned">
-          <button type="button" class="circular ui basic negative icon button"><i class="minus icon" onclick="delCart({{ item.product.id }})"></i></button>
+          <button type="button" class="circular ui basic negative icon button" onclick="javascript:window.location='remove/?id={{ item.product.id }}'"><i class="minus icon"></i></button>
         </td>
         <td>
           <img class="ui middle aligned rounded tiny image" src="{{MEDIA_URL}}/{{ item.product.product.image }}">
@@ -26,11 +26,11 @@
         <td class="middle aligned">{{ item.product }}</td>
         <td class="middle aligned">
           <div class="ui action input">
-            <button type="button" class="ui negative icon button" data-type="minus" onclick="quantityPM({{forloop.counter0}}, '-')"><i class="minus icon"></i></button>
+            <button type="button" id='plusButton' class="ui negative icon button" data-type="minus" onclick="quantityPM({{forloop.counter0}}, '-')"><i class="minus icon"></i></button>
             <div class="one wide">
-              <input type="text" name="quantity" maxlength="2" value="{{ item.quantity }}" min="1" max="99" class="form-control input-number">
+              <input type="text" name="quantity[]" maxlength="2" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="form-control input-number" readonly=True>
             </div>
-            <button type="button" class="ui positive icon button" data-type="plus" onclick="quantityPM({{forloop.counter0}}, '+')"><i class="plus icon"></i></button>
+            <button type="button" id='minusButton' class="ui positive icon button" data-type="plus" onclick="quantityPM({{forloop.counter0}}, '+')"><i class="plus icon"></i></button>
           </div>
         </td>
         <td class="middle aligned">$ {{ item.product.price }}</td>
@@ -38,8 +38,8 @@
       {% endfor %}
     </tbody>
   </table>
-  <hr>
   {% if cart.is_empty != True %}
+  <hr><a href="clear"><i class="trash outline icon"></i></a>
   <div class="row">
     <div class="col-md-2 col-md-offset-5">
       <button type="submit" class="btn btn-success btn-lg btn-block"> 確定 </button></a>
@@ -56,21 +56,23 @@
     document.getElementsByClassName("step")[0].setAttribute("class", "active step");
   });
 
-  function delCart(objID) {
-    window.location = "remove/?id=" + objID;
-  }
-  $('.ui.icon.button').click(function() {});
-
   function quantityPM(num, mark) {
-    var input_quantity = document.getElementsByName("quantity");
-    var minValue = parseInt($('.input-number').attr('min'));
-    var maxValue = parseInt($('.input-number').attr('max'));
-    var quantity = parseInt(input_quantity[num].value);
-    if (mark == '+' && quantity >= minValue && quantity < maxValue) {
-      input_quantity[num].value = quantity + 1
-    } else if (mark == '-' && quantity > minValue && quantity <= maxValue) {
-      input_quantity[num].value = quantity - 1
+    var selInput = $("input[name='quantity[]']").eq(num);
+    var selMinusBtn = $("button[id='minusButton']").eq(num);
+    var selPlusBtn = $("button[id='plusButton']").eq(num);
+    var minValue = parseInt(selInput.attr('min'));
+    var maxValue = parseInt(selInput.attr('max'));
+    var quantity = parseInt(selInput.val());
+    if (mark == '+' && quantity < maxValue) {
+      selInput.val(quantity + 1);
     }
+    else if (mark == '-' && quantity > minValue) {
+      selInput.val(quantity - 1);
+    }
+    selMinusBtn.prop("disabled", false);
+    selPlusBtn.prop("disabled", false);
+    if (selInput.val() == minValue) { selPlusBtn.prop("disabled", true); }
+    else if (selInput.val() == maxValue) { selMinusBtn.prop("disabled", true); }
   };
 </script>
 {% endblock js-foot %}

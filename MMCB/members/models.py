@@ -12,16 +12,16 @@ class PersonalInfo(models.Model):
     user = models.OneToOneField(allauth.app_settings.USER_MODEL)
     name = models.CharField(_('姓名（收件人）'), max_length=20)
     sexual = models.CharField(_('性別'), max_length=1, choices=SEXUAL)
-    birthday = models.DateField(_('生日'), help_text=_('範例：XXXX/XX/XX'))
+    birthday = models.DateField(_('生日'), help_text=_('範例：1993/11/29'))
     phone = models.CharField(
-        _('手機'), max_length=10, help_text=_('範例：09XXXXXXXX'),
+        _('手機'), max_length=10, help_text=_('範例：0912456999'),
         validators=[validators.RegexValidator(
                             r'^09\d{8}$', _('請輸入正確的手機號碼'), 'invalid')])
     email = models.EmailField()
     address = models.CharField('住址', max_length=150)
     # called 'card_number' when this reconstructure.
     accounts = models.CharField(
-        _('匯款帳號後五碼'), max_length=5, help_text=_('範例：XXXXX'),
+        _('匯款帳號後五碼'), max_length=5, help_text=_('範例：12345'),
         validators=[validators.RegexValidator(
                             r'^\d{5}$', _('請輸入匯款帳號後五碼'), 'invalid')])
     money = models.PositiveIntegerField(_('儲值金'), default=0)

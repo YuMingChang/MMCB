@@ -13,6 +13,11 @@
     <div class="ui center aligned segment">
       <p>購買日期：{{ myorder.order_date }}</p>
     </div>
+    {% if myorder.date_remittance %}
+    <div class="ui center aligned segment">
+      <p>匯款日期/時間：{{ myorder.date_remittance }}</p>
+    </div>
+    {% endif %}
   </div>
   <div class="ui clearing segment">
     <div class="ui right aligned grid">
@@ -63,6 +68,14 @@
           {% endif %}
         </tr>
         {% endfor %}
+        {% if myorder.notes %}
+        <tr>
+          <td colspan="7">
+            <h3>買家的話：</h3>
+            　　{{ myorder.notes }}
+          </td>
+        </tr>
+        {% endif %}
       </tbody>
     </table>
   </div>

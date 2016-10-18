@@ -7,16 +7,17 @@ from products.models import Detail
 
 def add(request):
     cart = Cart(request.session)
-    product = Detail.objects.get(id=request.GET.get('id'))
-    quantity = request.GET.get('quantity')
-    cart.add(product, quantity, price=product.price)
-    return redirect(reverse('store'))
+    selitem_id = request.GET.get('id')
+    selitem_qty = request.GET.get('quantity')
+    selitem = Detail.objects.get(id=selitem_id)
+    cart.add(selitem, selitem_qty, price=selitem.price)
+    return redirect(reverse('store') + "#No{}Card".format(selitem.product.id))
 
 
 def remove(request):
     cart = Cart(request.session)
-    product = Detail.objects.get(id=request.GET.get('id'))
-    cart.remove(product)
+    selitem = Detail.objects.get(id=request.GET.get('id'))
+    cart.remove(selitem)
     return redirect(reverse('cart:shopping-cart-show'))
 
 
@@ -27,13 +28,22 @@ def clear(request):
 
 
 def show(request):
+    cart = Cart(request.session)
+    errors = []
+    isLessThanStock = False
     if request.method == 'POST':
-        cart = Cart(request.session)
-        try:
-            quantityList = request.POST.getlist('quantity')
-            for idx, item in enumerate(cart.products):
-                cart.set_quantity(item, quantityList[idx])
+        quantitylist = request.POST.getlist('quantity[]')
+        for idx, item in enumerate(cart.products):
+            item = Detail.objects.get(id=item.id)
+            if (item.stock < int(quantitylist[idx])):
+                cart.set_quantity(item, item.stock)
+                errors.append('{}({})  商品庫存少於所選擇數量，自動幫您降為商品庫存所剩'.format(item.product, item))
+                isLessThanStock = True
+            else:
+                cart.set_quantity(item, quantitylist[idx])
+        if isLessThanStock:
+            return render(request, 'shopping/show-cart.html', {'errors': errors})
+        else:
             return redirect(reverse('checkout:page'))
-        except:
-            pass
+
     return render(request, 'shopping/show-cart.html')

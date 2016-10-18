@@ -1,4 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}{{ block.super }}
+{% if errors %}
+<div class="ui error message">
+  <i class="close icon"></i>
+  <div class="header">錯誤提醒</div>
+  <ul class="list">
+    {% for error in errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 {% endblock content%}

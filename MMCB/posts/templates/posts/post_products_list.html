@@ -7,6 +7,21 @@
   <a href="{% url 'posts:orderlist' %}"><button class="ui basic teal large button">訂單管理頁面</button></a>
   <a href="{% url 'posts:add_detail' %}"><button class="ui right floated green basic button"><i class="add square icon"></i>新增內容</button></a>
   <a href="{% url 'posts:create' %}"><button class="ui right floated red basic button"><i class="plus icon"></i> 新增商品</button></a>
+  <form method="get" class="ui form">
+    <div class="field">
+      <div class="ui category search">
+        <div class="ui icon input">
+          <input class="prompt" type="text" name='search_name' placeholder="搜尋 商品名稱">
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ui right floated ui buttons">
+      <button type="submit" class="ui blue basic button">搜尋</button>
+      <div class="or"></div>
+      <a href="{% url 'posts:productlist' %}"><button type="button" class="ui red basic button">取消</button></a>
+    </div>
+  </form>
   <h4 class="ui horizontal divider header"><i class="gift icon"></i> Product List </h4>
   <div class="ui massive selection animated list">
     {% for good in good_queryset %}

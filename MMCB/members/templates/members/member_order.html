@@ -24,7 +24,7 @@
       <div class="left floated left aligned eight wide column">
         <a href="{% url 'member:shoppinglist' %}"><button class="ui green basic button">我的購物清單</button></a>
       </div>
-      {% if myorder.date_remittance == None %}
+      {% if myorder.date_remittance == None or myorder.status == 'UP' %}
       <div class="four wide column">
         <div class="input-group date" id='datetimepicker'>
           <input type="text" class="form-control" id="datetime" placeholder="匯款日期/時間" />
@@ -73,8 +73,8 @@
               <div class="detail">{{ good }}</div>
             </a>
           </td>
-          <td class="middle aligned" id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
-          <td class="middle aligned" name="tdQtySum">{{ myorder.order_notes_nonono }}</td>
+          <td class="middle aligned" id="{{ good.id }}" name="tdPrice">$ {{ good.price }}</td>
+          <td class="middle aligned" name="tdQtySum">{{ myorder.order_notes }}</td>
           {% if forloop.first %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
@@ -100,6 +100,14 @@
           {% endif %} {% endif %}
         </tr>
         {% endfor %}
+        {% if myorder.notes %}
+        <tr>
+          <td colspan="7">
+            <h3>買家的話：</h3>
+            <p>　　{{ myorder.notes }}</p>
+          </td>
+        </tr>
+        {% endif %}
       </tbody>
     </table>
   </div>
@@ -132,7 +140,6 @@
       <a href="https://eservice.7-11.com.tw/E-Tracking/search.aspx">超商系統</a>查詢。
     </div>
   </div>
-
 </div>
 {% endblock content %}
 
@@ -140,7 +147,8 @@
 <script type="text/javascript">
   function yesorno(dowhat, display) {
     var datetime = $('#datetime').val();
-    var datetime = datetime.replace(/\//g, '-');
+    alert(datetime);
+    // var datetime = datetime.replace(/\//g, '-');
     if (dowhat == 'PA' && datetime == '') {
       alert('請記得選擇您的「匯款日期與時間」再點選"通知已付款"，謝謝。');
       return false;

@@ -89,6 +89,16 @@ Having said that, you can put this kind of substitution into your JavaScript.
 
 [Django Template Variables and Javascript](http://stackoverflow.com/questions/298772/django-template-variables-and-javascript)
 
+### 'yes and no' alert
+> You’re probably looking for [JS confirm()](http://stackoverflow.com/questions/9334636/javascript-yes-no-alert), which displays a prompt and returns true or false based on what the user decided:
+	
+	if (confirm('Are you sure you want to save this thing into the database?')) {
+	    // Save it!
+	} else {
+	    // Do nothing!
+	}
+
+
 ## jQuery
 jQuery 是一套物件導向式簡潔輕量級的 **JavaScript Library**。透過 jQuery 你可以用最精簡少量的程式碼來輕鬆達到跨瀏覽器 DOM 操作、事件處理、設計頁面元素動態效果、AJAX 互動等。
 
@@ -171,5 +181,5 @@ Integrated set of Django applications addressing authentication, registration, a
 		<a href="{% url 'checkout:page' %}"><button class="btn btn-success btn-lg btn-block"> 結帳 </button></a>
 		
 * frontend form page need to interactive with user, plase return feedback like: **errors or messages**.
-* 
+
 * member/models/field Name 'accounts' -> 'card_number' & 'sexual' -> 'gender' & ForeignKey -> OneToOneField

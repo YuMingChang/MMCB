@@ -1,6 +1,6 @@
-from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.urls import reverse
 from functools import reduce
 from datetime import datetime
 from carton.cart import Cart
@@ -14,7 +14,7 @@ def checkout_page(request):
     cart = Cart(request.session)
     cost_total = cart.total
     if cart.is_empty:
-        return redirect('store')
+        return redirect(reverse('store'))
     else:
         if request.POST:
             cart_list = [v for k, v in cart.cart_serializable.items()]
@@ -37,14 +37,26 @@ def checkout_page(request):
                     order.number = float(datetime.now().strftime('%y%m%d%H%M%S')) + float(order.id)
                     order.total = order.total + order.freight
                     for d in cart_list:
-                        order.sold_goods.add(Detail.objects.get(id=d['product_pk']))
+                        detail_item = get_object_or_404(Detail, id=d['product_pk'])
+                        order.sold_goods.add(detail_item)
+                        if detail_item.stock - d['quantity'] >= 0:
+                            detail_item.stock -= d['quantity']
+                        else:
+                            return redirect(reverse('cart:shopping-cart-show'))
+                        detail_item.sold += d['quantity']
+                        detail_item.total_sold += d['quantity']
+                        # print ('id={} / 存貨={} / 售貨={} / 總售貨={}'.format(
+                        #     detail_item.id, detail_item.stock,
+                        #     detail_item.sold, detail_item.total_sold
+                        # ))
+                        detail_item.save()
                     order.save()
                     cart.clear()
                     return HttpResponseRedirect(reverse('checkout:orderinfo'))
                 else:
                     errors.append('資料有誤 或 尚未填寫，請重新整理再次一次')
             except:
-                return redirect('member:info')
+                return redirect(reverse('member:info'))
     context = {
         'title': '結帳清單',
         'errors': errors,
@@ -56,9 +68,10 @@ def checkout_page(request):
 def checkout_orderinfo(request):
     errors = []
     newest_order = None
+    user_orderlist = request.user.personalinfo.purchaseorder_set.all()
     try:
-        newest_orderid = request.user.personalinfo.purchaseorder_set.all().order_by('-order_date')[0].id
-        newest_order = PurchaseOrder.objects.get(id=newest_orderid)
+        newest_orderid = user_orderlist.order_by('-order_date')[0].id
+        newest_order = get_object_or_404(PurchaseOrder, id=newest_orderid)
     except:
         errors.append('無法取得訂單資料')
     context = {

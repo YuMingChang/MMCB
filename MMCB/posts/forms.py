@@ -3,7 +3,7 @@ from django.forms.models import inlineformset_factory
 
 from products.models import Product, Detail, Images
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Button
+from crispy_forms.layout import Submit, Button, Layout, Div, HTML, Fieldset, Field
 from bootstrap3_datetime.widgets import DateTimePicker
 
 
@@ -11,10 +11,6 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        # Test: It test for DatePicker but no idea how to work.
-        date = forms.DateField(
-            widget=DateTimePicker(
-                options={"format": "YYYY-MM-DD", "pickTime": False}))
         fields = [
             'name',
             'notes',
@@ -26,6 +22,43 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Div(
+                Div('name', css_class="col-md-8"),
+                Div('date', css_class="col-md-2"),
+                Div('is_display', css_class="col-md-2"),
+                css_class="row"
+            ),
+            Div(
+                Div('notes', css_class="col-md-8"),
+                Div(
+                    Div(
+                        HTML("""
+                            {% if form.image.value %}
+                            <img class="img-responsive" src="{{ MEDIA_URL }}{{ form.image.value }}">
+                            {% endif %}
+                        """, )
+                    ),
+                    Div('image'),
+                    css_class="col-md-4"
+                ),
+                css_class='row'
+            ),
+            Div(
+                Div(HTML("""
+
+                <h4>商品內容圖片展示：</h4>
+                <div class="ui tiny images">
+                    {% for item in image_formset %}
+                    {% if item.image.value %}
+                    <img class="ui small image" src="{{ MEDIA_URL }}{{ item.image.value }}">
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="ui divider"></div>
+                """, )),
+            )
+        )
         if submit_title:
             self.helper.add_input(Submit('submit', submit_title))
             self.helper.add_input(Button(
@@ -42,12 +75,15 @@ class DetailForm(forms.ModelForm):
             'color',
             'size',
             'price',
+            'stock',
+            'sold',
+            'total_sold',
         ]
 
 
 BaseDetailFormSet = inlineformset_factory(
     parent_model=Product, model=Detail,
-    fields=('color', 'size', 'price'), extra=0,
+    fields=('color', 'size', 'price', 'stock', 'sold', 'total_sold', ), extra=0,
 )
 
 
@@ -59,6 +95,16 @@ class DetailFormSet(BaseDetailFormSet):
         self.helper.template = 'bootstrap/table_inline_formset.html'
         self.helper.form_tag = False
         self.helper.disable_csrf = True
+        self.helper.layout = Layout(
+            Fieldset(
+                Field('color', ),
+                Field('size', ),
+                Field('price', ),
+                Field('stock', ),
+                Field('sold', readonly=True),
+                Field('total_sold', readonly=True),
+            )
+        )
 
 
 class ImageForm(forms.ModelForm):
@@ -72,7 +118,7 @@ class ImageForm(forms.ModelForm):
 
 BaseImagesFormSet = inlineformset_factory(
     parent_model=Product, model=Images,
-    fields=('image', ), extra=10,
+    fields=('image', ), extra=4, max_num=4,
 )
 
 
@@ -81,6 +127,6 @@ class ImageFormSet(BaseImagesFormSet):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.template = 'bootstrap/table_inline_formset.html'
+        self.helper.template = 'bootstrap3/table_inline_formset.html'
         self.helper.form_tag = False
         self.helper.disable_csrf = True

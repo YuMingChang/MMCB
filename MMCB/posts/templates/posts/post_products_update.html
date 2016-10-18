@@ -13,44 +13,13 @@
 </div>
 {% endblock content %}
 
-{% block footer %} {{ block.super }}
-<div class="ui basic modal">
-  <i class="close icon"></i>
-  <div class="header">
-    刪除商品
-  </div>
-  <div class="image content">
-    <div class="image">
-      <i class="trash icon"></i>
-    </div>
-    <div class="description">
-      <p>您真的確定要刪除此商品嗎?</p>
-    </div>
-  </div>
-  <div class="actions">
-    <div class="two fluid ui inverted buttons">
-      <div class="ui cancel red basic inverted button">
-        <i class="remove icon"></i> 取消
-      </div>
-      <div class="ui ok green basic inverted button">
-        <i class="checkmark icon"></i> 刪除確定
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock footer %}
-
 {% block js-foot %} {{ block.super }}
 <script type="text/javascript">
   function ProductDelete() {
     var delAddress = window.location.href.replace("edit", "delete");
-    $('.ui.basic.modal')
-      .modal({
-        onApprove: function() {
-          window.location.href = delAddress;
-        }
-      })
-      .modal('show');
+    if(confirm("您真的確定要刪除此商品嗎?")){
+      window.location.href = delAddress;
+    }
   }
 </script>
 {% endblock js-foot %}
