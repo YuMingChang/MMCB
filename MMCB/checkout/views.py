@@ -6,12 +6,13 @@ from datetime import datetime
 from carton.cart import Cart
 from checkout.models import PurchaseOrder
 from members.models import PersonalInfo
-from products.models import Detail
+from products.models import Item
 
 
 def checkout_page(request):
     errors = []
     cart = Cart(request.session)
+    freight_only = any([item.product.product.freight_only for item in cart.items])
     cost_total = cart.total
     if cart.is_empty:
         return redirect(reverse('store'))
@@ -25,42 +26,41 @@ def checkout_page(request):
                 if cart.total == cal_price and delivery is not None:
                     order = PurchaseOrder.objects.create(
                         number=0,
-                        shopper=shopper,
-                        order_date=datetime.now(),
-                        freight=60 if delivery == '7-11' else 80
-                        if delivery == 'postoffice' else 120
-                        if delivery == 'homedelivery' else 1000,
+                        buyer=shopper,
+                        order_time=datetime.now(),
+                        freight=0 if cart.total > 1500 else
+                        60 if delivery.isdigit() else 90,
+                        ship_method='FML' if delivery.isdigit() else 'KTJ',
+                        address=delivery,
                         total=cart.total,
-                        notes=request.POST.get('shopper_notes'),
+                        buyer_notes=request.POST.get('shopper_notes'),
                         order_notes=cart_list
                     )
                     order.number = float(datetime.now().strftime('%y%m%d%H%M%S')) + float(order.id)
                     order.total = order.total + order.freight
+
+                    # 更改為預購模式！
                     for d in cart_list:
-                        detail_item = get_object_or_404(Detail, id=d['product_pk'])
-                        order.sold_goods.add(detail_item)
-                        if detail_item.stock - d['quantity'] >= 0:
-                            detail_item.stock -= d['quantity']
-                        else:
-                            return redirect(reverse('cart:shopping-cart-show'))
-                        detail_item.sold += d['quantity']
-                        detail_item.total_sold += d['quantity']
+                        item = get_object_or_404(Item, id=d['product_pk'])
+                        order.sold_goods.add(item)
+                        item.pre_order += d['quantity']
                         # print ('id={} / 存貨={} / 售貨={} / 總售貨={}'.format(
-                        #     detail_item.id, detail_item.stock,
-                        #     detail_item.sold, detail_item.total_sold
+                        #     item.id, item.stock,
+                        #     item.sold, item.total_sold
                         # ))
-                        detail_item.save()
+                        item.save()
                     order.save()
                     cart.clear()
                     return HttpResponseRedirect(reverse('checkout:orderinfo'))
                 else:
                     errors.append('資料有誤 或 尚未填寫，請重新整理再次一次')
-            except:
-                return redirect(reverse('member:info'))
+            except Exception as e:
+                print ('%s (%s)' % (e, type(e)))
     context = {
         'title': '結帳清單',
         'errors': errors,
         'cost_total': cost_total,
+        'freight_only': freight_only,
     }
     return render(request, 'checkout/checkout-page.html', context)
 
@@ -70,7 +70,7 @@ def checkout_orderinfo(request):
     newest_order = None
     user_orderlist = request.user.personalinfo.purchaseorder_set.all()
     try:
-        newest_orderid = user_orderlist.order_by('-order_date')[0].id
+        newest_orderid = user_orderlist.order_by('-order_time')[0].id
         newest_order = get_object_or_404(PurchaseOrder, id=newest_orderid)
     except:
         errors.append('無法取得訂單資料')

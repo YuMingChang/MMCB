@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from products.models import Product, Detail, Images
+from products.models import Product, Item, Images
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Button, Layout, Div, HTML, Fieldset, Field
 from bootstrap3_datetime.widgets import DateTimePicker
@@ -14,9 +14,10 @@ class ProductForm(forms.ModelForm):
         fields = [
             'name',
             'notes',
-            'date',
+            'onshelf_time',
             'image',
             'is_display',
+            'freight_only',
         ]
     def __init__(self, *args, submit_title=None, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -24,9 +25,10 @@ class ProductForm(forms.ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Div(
-                Div('name', css_class="col-md-8"),
-                Div('date', css_class="col-md-2"),
+                Div('name', css_class="col-md-6"),
+                Div('onshelf_time', css_class="col-md-2"),
                 Div('is_display', css_class="col-md-2"),
+                Div('freight_only', css_class="col-md-2"),
                 css_class="row"
             ),
             Div(
@@ -64,30 +66,45 @@ class ProductForm(forms.ModelForm):
             self.helper.add_input(Button(
                 'delete', '移除商品',
                 css_class='btn btn-danger', onclick='javascript:ProductDelete();'))
+            self.helper.add_input(Button(
+                'delete', '歸零全選/全取消',
+                css_class='btn', onclick='javascript:ResetAllItem();'))
 
 
-class DetailForm(forms.ModelForm):
-
+class ItemForm(forms.ModelForm):
     class Meta:
-        model = Detail
+        model = Item
         fields = [
             'product',
-            'color',
+            'style',
             'size',
             'price',
-            'stock',
-            'sold',
-            'total_sold',
+            'pre_order',
+            'selling',
+            'selling_volume',
+            'reset_time',
+            'is_reset',
+            'is_shortage',
         ]
 
 
-BaseDetailFormSet = inlineformset_factory(
-    parent_model=Product, model=Detail,
-    fields=('color', 'size', 'price', 'stock', 'sold', 'total_sold', ), extra=0,
+BaseItemFormSet = inlineformset_factory(
+    parent_model=Product, model=Item,
+    fields=(
+        'style',
+        'size',
+        'price',
+        'pre_order',
+        'selling',
+        'selling_volume',
+        'reset_time',
+        'is_reset',
+        'is_shortage',
+    ), extra=0,
 )
 
 
-class DetailFormSet(BaseDetailFormSet):
+class ItemFormSet(BaseItemFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -97,18 +114,21 @@ class DetailFormSet(BaseDetailFormSet):
         self.helper.disable_csrf = True
         self.helper.layout = Layout(
             Fieldset(
-                Field('color', ),
+                Field('style', ),
                 Field('size', ),
                 Field('price', ),
-                Field('stock', ),
-                Field('sold', readonly=True),
-                Field('total_sold', readonly=True),
+                Field('pre_order', readonly=True),
+                Field('selling', readonly=True),
+                Field('selling_volume', readonly=True),
+                Field('reset_time', readonly=True),
+                Field('is_reset', ),
+                Field('is_shortage', ),
             )
         )
 
 
-class ImageForm(forms.ModelForm):
-    image = forms.ImageField(label='Image')
+class ImagesForm(forms.ModelForm):
+    image = forms.ImageField(label='Images')
 
     class Meta:
         model = Images
@@ -122,7 +142,7 @@ BaseImagesFormSet = inlineformset_factory(
 )
 
 
-class ImageFormSet(BaseImagesFormSet):
+class ImagesFormSet(BaseImagesFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

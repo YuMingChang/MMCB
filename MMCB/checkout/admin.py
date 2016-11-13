@@ -4,15 +4,19 @@ from checkout.models import PurchaseOrder
 
 @admin.register(PurchaseOrder)
 class PurchaseOrderAdmin(admin.ModelAdmin):
+    raw_id_fields = ['buyer']
     list_display = (
         'number',
-        'shopper',
-        'order_date',
+        'buyer',
+        'order_time',
         'get_sold_goods',
         'freight',
         'total',
         'status',
+        'remittance_time',
+        'shipment_time',
+        'renounce_time',
     )
-    list_filter = ('status', 'order_date', )
-    search_fields = ('shopper', )
-    ordering = ('-order_date', 'total', )
+    list_filter = ('buyer', 'status', 'order_time', )
+    search_fields = ('buyer', )
+    ordering = ('-order_time', '-total', )

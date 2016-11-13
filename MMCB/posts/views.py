@@ -3,10 +3,11 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
-from posts.forms import ProductForm, DetailFormSet, ImageFormSet
-from products.models import Product, Detail, Images
+from posts.forms import ProductForm, ItemFormSet, ImagesFormSet
+from products.models import Product, Item, Images
 from members.models import PersonalInfo
 from checkout.models import PurchaseOrder
+from datetime import datetime
 
 
 @staff_member_required
@@ -30,16 +31,16 @@ def post_page(request):
 @staff_member_required
 def post_products_list(request):
     errors = []
-    good_queryset = Product.objects.all()
+    all_products = Product.objects.all()
     if request.method == 'GET' and 'search_name' in request.GET:
         try:
-            good_queryset = Product.objects.filter(name__icontains=request.GET.get('search_name', None))
+            all_products = Product.objects.filter(name__icontains=request.GET.get('search_name', None))
         except:
             errors.append('搜尋不到資料，請重新嘗試！')
     context = {
         'title': '商品管理列表',
         'errors': errors,
-        'good_queryset': good_queryset,
+        'all_products': all_products,
     }
     return render(request, 'posts/post_products_list.html', context)
 
@@ -47,7 +48,7 @@ def post_products_list(request):
 @staff_member_required
 def post_product_add(request):
     product_form = ProductForm(request.POST or None, request.FILES or None, )
-    image_formset = ImageFormSet(
+    image_formset = ImagesFormSet(
         request.POST or None, request.FILES or None,
         queryset=Images.objects.none(),
     )
@@ -80,22 +81,32 @@ def post_product_update(request, good_id=None):
     product_form = ProductForm(
         request.POST or None, request.FILES or None,
         submit_title='確定修改商品', instance=good, )
-    detail_formset = DetailFormSet(
+    item_formset = ItemFormSet(
         request.POST or None, request.FILES or None, instance=good, )
-    image_formset = ImageFormSet(
+    image_formset = ImagesFormSet(
         request.POST or None, request.FILES or None, instance=good, )
-    if product_form.is_valid() and detail_formset.is_valid() and image_formset.is_valid():
+    if product_form.is_valid() and item_formset.is_valid() and image_formset.is_valid():
         good = product_form.save(commit=False)
-        detail_formset.save()
+        item_formset.save()
         image_formset.save()
         good.save()
         messages.success(request, 'Item Saved')
+
+        # Reset pre_order & selling of good_item.
+        for item in good.item_set.all():
+            if item.is_reset:
+                item.pre_order = 0
+                item.selling = 0
+                item.reset_time = datetime.now()
+            item.is_reset = False
+            item.save()
+
         return redirect(reverse('posts:productlist'))
     context = {
         'title': '商品編輯',
         'good': good,
         'form': product_form,
-        'detail_formset': detail_formset,
+        'item_formset': item_formset,
         'image_formset': image_formset,
     }
     return render(request, 'posts/post_products_update.html', context)
@@ -110,7 +121,7 @@ def post_product_delete(request, good_id=None):
 
 
 @staff_member_required
-def post_detail_add(request, good_id=None):
+def post_item_add(request, good_id=None):
     goods_id_name = Product.objects.all().values_list('id', 'name')
     errors = []
     context = {
@@ -132,11 +143,11 @@ def post_detail_add(request, good_id=None):
         # Check section is a NoneType or not(RadioBox has been check or not.)
         if section and selObj:
             # Initializing Multiple Lists/Line
-            color_list, size_list, price_list = ([] for i in range(3))
-            color_list = request.POST.getlist(section + 'color')
+            style_list, size_list, price_list = ([] for i in range(3))
+            style_list = request.POST.getlist(section + 'style')
             size_list = request.POST.getlist(section + 'size')
             price_list = request.POST.getlist(section + 'price')
-            lst = [color_list, size_list, price_list]
+            lst = [style_list, size_list, price_list]
             for tmp in lst:
                 while '' in tmp:
                     tmp.remove('')
@@ -150,9 +161,9 @@ def post_detail_add(request, good_id=None):
                 # Color - Size - Price
                 elif (section == 'S1' and all(len(x) == len(lst[2]) for x in lst)):
                     for i in range(len(price_list)):
-                        Detail.objects.create(
+                        Item.objects.create(
                             product=product,
-                            color=color_list[i],
+                            style=style_list[i],
                             size=size_list[i],
                             price=price_list[i]
                         )
@@ -161,10 +172,10 @@ def post_detail_add(request, good_id=None):
                 # [Color - Pirce] * Size
                 elif section == 'S2' and len(lst[0]) == len(lst[2]):
                     for i in range(len(size_list)):
-                        for j in range(len(color_list)):
-                            Detail.objects.create(
+                        for j in range(len(style_list)):
+                            Item.objects.create(
                                 product=product,
-                                color=color_list[j],
+                                style=style_list[j],
                                 size=size_list[i],
                                 price=price_list[j]
                             )
@@ -172,17 +183,17 @@ def post_detail_add(request, good_id=None):
 
                 # [Size - Price] * Color
                 elif section == 'S3' and len(lst[1]) == len(lst[2]):
-                    for i in range(len(color_list)):
+                    for i in range(len(style_list)):
                         for j in range(len(size_list)):
-                            Detail.objects.create(
+                            Item.objects.create(
                                 product=product,
-                                color=color_list[i],
+                                style=style_list[i],
                                 size=size_list[j],
                                 price=price_list[j]
                             )
                     created_flag = True
                 if created_flag:
-                    color_list, size_list, price_list = ('', '', '')
+                    style_list, size_list, price_list = ('', '', '')
                     return redirect(reverse('posts:update', kwargs={'good_id': selObj}))
                 else:
                     errors.append("資料輸入有所缺少，請重新確認！")
@@ -190,7 +201,7 @@ def post_detail_add(request, good_id=None):
                 errors.append("資料輸入型態有誤，請重新確認！")
         else:
             errors.append("請記得選擇所新增商品，填寫內容後再次確認！")
-    return render(request, 'posts/post_products_add_detail.html', context)
+    return render(request, 'posts/post_products_add_item.html', context)
 
 # What the difference between using Django redirect and HttpResponseRedirect?:
 # http://stackoverflow.com/questions/13304149/what-the-difference-between-using-django-redirect-and-httpresponseredirect
@@ -208,16 +219,16 @@ def post_orders_list(request):
             print ('buyer= {}, status= {}, year= {}, month= {}'.format(buyer, status, year, month))
             if buyer is not None and buyer != '':
                 personal = PersonalInfo.objects.filter(name__icontains=buyer)
-                order_queryset = PurchaseOrder.objects.filter(shopper=personal)
+                order_queryset = PurchaseOrder.objects.filter(buyer=personal)
                 str_search += ' 買家：{} /'.format(buyer)
                 if personal.exists() is False or order_queryset.exists() is None:
                     errors.append('搜尋不到資料，請重新嘗試！')
                     order_queryset = PurchaseOrder.objects.all()
             if year is not None and year != '':
-                order_queryset = order_queryset.filter(order_date__year=year)
+                order_queryset = order_queryset.filter(order_time__year=year)
                 str_search += ' 年份：{} /'.format(year)
             if month is not None and month != '':
-                order_queryset = order_queryset.filter(order_date__month=month)
+                order_queryset = order_queryset.filter(order_time__month=month)
                 str_search += ' 月份：{} /'.format(month)
             if status is not None:
                 order_queryset = order_queryset.filter(status=status)
@@ -237,7 +248,7 @@ def post_orders_list(request):
 @staff_member_required
 def posts_order(request, number):
     order = get_object_or_404(PurchaseOrder, number=number)
-    buyer = get_object_or_404(PersonalInfo, id=order.shopper.id)
+    buyer = get_object_or_404(PersonalInfo, id=order.buyer.id)
     context = {
         'title': '訂單',
         'myorder': order,
@@ -248,12 +259,24 @@ def posts_order(request, number):
 
 
 @staff_member_required
-def posts_order_update(request, number, do):
+def posts_order_update(request, number, do, shiptime=None, fmnumber=None):
     order = get_object_or_404(PurchaseOrder, number=number)
     if do is not None:
-        if do in ['UP', 'PA', 'PC', 'WS', 'SN', 'AB', 'CA', 'AC', 'AD']:
-            if do == 'AD':
-                print ('{}'.format(order.sold_goods.all()))
+        if do in ['UPD', 'PAD', 'CFP', 'SPN', 'SPD', 'ABN', 'CCA', 'CFA', 'ABD']:
+            if do in ['CFP', 'SPN', 'SPD']:
+                # buyer = get_object_or_404(PersonalInfo, id=order.buyer.id)
+                # buyer.money = sum([o.total for o in buyer.purchaseorder_set.all()])
+                # buyer.save()
+                if do == 'SPD':
+                    order.shipment_time = datetime.strptime(shiptime, "%Y-%m-%d %H:%M")
+                    order.shipment_number = fmnumber
+
+                    d = {item['product_pk']: item['quantity'] for item in eval(order.order_notes)}
+                    for item in order.sold_goods.all():
+                        item.selling += d[item.id]
+                        item.selling_volume += d[item.id]
+                        item.save()
+
             order.status = do
             order.save()
     return redirect(reverse('posts:order', kwargs={'number': number}))

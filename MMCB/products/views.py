@@ -3,9 +3,9 @@ from products.models import Product
 
 
 def store_list(request):
-    QuerySet = Product.objects.all()
+    all_products = Product.objects.all()
     context = {
         'title': 'StoreList',
-        'Product_ObjList': QuerySet
+        'All_Products': all_products
     }
     return render(request, 'products/store_list.html', context)

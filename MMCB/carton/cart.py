@@ -166,7 +166,6 @@ class Cart(object):
             cart_representation[product_id] = item.to_dict()
         return cart_representation
 
-
     @property
     def items_serializable(self):
         """

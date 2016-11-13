@@ -5,10 +5,10 @@
 <div class="ui clearing segment">
   <h1 class="ui left floated header"> {{ title }} </h1>
   <a href="{% url 'posts:productlist' %}"><button class="ui right floated blue basic button"></i>返回商品列表</button></a>
-  <a href="{% url 'posts:add_detail' good_id=good.id %}"><button class="ui right floated green basic button"><i class="add square icon"></i>新增內容</button></a>
+  <a href="{% url 'posts:add_item' good_id=good.id %}"><button class="ui right floated green basic button"><i class="add square icon"></i>新增內容</button></a>
   <h4 class="ui horizontal divider header"><i class="edit icon"></i> Edit Product </h4>
   <form enctype="multipart/form-data" method="post">
-    {% crispy form %} {% crispy detail_formset %} {% crispy image_formset %}
+    {% crispy form %} {% crispy item_formset %} {% crispy image_formset %}
   </form>
 </div>
 {% endblock content %}
@@ -19,6 +19,13 @@
     var delAddress = window.location.href.replace("edit", "delete");
     if(confirm("您真的確定要刪除此商品嗎?")){
       window.location.href = delAddress;
+    }
+  }
+  function ResetAllItem() {
+    if ($("input[id*='is_reset']").prop("checked") == true){
+      $("input[id*='is_reset']").prop("checked", false);
+    }else{
+      $("input[id*='is_reset']").prop("checked", true);
     }
   }
 </script>

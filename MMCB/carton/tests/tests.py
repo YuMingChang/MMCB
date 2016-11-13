@@ -5,7 +5,7 @@ from carton.tests.models import Product
 try:
     from django.test import override_settings
 except ImportError:
-    from  django.test.utils import override_settings
+    from django.test.utils import override_settings
 
 
 class CartTests(TestCase):

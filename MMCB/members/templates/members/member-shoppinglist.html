@@ -8,36 +8,38 @@
       <tr class="center aligned">
         <th>購買時間</th>
         <th>商品名稱/商品編號</th>
-        <th>商品總額</th>
-        <th>商品總數量</th>
+        <th>商品運費</th>
+        <th>結帳總額</th>
+        <th>寄送方式</th>
         <th colspan="2">訂單管理 / 狀態</th>
       </tr>
     </thead>
     <tbody>
       {% for order in order_list %}
       <tr class="center aligned" data-href="{% url 'member:shoppinglist' %}{{ order.number }}">
-        <td>{{ order.order_date }}</td>
+        <td>{{ order.order_time }}</td>
         <td><a href="{% url 'member:shoppinglist' %}{{order.number}}">{{ order.number }}</a></td>
+        <td>${{ order.freight }}</td>
         <td>${{ order.total }}</td>
-        <td>{{ order.order_date }}</td>
+        <td>{{ order.get_ship_method_display }}</td>
         <td>{{ order.get_status_display }}</td>
-        {% if order.status == 'UP' %}
+        {% if order.status == 'UPD' %}
         <td><i class="large money middle aligned icon"></i></td>
-        {% elif order.status == 'PA' %}
+        {% elif order.status == 'PAD' %}
         <td><i class="large alarm outline middle aligned icon"></i></td>
-        {% elif order.status == 'PC' %}
+        {% elif order.status == 'CFP' %}
         <td><i class="large checkmark middle aligned icon"></i></td>
-        {% elif order.status == 'WS' %}
+        {% elif order.status == 'SPN' %}
         <td><i class="large archive middle aligned icon"></i></td>
-        {% elif order.status == 'SN' %}
+        {% elif order.status == 'SPD' %}
         <td><i class="large shipping middle aligned icon"></i></td>
-        {% elif order.status == 'AB' %}
+        {% elif order.status == 'ABN' %}
         <td><i class="large trash outline middle aligned icon"></i></td>
-        {% elif order.status == 'CA' %}
+        {% elif order.status == 'CCA' %}
         <td><i class="large reply middle aligned icon"></i></td>
-        {% elif order.status == 'AC' %}
+        {% elif order.status == 'CFA' %}
         <td><i class="large remove middle aligned icon"></i></td>
-        {% elif order.status == 'AD' %}
+        {% elif order.status == 'ABD' %}
         <td><i class="large trash middle aligned icon"></i></td>
         {% endif %}
       </tr>

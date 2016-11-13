@@ -28,7 +28,7 @@
           <div class="ui action input">
             <button type="button" id='plusButton' class="ui negative icon button" data-type="minus" onclick="quantityPM({{forloop.counter0}}, '-')"><i class="minus icon"></i></button>
             <div class="one wide">
-              <input type="text" name="quantity[]" maxlength="2" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="form-control input-number" readonly=True>
+              <input type="text" name="quantity[]" maxlength="2" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" class="form-control input-number">
             </div>
             <button type="button" id='minusButton' class="ui positive icon button" data-type="plus" onclick="quantityPM({{forloop.counter0}}, '+')"><i class="plus icon"></i></button>
           </div>
@@ -61,7 +61,8 @@
     var selMinusBtn = $("button[id='minusButton']").eq(num);
     var selPlusBtn = $("button[id='plusButton']").eq(num);
     var minValue = parseInt(selInput.attr('min'));
-    var maxValue = parseInt(selInput.attr('max'));
+    // var maxValue = parseInt(selInput.attr('max'));
+    var maxValue = 99;
     var quantity = parseInt(selInput.val());
     if (mark == '+' && quantity < maxValue) {
       selInput.val(quantity + 1);

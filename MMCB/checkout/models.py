@@ -1,12 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator
+from django.utils.translation import ugettext_lazy as _
 from members.models import PersonalInfo
-from products.models import Detail
-
-
-# Create your models here.
-
+from products.models import Item
 # 訂單編號、買家、連絡賣家、查看訂單
 # 結帳時間
 # 商品名稱/商品編號 (多個)
@@ -33,45 +30,58 @@ from products.models import Detail
 
 class PurchaseOrder(models.Model):
     STATUS = {
-        'UnPaid': 'UP',
-        'Paid': 'PA',
-        'PaidComfirm': 'PC',
-        'WaitToSend': 'WS',
-        'Sent': 'SN',
-        'Abandon': 'AB',
-        'CancelAbandon': 'CA',
-        'AbandonComfirm': 'AC',
-        'Abandoned': 'AD',
+        'Unpaid': 'UPD',
+        'Paid': 'PAD',
+        'ComfirmPayment': 'CFP',
+        'Shipping': 'SPN',
+        'Shipped': 'SPD',
+        'Abandon': 'ABN',
+        'CancelAbandonment': 'CCA',
+        'ComfirmAbandonment': 'CFA',
+        'Abandoned': 'ABD',
     }
     ORDER_STATUS = (
-        (STATUS['UnPaid'], '待付款/匯款'),
+        (STATUS['Unpaid'], '待付款/匯款'),
         (STATUS['Paid'], '通知已付款'),
-        (STATUS['PaidComfirm'], '確認已付款'),
-        (STATUS['WaitToSend'], '商品準備中'),
-        (STATUS['Sent'], '商品已寄出'),
+        (STATUS['ComfirmPayment'], '確認已付款'),
+        (STATUS['Shipping'], '商品準備中'),
+        (STATUS['Shipped'], '商品已寄出'),
         (STATUS['Abandon'], '放棄此訂單'),
-        (STATUS['CancelAbandon'], '取消放棄此訂單'),
-        (STATUS['AbandonComfirm'], '待賣家確認放棄'),
+        (STATUS['CancelAbandonment'], '取消放棄此訂單'),
+        (STATUS['ComfirmAbandonment'], '待賣家確認放棄'),
         (STATUS['Abandoned'], '已放棄'),
     )
+    METHOD = {
+        'Family': 'FML',
+        'KerryTJ': 'KTJ',
+    }
+    SHIP_METHOD = (
+        (METHOD['Family'], '全家'),
+        (METHOD['KerryTJ'], '大榮貨運'),
+    )
 
-    number = models.DecimalField('訂單編號', max_digits=16, decimal_places=0,
+    number = models.DecimalField(_('訂單編號'), max_digits=16, decimal_places=0,
                                  validators=[MinValueValidator(0)])
-    shopper = models.ForeignKey(PersonalInfo, verbose_name='買家')
-    order_date = models.DateTimeField('訂購時間', default=timezone.now)
-    sold_goods = models.ManyToManyField(Detail, verbose_name='已買商品')
-    freight = models.PositiveIntegerField('運費')
-    total = models.PositiveIntegerField('總額')
-    notes = models.TextField('備註', max_length=200, default='')
-    status = models.CharField(max_length=2, choices=ORDER_STATUS, default=STATUS['UnPaid'])
-    order_notes = models.TextField('訂單清單', default='')
-    date_remittance = models.DateTimeField('匯款日期時間', blank=True, null=True)
-    date_shipment = models.DateTimeField('寄出日期時間', blank=True, null=True)
+    buyer = models.ForeignKey(PersonalInfo, verbose_name=_('買家'))
+    order_time = models.DateTimeField(_('訂購時間'), default=timezone.now)
+    sold_goods = models.ManyToManyField(Item, verbose_name=_('已買商品'))
+    freight = models.PositiveSmallIntegerField(_('運費'))
+    ship_method = models.CharField(_('運送方式'), max_length=3, choices=SHIP_METHOD, default=METHOD['KerryTJ'])
+    address = models.CharField(_('寄送地址'), max_length=64, default='')
+    total = models.PositiveIntegerField(_('總額'))
+    buyer_notes = models.TextField(_('備註'), default='')
+    status = models.CharField(_('訂單狀態'), max_length=3, choices=ORDER_STATUS, default=STATUS['Unpaid'])
+    order_notes = models.TextField(_('訂單清單'), default='')
+    remittance_account = models.CharField(_('匯款帳號'), max_length=6, default="")
+    remittance_time = models.DateTimeField(_('匯款日期時間'), blank=True, null=True)
+    shipment_number = models.CharField(_('包裹貨件編號'), max_length=13, default="")
+    shipment_time = models.DateTimeField(_('寄出日期時間'), blank=True, null=True)
+    renounce_time = models.DateTimeField(_('放棄日期時間'), blank=True, null=True)
 
     class Meta:
         verbose_name = '購物清單'
         verbose_name_plural = '所有購物清單'
-        ordering = ['-order_date']
+        ordering = ['-order_time']
 
     def get_sold_goods(self):
         return "\n".join([str(good) for good in self.sold_goods.all()])

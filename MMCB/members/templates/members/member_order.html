@@ -8,23 +8,34 @@
       <p>訂單編號：{{ myorder.number }}</p>
     </div>
     <div class="ui center aligned segment">
-      <p>買家：{{ myorder.shopper }}</p>
+      <p>買家：{{ myorder.buyer }}</p>
     </div>
     <div class="ui center aligned segment">
-      <p>購買日期：{{ myorder.order_date }}</p>
+      <p>購買日期：{{ myorder.order_time }}</p>
     </div>
-    {% if myorder.date_remittance %}
-    <div class="ui center aligned segment">
-      <p>匯款日期/時間：{{ myorder.date_remittance }}</p>
-    </div>
-    {% endif %}
   </div>
   <div class="ui clearing segment">
     <div class="ui right aligned grid">
-      <div class="left floated left aligned eight wide column">
+      <div class="left aligned three wide column">
         <a href="{% url 'member:shoppinglist' %}"><button class="ui green basic button">我的購物清單</button></a>
       </div>
-      {% if myorder.date_remittance == None or myorder.status == 'UP' %}
+      <div class="three wide column"></div>
+      {% if myorder.remittance_time == None or myorder.status == 'UP' %}
+      <div class="four wide column">
+        <div class="ui form">
+          <div class="inline fields">
+            <label for="account">匯款帳號</label>
+            {% for qs in request.user.personalinfo.accounts_set.all %}{% if qs.account != "" %}
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="account" checked="" tabindex="0" class="hidden" value="{{ qs.account }}">
+                <label>{{ qs.account }}</label>
+              </div>
+            </div>
+            {% endif %}{% endfor %}
+          </div>
+        </div>
+      </div>
       <div class="four wide column">
         <div class="input-group date" id='datetimepicker'>
           <input type="text" class="form-control" id="datetime" placeholder="匯款日期/時間" />
@@ -33,22 +44,24 @@
           </div>
         </div>
       </div>
-      {% endif %}
-      <div class="right floated left aligned four wide column">
-        {% if myorder.status == 'UP' %}
+      <div class="two wide column">
+        {% if myorder.status == 'UPD' %}
         <div class="ui buttons">
-          <button class="ui blue basic button" onclick="yesorno('PA', '通知已付款')">通知已付款</button>
-          <div class="or"></div>
-          <button class="ui red basic button" onclick="yesorno('AB', '放棄此訂單')">放棄此訂單</button>
+          <button class="ui blue basic button" onclick="yesorno('PAD', '通知已付款')">通知已付款</button>
+          <!-- <div class="or"></div>
+          <button class="ui red basic button" onclick="yesorno('ABN', '放棄此訂單')">放棄此訂單</button> -->
         </div>
-        {% elif myorder.status == 'PA' %}
-        {% elif myorder.status == 'PC' and user.is_staf %}
-        {% elif myorder.status == 'WS' %}
-        {% elif myorder.status == 'SN' %}
-        {% elif myorder.status == 'AB' %}
-        {% elif myorder.status == 'AC' %}
-        <button class="ui orange basic button" onclick="yesorno('CA', '取消放棄此訂單')">取消放棄此訂單</button> {% elif myorder.status == 'AD' %} {% endif %}
+        {% elif myorder.status == 'PAD' %}
+        {% elif myorder.status == 'CFP' and user.is_staff %}
+        {% elif myorder.status == 'SPN' %}
+        {% elif myorder.status == 'SPD' %}
+        {% elif myorder.status == 'ABN' %}
+        {% elif myorder.status == 'CCA' %}
+        <!-- <button class="ui orange basic button" onclick="yesorno('CCA', '取消放棄此訂單')">取消放棄此訂單</button>  -->
+        {% elif myorder.status == 'ABD' %}
+        {% endif %}
       </div>
+      {% endif %}
     </div>
   </div>
   <div class="ui segment">
@@ -58,7 +71,7 @@
           <th>商品名稱/商品編號</th>
           <th>商品單價</th>
           <th>商品數量/商品總價</th>
-          <th>運費</th>
+          <th>運送方式/費用</th>
           <th>結帳總金額</th>
           <th colspan="2">訂單狀況 / 狀況</th>
         </tr>
@@ -76,26 +89,26 @@
           <td class="middle aligned" id="{{ good.id }}" name="tdPrice">$ {{ good.price }}</td>
           <td class="middle aligned" name="tdQtySum">{{ myorder.order_notes }}</td>
           {% if forloop.first %}
-          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><p>{{ myorder.get_ship_method_display }}</p>${{ myorder.freight }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">{{ myorder.get_status_display }}</td>
-          {% if myorder.status == 'UP' %}
+          {% if myorder.status == 'UPD' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large money middle aligned icon"></i></td>
-          {% elif myorder.status == 'PA' %}
+          {% elif myorder.status == 'PAD' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large alarm outline middle aligned icon"></i></td>
-          {% elif myorder.status == 'PC' %}
+          {% elif myorder.status == 'CFP' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large checkmark middle aligned icon"></i></td>
-          {% elif myorder.status == 'WS' %}
+          {% elif myorder.status == 'SPN' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large archive middle aligned icon"></i></td>
-          {% elif myorder.status == 'SN' %}
+          {% elif myorder.status == 'SPD' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large shipping middle aligned icon"></i></td>
-          {% elif myorder.status == 'AB' %}
+          {% elif myorder.status == 'ABN' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash outline middle aligned icon"></i></td>
-          {% elif myorder.status == 'CA' %}
+          {% elif myorder.status == 'CCA' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large reply middle aligned icon"></i></td>
-          {% elif myorder.status == 'AC' %}
+          {% elif myorder.status == 'CFA' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large remove middle aligned icon"></i></td>
-          {% elif myorder.status == 'AD' %}
+          {% elif myorder.status == 'ABD' %}
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><i class="large trash middle aligned icon"></i></td>
           {% endif %} {% endif %}
         </tr>
@@ -112,49 +125,94 @@
     </table>
   </div>
   <div class="ui segment">
-    <div class="ui info message">
-      <i class="close icon"></i>
-      <div class="header">賣家所提供的匯款帳戶：</div>
-      <ol class="ui list">
-        <li value=" * ">銀行名稱與代號：中國信託 (822)
-          <ol>
-            <li value=" - ">戶名：劉秋婕</li>
-            <li value=" - ">銀行帳號：5325-4026-4159</li>
+    <div class="ui equal width grid">
+      <div class="column">
+        <table class="ui celled table">
+          <thead>
+            <tr>
+              <th colspan="2">訂單內容資訊</th>
+            </tr>
+          </thead>
+          <tbody class="center aligned warning">
+            <tr class="positive">
+              <td>買家選擇地址</td>
+              <td>{{ myorder.address }}</td>
+            </tr>
+            <tr>
+              <td class="five wide">買家匯款時間</td>
+              <td>{%if myorder.remittance_time != None%}{{ myorder.remittance_time }}{% else %}尚未匯款{%endif%}</td>
+            </tr>
+            <tr>
+              <td>買家匯款帳號</td>
+              <td>{%if myorder.remittance_account%}{{ myorder.remittance_account }}{%else%}尚無帳號{%endif%}</td>
+            </tr>
+            <tr class="warning">
+              <td>包裹寄出時間</td>
+              <td>{%if myorder.shipment_time != None%}{{ myorder.shipment_time }}{% else %}尚未寄出{%endif%}</td>
+            </tr>
+            <tr class="warning">
+              <td>包裹貨件編號</td>
+              <td>{%if myorder.shipment_number%}{{ myorder.shipment_number }}{%else%}尚無編號{%endif%}</td>
+            </tr>
+            <tr>
+              <td>買家備註</td>
+              <td class="left aligned">　　{{ myorder.buyer_notes }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="column">
+        <div class="ui info message">
+          <div class="header">賣家所提供的匯款帳戶：</div>
+          <ol class="ui list">
+            <li value=" * ">銀行名稱與代號：中國信託 (822)
+              <ol>
+                <li value=" - ">戶名：劉秋婕</li>
+                <li value=" - ">銀行帳號：5325-4026-4159</li>
+              </ol>
+            </li>
+            </br>
+            <li value=" * ">銀行名稱與代號：郵局(700)
+              <ol>
+                <li value=" - ">戶名：劉秋婕</li>
+                <li value=" - ">銀行帳號：0031005-1502435</li>
+              </ol>
+            </li>
           </ol>
-        </li>
-        </br>
-        <li value=" * ">銀行名稱與代號：郵局(700)
-          <ol>
-            <li value=" - ">戶名：劉秋婕</li>
-            <li value=" - ">銀行帳號：0031005-1502435</li>
-          </ol>
-        </li>
-      </ol>
-    </div>
-    <div class="ui warning message">
-      <div class="header"><i class="warning icon"></i> 您選擇使用7-11取貨付款服務，請注意以下取貨注意事項：
-      </div><br/> ．到貨時，系統將發手機簡訊與email通知您取件時間。
-      <br/> ．請務必於
-      <span class="style2">7天內</span>至您所指定的門市取貨。<br/> ．若逾期未領，貨品將直接退還給賣家，您的帳號將累積一次未取貨次數。
-      <br/> ．配送資料是定時與超商作資料交換，如遇通知卻取不到貨的情況，可利用
-      <a href="https://eservice.7-11.com.tw/E-Tracking/search.aspx">超商系統</a>查詢。
+        </div>
+        <div class="ui warning message">
+          <div class="header"><i class="warning icon"></i> 您選擇使用全家取貨付款服務，請注意以下取貨注意事項：
+          </div><br/> ．到貨時，系統將發手機簡訊與email通知您取件時間。
+          <br/> ．請務必於
+          <span class="style2">7天內</span>至您所指定的門市取貨。<br/> ．若逾期未領，貨品將直接退還給賣家，您的帳號將累積一次未取貨次數。
+          <br/> ．配送資料是定時與超商作資料交換，如遇通知卻取不到貨的情況，可利用
+          <a href="http://www.famiport.com.tw/distribution_search.asp" target="_blank">全家系統</a>查詢。
+        </div>
+      </div>
     </div>
   </div>
+
+
 </div>
 {% endblock content %}
 
 {% block js-foot %} {{ block.super }}
 <script type="text/javascript">
-  function yesorno(dowhat, display) {
+$('.ui.radio.checkbox').checkbox();
+console.log($('input[name=account]:checked').val())
+  function yesorno(dowhat, display, act) {
     var datetime = $('#datetime').val();
-    alert(datetime);
     // var datetime = datetime.replace(/\//g, '-');
-    if (dowhat == 'PA' && datetime == '') {
+    if (datetime == '') {
       alert('請記得選擇您的「匯款日期與時間」再點選"通知已付款"，謝謝。');
       return false;
     }
     if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display))) {
-      window.document.location = "{% url 'member:orderstatus' number=myorder.number do='dodo' remittime='None' %}".replace('dodo', dowhat).replace('None', datetime);
+      var url = "{% url 'member:orderstatus' number=myorder.number do='123' dt='456' account='789' %}"
+      url = url.replace('123', dowhat);
+      url = url.replace('456', datetime);
+      url = url.replace('789', $('input[name=account]:checked').val());
+      window.document.location = url;
     } else {
       // Do nothing!
     }

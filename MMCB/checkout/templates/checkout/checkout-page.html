@@ -31,27 +31,56 @@
   <div class="ui hidden divider"></div>
   <div class="ui right aligned grid">
     <div class="left floated left aligned six wide column">
-      <div class="grouped fields">
-        <label for="delivery">選擇你的運送方式：</label>
-        <div class="field">
-          <div class="ui radio checkbox">
-            <input type="radio" name="delivery" value="7-11" onclick="CostTotal(100);">
-            <label>7-11 取貨付款 $60元</label>
+      <div class="ui small green message">
+        <div class="header">小提醒：</div>
+        <ul class="list">
+          <li>若想修改預設全家店鋪號/寄送地址，請至會員中心修改。</li>
+          <li>滿一千五免運費</li>
+        </ul>
+      </div>
+      <div class="ui vertical fluid accordion menu">
+        {% if not freight_only %}
+        <div class="item">
+          <a class="title"><i class="dropdown icon"></i>全家 貨到付款</a>
+          <div class="content">
+            <div class="grouped fields">
+              <div class="item">
+                <div class="header">您預設的全家店鋪號：</div>
+                <div class="content">(於<a href="{% url 'member:info' %}">會員中心</a>新增/修改)</div>
+              </div>
+              {% for fmnumber in request.user.personalinfo.familynumber_set.all %}
+              <div class="field" name="numberfield">
+                <div class="ui radio checkbox">
+                  <input type="radio" id="familynumber" name=delivery value={{fmnumber}}>
+                  <label for="">{{ fmnumber }}</label>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
-        <div class="field">
-          <div class="ui radio checkbox">
-            <input type="radio" name="delivery" value="postoffice" onclick="CostTotal({{ cart.total }});">
-            <label>郵寄 $80元</label>
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui radio checkbox">
-            <input type="radio" name="delivery" value="homedelivery" onclick="CostTotal(100);">
-            <label>宅配 $120元</label>
+        {% endif %}
+        <div class="item">
+          <a class="active title"><i class="dropdown icon"></i>大榮貨運</a>
+          <div class="active content">
+            <div class="grouped fields">
+              <div class="item">
+                <div class="header">您預設的寄送地址：</div>
+                <div class="content">(於<a href="{% url 'member:info' %}">會員中心</a>新增/修改)</div>
+              </div>
+              {% for address in request.user.personalinfo.addresses_set.all %}
+              <div class="field" name="addressfield">
+                <div class="ui radio checkbox">
+                  <input type="radio" id="address" name=delivery value={{address}}>
+                  <label for="">{{ address }}</label>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
+
     </div>
     <div class="right floated left aligned ten wide column">
       <div class="field">
@@ -91,19 +120,22 @@
   $(document).ready(function() {
     document.getElementsByClassName("step")[0].setAttribute("class", "step");
     document.getElementsByClassName("step")[1].setAttribute("class", "active step");
-
+    var all_cost = "{{ cost_total }}";
     $('.ui.radio.checkbox').checkbox({
       onChange: function() {
-        var all_cost = "{{ cost_total }}";
-        if ($(this).val() == '7-11') {
-          all_cost = parseInt(all_cost) + 60;
-        } else if ($(this).val() == 'postoffice') {
-          all_cost = parseInt(all_cost) + 80;
-        } else if ($(this).val() == 'homedelivery') {
-          all_cost = parseInt(all_cost) + 120;
-        } else {
-          $("#total").text("ERROR!!");
-          return false;
+        var all_cost = "{{ cost_total }}";if (all_cost < 1500){
+          if ($(this).attr('id') == 'familynumber') {
+            all_cost = parseInt(all_cost) + 60;
+            $("input[id='address']").attr("checked", false);
+          } else if ($(this).attr('id') == 'address') {
+            all_cost = parseInt(all_cost) + 90;
+            $("input[id='familynumber']").attr("checked", false);
+          } else {
+            $("#total").text("ERROR!!");
+            return false;
+          }
+        }else{
+          return true;
         }
         $("#total").text("$ " + all_cost.toLocaleString());
       }
@@ -118,6 +150,11 @@
               prompt: '請選擇您的運送方式'
             }]
           }
+        }
+      });
+      $('.vertical.accordion').accordion({
+        selector: {
+          trigger: '.title '
         }
       });
   })

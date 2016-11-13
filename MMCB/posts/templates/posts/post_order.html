@@ -8,23 +8,33 @@
       <p>訂單編號：{{ myorder.number }}</p>
     </div>
     <div class="ui center aligned segment">
-      <p>買家：{{ myorder.shopper }}</p>
+      <p>買家：{{ myorder.buyer }}</p>
     </div>
     <div class="ui center aligned segment">
-      <p>購買日期：{{ myorder.order_date }}</p>
+      <p>購買日期：{{ myorder.order_time }}</p>
     </div>
-    {% if myorder.date_remittance %}
-    <div class="ui center aligned segment">
-      <p>匯款日期/時間：{{ myorder.date_remittance }}</p>
-    </div>
-    {% endif %}
   </div>
   <div class="ui clearing segment">
     <div class="ui right aligned grid">
-      <div class="left floated left aligned six wide column">
+      <div class="left floated left aligned four wide column">
         <a href="{% url 'posts:orderlist' %}"><button class="ui green basic button">返回訂單列表</button></a>
       </div>
-      <div class="right floated right aligned six wide column">
+      <div class="four wide column">
+        <div class="input-group date" id='datetimepicker'>
+          <input type="text" class="form-control" id="datetime" placeholder="包裹寄件日期/時間" />
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </div>
+        </div>
+      </div>
+      <div class="four wide column">
+        <div class="ui form">
+          <div class="field">
+            <input type="text" name="shipping[number]" placeholder="貨物包裹編號" maxlength="13">
+          </div>
+        </div>
+      </div>
+      <div class="right floated right aligned four wide column">
         <div class="ui selection dropdown">
           <input type="hidden" name="status">
           <i class="dropdown icon"></i>
@@ -45,7 +55,7 @@
           <th>商品名稱/商品編號</th>
           <th>商品單價</th>
           <th>商品數量/商品總價</th>
-          <th>運費</th>
+          <th>運送方式/費用</th>
           <th>結帳總金額</th>
           <th>訂單狀況</th>
         </tr>
@@ -62,7 +72,7 @@
           <td class="middle aligned" id="{{ good.id }}" name="tdPrice">{{ good.price }}</td>
           <td class="middle aligned" name="tdQtySum">{{ myorder.order_notes_nonono }}</td>
           {% if forloop.first %}
-          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.freight }}</td>
+          <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}"><p>{{ myorder.get_ship_method_display }}</p>${{ myorder.freight }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">${{ myorder.total }}</td>
           <td class="middle aligned" rowspan="{{myorder.sold_goods.all|length}}">{{ myorder.get_status_display }}</td>
           {% endif %}
@@ -80,49 +90,107 @@
     </table>
   </div>
   <div class="ui segment">
-    <table class="ui compact celled definition table">
-      <thead class="full-width">
-        <tr>
-          <th colspan=2>買家資料</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="four wide">姓名（收件人）</td>
-          <td>{{ buyer.name }}</td>
-        </tr>
-        <tr>
-          <td>性別</td>
-          <td>{{ buyer.get_sexual_display }}</td>
-        </tr>
-        <tr>
-          <td>生日</td>
-          <td>{{ buyer.birthday }}</td>
-        </tr>
-        <tr>
-          <td>電話</td>
-          <td>{{ buyer.phone }}</td>
-        </tr>
-        <tr>
-          <td>住址</td>
-          <td>{{ buyer.address }}</td>
-        </tr>
-        <tr>
-          <td>信箱</td>
-          <td>{{ buyer.email }}</td>
-        </tr>
-        <tr>
-          <td>銀行帳號後五碼</td>
-          <td>{{ buyer.accounts }}</td>
-        </tr>
-      </tbody>
+    <div class="ui equal width grid">
+      <div class="column">
+        <table class="ui celled table">
+          <thead>
+            <tr>
+              <th colspan=3>買家資料</th>
+            </tr>
+          </thead>
+          <tbody class="center aligned">
+            <tr>
+              <td class="five wide">姓名</td>
+              <td colspan=2 class="left aligned">{{ buyer.name }}</td>
+            </tr>
+            <tr>
+              <td>性別</td>
+              <td colspan=2 class="left aligned">{{ buyer.get_gender_display }}</td>
+            </tr>
+            <tr>
+              <td>生日</td>
+              <td colspan=2 class="left aligned">{{ buyer.birthday }}</td>
+            </tr>
+            <tr>
+              <td>手機</td>
+              <td colspan=2 class="left aligned">{{ buyer.phone }}</td>
+            </tr>
+            <tr>
+              <td>信箱</td>
+              <td colspan=2 class="left aligned">{{ buyer.email }}</td>
+            </tr>
+            <tr>
+              <td>地址1</td>
+              <td colspan=2 class="left aligned">{{ buyer.addresses_set.all.0 }}</td>
+            </tr>
+            <tr>
+              <td>地址2</td>
+              <td colspan=2 class="left aligned">{{ buyer.addresses_set.all.1 }}</td>
+            </tr>
+            <tr>
+              <td>匯款帳號/無摺號碼</td>
+              <td>{{ buyer.accounts_set.all.0 }}</td>
+              <td>{{ buyer.accounts_set.all.1 }}</td>
+            </tr>
+            <tr>
+              <td>全家店鋪號</td>
+              <td>{{ buyer.familynumber_set.all.0 }}</td>
+              <td>{{ buyer.familynumber_set.all.1 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="column">
+        <table class="ui celled table">
+          <thead>
+            <tr>
+              <th colspan="2">訂單內容資訊</th>
+            </tr>
+          </thead>
+          <tbody class="center aligned warning">
+            <tr class="positive">
+              <td>買家選擇地址</td>
+              <td>{{ myorder.address }}</td>
+            </tr>
+            <tr>
+              <td class="five wide">買家匯款時間</td>
+              <td>{%if myorder.remittance_time != None%}{{ myorder.remittance_time }}{% else %}尚未匯款{%endif%}</td>
+            </tr>
+            <tr>
+              <td>買家匯款帳號</td>
+              <td>{%if myorder.remittance_account%}{{ myorder.remittance_account }}{%else%}尚無帳號{%endif%}</td>
+            </tr>
+            <tr class="warning">
+              <td>包裹寄出時間</td>
+              <td>{%if myorder.shipment_time != None%}{{ myorder.shipment_time }}{% else %}尚未寄出{%endif%}</td>
+            </tr>
+            <tr class="warning">
+              <td>包裹貨件編號</td>
+              <td>{%if myorder.shipment_number%}{{ myorder.shipment_number }}{%else%}尚無編號{%endif%}</td>
+            </tr>
+            <tr>
+              <td>買家備註</td>
+              <td class="left aligned">　　{{ myorder.buyer_notes }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
+
 </div>
 </div>
 {% endblock content %}
 
 {% block js-foot %} {{ block.super }}
 <script type="text/javascript">
+$(function() {
+    $('#datetimepicker').datetimepicker({
+      format: 'YYYY-MM-DD HH:mm',
+      useCurrent: false, //Important! See issue #1075
+    });
+  });
+
   $(document).ready(function() {
     var j = "{{ myorder.order_notes }}";
     var j = j.replace(/&#39;/g, "'");
@@ -141,7 +209,22 @@
     $('.ui.dropdown').dropdown({
       onChange: function(key, value) {
         if (confirm('您確定要把訂單狀態更改為「motion」嗎？'.replace('motion', value))) { //.replace('motion', display)
-          window.location.href = "{% url 'posts:order_update' number=myorder.number do='dodo' %}".replace('dodo', key);
+          console.log(key)
+          console.log(value)
+          if (key=='SPD' && value == '商品已寄出'){
+            var dt = $('#datetime').val();
+            var fmnumber = $("input[name='shipping[number]']").val();
+            if (dt == '' || fmnumber == '') {
+              alert('請記得選擇您的「包裹寄件日期與時間」和「包裹編號」再點選"商品已寄出"，謝謝。');
+              return false;
+            }
+            var url = "{% url 'posts:order_update' number=myorder.number do=999 fmnumber=888 shiptime=777 %}"
+            var url = url.replace('999', key).replace('888', fmnumber).replace('777', dt);
+            window.location.href = url
+          }
+          else{
+            window.location.href = "{% url 'posts:order_update' number=myorder.number do='999' shiptime='888' fmnumber='777' %}".replace('999', key);
+          }
         } else {
           // Do nothing!
         }

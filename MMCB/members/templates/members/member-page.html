@@ -8,40 +8,54 @@
   <p>請點擊「資料編輯」新增內容</p>
 </div>
 {% else %}
-<table class="ui compact celled definition table">
-  <thead class="full-width">
+<table class="ui celled table">
+  <thead>
     <tr>
-      <th colspan=2>個人資料 (Personal Information)</th>
+      <th colspan=3>個人資料 (Personal Information)</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="center aligned">
     <tr>
-      <td class="four wide">姓名（收件人）</td>
-      <td>{{ request.user.personalinfo.name }}</td>
+      <td class="five wide">Facebook姓名</td>
+      <td colspan=2 class="left aligned">{{ request.user.socialaccount_set.all.0.extra_data.name }}</td>
+    </tr>
+    <tr>
+      <td class="five wide">姓名</td>
+      <td colspan=2 class="left aligned">{{ request.user.personalinfo.name }}</td>
     </tr>
     <tr>
       <td>性別</td>
-      <td>{{ request.user.personalinfo.get_sexual_display }}</td>
+      <td colspan=2 class="left aligned">{{ request.user.personalinfo.get_gender_display }}</td>
     </tr>
     <tr>
       <td>生日</td>
-      <td>{{ request.user.personalinfo.birthday }}</td>
+      <td colspan=2 class="left aligned">{{ request.user.personalinfo.birthday }}</td>
     </tr>
     <tr>
-      <td>電話</td>
-      <td>{{ request.user.personalinfo.phone }}</td>
-    </tr>
-    <tr>
-      <td>住址</td>
-      <td>{{ request.user.personalinfo.address }}</td>
+      <td>手機</td>
+      <td colspan=2 class="left aligned">{{ request.user.personalinfo.phone }}</td>
     </tr>
     <tr>
       <td>信箱</td>
-      <td>{{ request.user.personalinfo.email }}</td>
+      <td colspan=2 class="left aligned">{{ request.user.personalinfo.email }}</td>
     </tr>
-    <tr>
-      <td>銀行帳號後五碼</td>
-      <td>{{ request.user.personalinfo.accounts }}</td>
+    <tr class="warning">
+      <td>地址1</td>
+      <td colspan=2 class="left aligned">{{ request.user.personalinfo.addresses_set.all.0 }}</td>
+    </tr>
+    <tr class="warning">
+      <td>地址2</td>
+      <td colspan=2 class="left aligned">{{ request.user.personalinfo.addresses_set.all.1 }}</td>
+    </tr>
+    <tr class="warning">
+      <td>匯款帳號/無摺號碼</td>
+      <td>{{ request.user.personalinfo.accounts_set.all.0 }}</td>
+      <td>{{ request.user.personalinfo.accounts_set.all.1 }}</td>
+    </tr>
+    <tr class="warning">
+      <td>全家店鋪號</td>
+      <td>{{ request.user.personalinfo.familynumber_set.all.0 }}</td>
+      <td>{{ request.user.personalinfo.familynumber_set.all.1 }}</td>
     </tr>
   </tbody>
 </table>

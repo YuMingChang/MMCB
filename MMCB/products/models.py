@@ -1,18 +1,17 @@
-# -*- coding: utf-8 -*-
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.safestring import mark_safe
-import datetime
+from django.utils.translation import ugettext_lazy as _
 
 
 class Product(models.Model):
-    name = models.CharField('商品名稱', max_length=20)
-    notes = models.TextField('商品描述', blank=True, default='')
-    # raiser = models.PositiveIntegerField('募集人數', null=True, blank=True)
-    date = models.DateField('刊登日期', default=datetime.date.today)
-    image = models.ImageField('商品展示圖片', upload_to='ProductImages',
-                              null=True, blank=True)
-    is_display = models.BooleanField('是否展示商品', default=True)
+    name = models.CharField(_('商品名稱'), max_length=16)
+    notes = models.TextField(_('商品描述'), blank=True, default='')
+    onshelf_time = models.DateTimeField(_('上架時間'), default=timezone.now)
+    image = models.ImageField(_('商品陳列圖片'), upload_to='ProductImages', null=True, blank=True)
+    is_display = models.BooleanField(_('是否陳列商品'), default=True)
+    freight_only = models.BooleanField(_('限制只能貨運'), default=False)
 
     def thumbnail(self):
         return mark_safe('<img src="/media/%s" width="30" height="30" />' % (self.image))
@@ -21,51 +20,45 @@ class Product(models.Model):
     class Meta:
         verbose_name = '商品'
         verbose_name_plural = '所有商品'
-        ordering = ['-date', ]
+        ordering = ['-onshelf_time', '-id']
 
-    # def __unicode__(self):    It's doesn't work.
-    # solve: http://blog.csdn.net/feifashengwu/article/details/12625719
-    # __str__ on Python 3,	__unicode__ on Python 2
     def __str__(self):
         return self.name
     __repr__ = __str__
 
 
-class Detail(models.Model):
-    # Django _set error: “'Product' object has no attribute 'detail_set'”:
-    # http://stackoverflow.com/questions/10466522/django-set-error-campaign-object-has-no-attribute-charity-set
-    product = models.ForeignKey('Product', verbose_name='商品')
-    color = models.CharField('商品樣式', max_length=10)
-    size = models.CharField('商品尺寸', max_length=10)
-    price = models.PositiveSmallIntegerField('商品價格', default=0)
-    stock = models.PositiveSmallIntegerField('存貨量', default=0)
-    sold = models.PositiveSmallIntegerField('已銷貨量', default=0)
-    total_sold = models.PositiveSmallIntegerField('總已銷貨量', default=0)  
+class Images(models.Model):
+    def get_image_filename(instance, filename):
+        title = instance.product.name
+        slug = slugify(title, allow_unicode=True)
+        return "ProductImages/%s - %s" % (slug, filename)
+
+    product = models.ForeignKey('Product', verbose_name=_('商品'))
+    image = models.ImageField(upload_to=get_image_filename,
+                              verbose_name=_('商品內容圖片'),
+                              blank=True, null=True, )
 
     class Meta:
-        verbose_name = '內容'
-        verbose_name_plural = '所有內容'
+        verbose_name = '商品內容圖片'
+        verbose_name_plural = '所有商品內容圖片'
+
+
+class Item(models.Model):
+    product = models.ForeignKey('Product', verbose_name=_('商品'))
+    style = models.CharField(_('商品款式'), max_length=8)
+    size = models.CharField(_('商品尺寸'), max_length=8)
+    price = models.PositiveSmallIntegerField(_('商品價格'), default=0)
+    pre_order = models.SmallIntegerField(_('預購量'), default=0)
+    selling = models.PositiveSmallIntegerField(_('已出貨量'), default=0)
+    selling_volume = models.PositiveSmallIntegerField(_('總出貨量'), default=0)
+    reset_time = models.DateTimeField(_('上次歸零時間'), blank=True, null=True)
+    is_reset = models.BooleanField(_('是否歸零'), default=False)
+    is_shortage = models.BooleanField(_('是否缺貨'), default=False)
+
+    class Meta:
+        verbose_name = '商品項目'
+        verbose_name_plural = '所有商品項目'
 
     def __str__(self):
-        return self.color + " - " + self.size
+        return "{} - {}".format(self.style, self.size)
     __repr__ = __str__
-
-# Introduce django database Field Type:
-# http://blog.csdn.net/pipisorry/article/details/45725953
-
-
-def get_image_filename(instance, filename):
-    title = instance.product.name
-    slug = slugify(title, allow_unicode=True)
-    return "ProductImages/%s-%s" % (slug, filename)
-
-
-class Images(models.Model):
-    product = models.ForeignKey('Product', verbose_name='商品')
-    image = models.ImageField(upload_to=get_image_filename,
-                              verbose_name='商品內容圖片',
-                              null=True, blank=True, )
-
-    class Meta:
-        verbose_name = '商品圖片'
-        verbose_name_plural = '所有商品圖片'

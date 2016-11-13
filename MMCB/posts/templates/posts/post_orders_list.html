@@ -14,15 +14,15 @@
           <div class="field">
             <select class="ui fluid search dropdown" name="selOrderStatus">
               <option option disabled selected value> -- 狀態篩選選擇 -- </option>
-              <option value="UP">待付款/匯款</option>
-              <option value="PA">通知已付款</option>
-              <option value="PC">確認已付款</option>
-              <option value="WS">商品準備中</option>
-              <option value="SN">商品已寄出</option>
-              <option value="AB">放棄此訂單</option>
-              <option value="CA">取消放棄此訂單</option>
-              <option value="AC">待賣家確認放棄</option>
-              <option value="AD">已放棄</option>
+              <option value="UPD">待付款/匯款</option>
+              <option value="PAD">通知已付款</option>
+              <option value="CFP">確認已付款</option>
+              <option value="SPN">商品準備中</option>
+              <option value="SPD">商品已寄出</option>
+              <option value="ABN">放棄此訂單</option>
+              <option value="CCA">取消放棄此訂單</option>
+              <option value="CFA">待賣家確認放棄</option>
+              <option value="ABD">已放棄</option>
             </select>
           </div>
           <div class="field">
@@ -41,23 +41,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="field">
-            <select class="ui fluid search dropdown" name="selOrderMonth">
-              <option option disabled selected value> -- 月份篩選選擇 -- </option>
-              <option value="1">一月</option>
-              <option value="2">二月</option>
-              <option value="3">三月</option>
-              <option value="4">四月</option>
-              <option value="5">五月</option>
-              <option value="6">六月</option>
-              <option value="7">七月</option>
-              <option value="8">八月</option>
-              <option value="9">九月</option>
-              <option value="10">十月</option>
-              <option value="11">十一月</option>
-              <option value="12">十二月</option>
-            </select>
-          </div> -->
           <div class="field">
             <div class="ui category search">
               <div class="ui icon input">
@@ -80,38 +63,38 @@
   <div class="ui big relaxed divided list">
     {% for order in order_queryset %}
     <div class="item">
-      {% if order.status == 'UP' %}<i class="large money middle aligned icon"></i>
-      {% elif order.status == 'PA' %}
+      {% if order.status == 'UPD' %}<i class="large money middle aligned icon"></i>
+      {% elif order.status == 'PAD' %}
       <div class="right floated content">
-        <button class="ui orange basic button" onclick="yesorno({{ order.number }}, 'PC', '確認已付款')">確認已付款</button>
-        <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '商品準備中')">商品準備中</button>
-        <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '商品已寄出')">商品已寄出</button>
+        <button class="ui orange basic button" onclick="yesorno({{ order.number }}, 'CFP', '確認已付款')">確認已付款</button>
+        <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'SPN', '商品準備中')">商品準備中</button>
+        <!-- <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SPD', '商品已寄出')">商品已寄出</button> -->
       </div>
       <i class="large alarm outline middle aligned icon"></i>
-      {% elif order.status == 'PC' %}
+      {% elif order.status == 'CFP' %}
       <div class="right floated content">
-        <button class="ui yellow basic button" onclick="yesorno({{ order.number }}, 'UP', '改為待付款狀態')">改為待付款狀態</button>
-        <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'WS', '商品準備中')">商品準備中</button>
-        <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '商品已寄出')">商品已寄出</button>
+        <button class="ui yellow basic button" onclick="yesorno({{ order.number }}, 'UPD', '改為待付款狀態')">改為待付款狀態</button>
+        <button class="ui green basic button" onclick="yesorno({{ order.number }}, 'SPN', '商品準備中')">商品準備中</button>
+        <!-- <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SPD', '商品已寄出')">商品已寄出</button> -->
       </div>
       <i class="large archive middle aligned icon"></i>
-      {% elif order.status == 'WS' %}
-      <div class="right floated content">
-        <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SN', '商品已寄出')">商品已寄出</button>
-      </div>
+      {% elif order.status == 'SPN' %}
+      <!-- <div class="right floated content">
+        <button class="ui blue basic button" onclick="yesorno({{ order.number }}, 'SPD', '商品已寄出')">商品已寄出</button>
+      </div> -->
       <i class="large archive middle aligned icon"></i>
-      {% elif order.status == 'SN' %}<i class="large shipping middle aligned icon"></i>
-      {% elif order.status == 'AB' %}<i class="large trash outline middle aligned icon"></i>
-      {% elif order.status == 'CA' %}<i class="large reply middle aligned icon"></i>
-      {% elif order.status == 'AC' %}
+      {% elif order.status == 'SPD' %}<i class="large shipping middle aligned icon"></i>
+      {% elif order.status == 'ABN' %}<i class="large trash outline middle aligned icon"></i>
+      {% elif order.status == 'CCA' %}<i class="large reply middle aligned icon"></i>
+      {% elif order.status == 'CFA' %}
       <div class="right floated content">
-        <button class="ui red basic button" onclick="yesorno({{ order.number }}, 'AD', '確認放棄此訂單')">確認放棄此訂單</button>
+        <button class="ui red basic button" onclick="yesorno({{ order.number }}, 'ABD', '確認放棄此訂單')">確認放棄此訂單</button>
       </div>
       <i class="large remove middle aligned icon"></i>
-      {% elif order.status == 'AD' %}<i class="large trash middle aligned icon"></i>
+      {% elif order.status == 'ABD' %}<i class="large trash middle aligned icon"></i>
       {% endif %}
       <div class="content">
-        <a class="header" href="{% url 'posts:order' number=order.number %}">{{ order.shopper }} ({{ order.order_date }})</a>
+        <a class="header" href="{% url 'posts:order' number=order.number %}">{{ order.buyer }} ({{ order.order_time }})</a>
         <div class="description">{{ order.get_status_display }}</div>
       </div>
     </div>
@@ -122,7 +105,7 @@
 <script type="text/javascript">
   function yesorno(number, dowhat, display) {
     if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display))) {
-      window.location.href = "{% url 'posts:order_update' number=666 do='dodo' %}".replace(666, number).replace('dodo', dowhat);
+      window.location.href = "{% url 'posts:order_update' number='123' do='456' fmnumber='000' shiptime='000' %}".replace('123', number).replace('456', dowhat);
     } else {
       // Do nothing!
     }

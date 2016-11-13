@@ -52,19 +52,19 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
 ]
-SITE_ID = 1
+SITE_ID = 2
 
 LOCAL_APPS = [
-    'carton',
-    'shopping',
     'base',
-    'posts',
     'products',
+    'shopping',
     'members',
     'checkout',
+    'carton',
+    'posts',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-CART_PRODUCT_MODEL = 'products.models.Detail'
+CART_PRODUCT_MODEL = 'products.models.Item'
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

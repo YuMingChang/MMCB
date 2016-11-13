@@ -11,9 +11,9 @@ urlpatterns = [
         # CREATE(Prodcut)
         url(r'^create/$', views.post_product_add, name='create'),
 
-        # CREATE(Detail)
-        url(r'^add_detail/$', views.post_detail_add, name='add_detail'),
-        url(r'^add_detail/(?P<good_id>\d+)/$', views.post_detail_add, name='add_detail'),
+        # CREATE(Item)
+        url(r'^add_item/$', views.post_item_add, name='add_item'),
+        url(r'^add_item/(?P<good_id>\d+)/$', views.post_item_add, name='add_item'),
 
         # UPDATE
         url(r'^edit/(?P<good_id>\d+)/$', views.post_product_update, name='update'),
@@ -35,9 +35,9 @@ urlpatterns = [
         url(r'^(?P<number>\d+)/$', views.posts_order, name='order'),
         # CREATE(Prodcut)
         # UPDATE
-        url(r'^(?P<number>\d+)/(?P<do>.+)/$', views.posts_order_update, name='order_update'),
+        url(r'^(?P<number>\d+)/(?P<do>.+)/(?P<fmnumber>\d+)/(?P<shiptime>.+)/$', views.posts_order_update, name='order_update'),
         # DELETE
     ])),
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # 以下適用於網頁讀取"settings.py"中的 MEDIA_URL 與 MEDIA_ROOT 所用
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
