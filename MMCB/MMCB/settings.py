@@ -46,11 +46,11 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'crispy_forms',
-    'bootstrap3_datetime',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
+    'herokuapp',
 ]
 SITE_ID = 2
 
@@ -171,7 +171,3 @@ STATIC_URL = '/static/'
 # http://blog.csdn.net/boycycyzero/article/details/43820481
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
-if os.getenv('DATABASE_URL') is not None:
-    import dj_database_url
-    DATABASE['default'] = dj_database_url.config()

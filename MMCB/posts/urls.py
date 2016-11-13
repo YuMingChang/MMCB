@@ -5,6 +5,7 @@ from posts import views
 
 urlpatterns = [
     url(r'^$', views.post_page, name='page'),
+    url(r'^meta/$', views.meta, name='meta'),
     url(r'^products/', include([
         # READ(Retreive)
         url(r'^$', views.post_products_list, name='productlist'),
@@ -20,7 +21,6 @@ urlpatterns = [
 
         # DELETE
         url(r'^delete/(?P<good_id>\d+)/$', views.post_product_delete, name='delete'),
-        url(r'^meta/$', views.meta, name='meta'),
     ])),
     url(r'^checkouts/', include([
         # READ(Retreive)

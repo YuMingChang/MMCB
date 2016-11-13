@@ -24,6 +24,7 @@
 ## Views.py
 
 * [request.POST or None](http://stackoverflow.com/questions/35891598/handling-post-data-in-django-forms)
+* [Django: catch all errors and display the type of error and message](http://stackoverflow.com/questions/7791261/django-catch-all-errors-and-display-the-type-of-error-and-message)
 
 ## Template Tag
 Django 在 django.template 子模組中實作了一個 recursive descent parser。當你的 template 被讀入時，會經過這個 parser 處理成 AST，接著一個 renderer 負責將這個 AST 輸出成字串。[Github](https://github.com/uranusjr/django-tutorial-for-programmers/blob/master/29-template-tags-explained.md)
@@ -155,6 +156,9 @@ Integrated set of Django applications addressing authentication, registration, a
 ### WebDevelopment Material
 * [泡在網上的日子](http://www.jcodecraeer.com/)
 
+### HTML
+* [DOM 中 Property 和 Attribute 的区别](http://www.cnblogs.com/elcarim5efil/p/4698980.html)
+
 ### Python Tricks
 * [Initializing Multiple Lists/Line](http://stackoverflow.com/questions/2402646/python-initializing-multiple-lists-line)
 * []()
@@ -162,7 +166,7 @@ Integrated set of Django applications addressing authentication, registration, a
 ### Questions
 * [What the difference between using Django redirect and HttpResponseRedirect?](http://stackoverflow.com/questions/13304149/what-the-difference-between-using-django-redirect-and-httpresponseredirect)
 * [request.POST.get('sth') vs request.POST['sth'] - difference?](http://stackoverflow.com/questions/12518517/request-post-getsth-vs-request-poststh-difference)
-
+* [Django - no such table exception](http://stackoverflow.com/questions/34548768/django-no-such-table-exception)
 ### BUG TAG
 * when you reconstructed, **urlpatterns names** and **user's permission** need to care
 * the space on the menu bar need to fixed.

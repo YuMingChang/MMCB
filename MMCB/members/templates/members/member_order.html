@@ -32,6 +32,8 @@
                 <label>{{ qs.account }}</label>
               </div>
             </div>
+            {% else %}
+            <a href="{% url 'member:info' %}"> (新增/修改)　</a>
             {% endif %}{% endfor %}
           </div>
         </div>
@@ -199,12 +201,12 @@
 {% block js-foot %} {{ block.super }}
 <script type="text/javascript">
 $('.ui.radio.checkbox').checkbox();
-console.log($('input[name=account]:checked').val())
   function yesorno(dowhat, display, act) {
     var datetime = $('#datetime').val();
+    var account = $('input[name=account]:checked').val();
     // var datetime = datetime.replace(/\//g, '-');
-    if (datetime == '') {
-      alert('請記得選擇您的「匯款日期與時間」再點選"通知已付款"，謝謝。');
+    if (datetime == null || account == null) {
+      alert('請記得選擇您的匯款帳號、「匯款日期與時間」再點選"通知已付款"，謝謝。');
       return false;
     }
     if (confirm('您確定要執行「motion」動作嗎？'.replace('motion', display))) {

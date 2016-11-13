@@ -4,7 +4,6 @@ from django.forms.models import inlineformset_factory
 from products.models import Product, Item, Images
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Button, Layout, Div, HTML, Fieldset, Field
-from bootstrap3_datetime.widgets import DateTimePicker
 
 
 class ProductForm(forms.ModelForm):
